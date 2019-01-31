@@ -10,6 +10,7 @@ namespace CircuitSim2.Chips.Digital.Generators
         {
 
         }
+
         public Random(int Seed = -1, Engine.Engine Engine = null) : base("DigitalRandom", Engine) => Generator = new System.Random(Seed);
 
         protected sealed override bool NextValue() => Generator.NextDouble() <= 0.5;

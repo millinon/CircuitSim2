@@ -41,19 +41,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Chips\Byte\Arithmetic.cs" />
+    <Compile Include="Chips\Byte\Comparison.cs" />
+    <Compile Include="Chips\Byte\Conversion.cs" />
+    <Compile Include="Chips\Byte\Generators.cs" />
+    <Compile Include="Chips\Byte\Signals.cs" />
+    <Compile Include="Chips\Char\Arithmetic.cs" />
+    <Compile Include="Chips\Char\Comparison.cs" />
+    <Compile Include="Chips\Char\Conversion.cs" />
     <Compile Include="Chips\ChipBase.cs" />
     <Compile Include="Chips\Digital\Comparison.cs" />
     <Compile Include="Chips\Digital\Conversion.cs" />
     <Compile Include="Chips\Digital\Generators.cs" />
     <Compile Include="Chips\Digital\Logic.cs" />
     <Compile Include="Chips\Digital\Signals.cs" />
+    <Compile Include="Chips\Double\Arithmetic.cs" />
+    <Compile Include="Chips\Double\Comparison.cs" />
+    <Compile Include="Chips\Double\Conversion.cs" />
+    <Compile Include="Chips\Double\Generators.cs" />
+    <Compile Include="Chips\Double\Signals.cs" />
     <Compile Include="Chips\Functors.cs" />
+    <Compile Include="Chips\Integer\Arithmetic.cs" />
+    <Compile Include="Chips\Integer\Comparison.cs" />
+    <Compile Include="Chips\Integer\Conversion.cs" />
+    <Compile Include="Chips\Integer\Generators.cs" />
+    <Compile Include="Chips\Integer\Signals.cs" />
     <Compile Include="Chips\IO\BasicInputs.cs" />
+    <Compile Include="Chips\Long\Arithmetic.cs" />
+    <Compile Include="Chips\Long\Comparison.cs" />
+    <Compile Include="Chips\Long\Conversion.cs" />
+    <Compile Include="Chips\Long\Generators.cs" />
+    <Compile Include="Chips\Long\Signals.cs" />
     <Compile Include="Chips\MetaChip.cs" />
     <Compile Include="Chips\Signals.cs" />
+    <Compile Include="Chips\Single\Arithmetic.cs" />
+    <Compile Include="Chips\Single\Comparison.cs" />
+    <Compile Include="Chips\Single\Conversion.cs" />
+    <Compile Include="Chips\Single\Signals.cs" />
+    <Compile Include="Chips\String\Comparison.cs" />
+    <Compile Include="Chips\String\Conversion.cs" />
+    <Compile Include="Chips\String\Operators.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="IO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

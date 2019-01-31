@@ -23,14 +23,14 @@ namespace CircuitSim2.Chips.Digital.Conversion
         }
     }
 
-    public sealed class ToInt : UnaryFunctor<bool, int>
+    public sealed class ToInteger : UnaryFunctor<bool, int>
     {
-        public ToInt(Engine.Engine Engine = null) : this(0, 1, Engine)
+        public ToInteger(Engine.Engine Engine = null) : this(0, 1, Engine)
         {
 
         }
 
-        public ToInt(int Low = 0, int High = 1, Engine.Engine Engine = null) : base("DigitalToInt", a => a ? High : Low)
+        public ToInteger(int Low = 0, int High = 1, Engine.Engine Engine = null) : base("DigitalToInt", a => a ? High : Low)
         {
 
         }
