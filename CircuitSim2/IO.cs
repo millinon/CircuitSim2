@@ -51,6 +51,7 @@ namespace CircuitSim2.IO
 
         protected IOBase(Chips.ChipBase Chip, string Name, Type Type)
         {
+            this.Chip = Chip;
             this.Name = Name;
             this.Type = Type;
         }
@@ -77,16 +78,20 @@ namespace CircuitSim2.IO
 
         public abstract void Detach();
 
+        public abstract void Attach(OutputBase Output);
+
         public void Bind(InputBase Input)
         {
             if (Input.Type != Type) throw new InvalidOperationException();
 
             if (IsAttached) Detach();
 
+            Input.Subscribe(this);
+
             Binding = Input;
         }
 
-        public void UnBind()
+        public void Unbind()
         {
             if (IsBound)
             {
@@ -127,6 +132,19 @@ namespace CircuitSim2.IO
         }
 
         private Output<T> Source = null;
+
+        public override void Attach(OutputBase Output)
+        {
+            if (IsAttached) Detach();
+
+            if (Output.Type != Type) throw new InvalidOperationException();
+
+            SourceBase = Output;
+
+            Source = Output as Output<T>;
+
+            Output.Attach(this);
+        }
 
         public sealed override void Detach()
         {
@@ -174,6 +192,7 @@ namespace CircuitSim2.IO
         public abstract IEnumerable<InputBase> Sinks();
 
         public abstract void Detach();
+        public abstract void Attach(InputBase Input);
     }
 
     public sealed class Output<T> : OutputBase where T : IEquatable<T>
@@ -187,14 +206,13 @@ namespace CircuitSim2.IO
 
         }
 
-        public bool HaveValue
+        /*public bool HaveValue
         {
             get; private set;
-        }
+        }*/
 
         public class ValueChangedEventArgs
         {
-            public T LastValue;
             public T NewValue;
         }
 
@@ -205,39 +223,40 @@ namespace CircuitSim2.IO
         {
             get
             {
-                if (!HaveValue) throw new InvalidOperationException();
+                //if (!HaveValue) throw new InvalidOperationException();
                 return value;
             }
             set
             {
-                T last_value = this.value;
                 bool changed = false;
-                if (HaveValue)
-                {
-                    last_value = Value;
-                    changed = last_value.Equals(value);
-                }
+                //if (HaveValue)
+                //{
+                    changed = !Value.Equals(value);
+                //}
+                //else changed = true;
 
                 this.value = value;
-                HaveValue = true;
+                //HaveValue = true;
 
                 if (changed)
                 {
-                    ValueChanged(this, new ValueChangedEventArgs { LastValue = last_value, NewValue = value });
+                    ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
+                }
 
-                    foreach (var sink in Sinks())
-                    {
-                        (sink as Input<T>).Notify();
-                    }
+                foreach (var sink in Sinks())
+                {
+                    (sink as Input<T>).Notify();
                 }
             }
         }
 
         private readonly HashSet<Input<T>> SinkList = new HashSet<Input<T>>();
 
-        public void Attach(Input<T> Input)
+        public override void Attach(InputBase Input)
         {
-            if (!SinkList.Contains(Input)) SinkList.Add(Input);
+            if (Input.Type != Type) throw new InvalidOperationException();
+
+            if (!SinkList.Contains(Input as Input<T>)) SinkList.Add(Input as Input<T>);
         }
 
         public void Detach(Input<T> Input)
@@ -256,18 +275,15 @@ namespace CircuitSim2.IO
         }
     }
 
-    public abstract class InputSetBase
+    public class InputSetBase
     {
         private readonly IReadOnlyDictionary<string, InputBase> InputsByName;
 
         public IEnumerable<InputBase> AllInputs => InputsByName.Values;
-
-        public readonly int Size;
-
+        
         public InputSetBase(IReadOnlyDictionary<string, InputBase> Inputs)
         {
             InputsByName = Inputs;
-            Size = Inputs.Values.Count();
         }
 
         public InputSetBase(IEnumerable<InputBase> Inputs)
@@ -280,15 +296,16 @@ namespace CircuitSim2.IO
             }
 
             InputsByName = dict;
-
-            Size = Inputs.Count();
         }
 
-        public IOBase InputLookup(string Name)
+        public InputBase this[string Name]
         {
-            if (!InputsByName.ContainsKey(Name)) throw new ArgumentException();
+            get
+            {
+                if (!InputsByName.ContainsKey(Name)) throw new ArgumentException();
 
-            return InputsByName[Name];
+                return InputsByName[Name];
+            }
         }
 
         public virtual void Detach()
@@ -304,7 +321,7 @@ namespace CircuitSim2.IO
     {
         public Input<T> A;
 
-        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip), }) => A = InputLookup("A") as Input<T>;
+        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip), }) => A = this["A"] as Input<T>;
     }
 
     public sealed class GenericInput<T, U> : InputSetBase where T : IEquatable<T> where U : IEquatable<U>
@@ -314,8 +331,8 @@ namespace CircuitSim2.IO
 
         public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip), new Input<U>("B", Chip), })
         {
-            A = InputLookup("A") as Input<T>;
-            B = InputLookup("B") as Input<U>;
+            A = this["A"] as Input<T>;
+            B = this["B"] as Input<U>;
         }
     }
 
@@ -328,7 +345,7 @@ namespace CircuitSim2.IO
             Array = new Input<T>[Size];
             for (int idx = 0; idx < Size; idx++)
             {
-                Array[idx] = InputLookup($"{idx}") as Input<T>;
+                Array[idx] = this[$"{idx}"] as Input<T>;
             }
         }
 
@@ -345,7 +362,7 @@ namespace CircuitSim2.IO
         }
     }
 
-    public abstract class OutputSetBase
+    public class OutputSetBase
     {
         protected readonly IReadOnlyDictionary<string, OutputBase> OutputsByName;
 
@@ -353,7 +370,9 @@ namespace CircuitSim2.IO
 
         public IEnumerable<OutputBase> AllOutputs => OutputsByName.Values;
 
-        public OutputSetBase(IReadOnlyCollection<OutputBase> Outputs)
+        public readonly int Size;
+
+        public OutputSetBase(IEnumerable<OutputBase> Outputs)
         {
             var dict = new Dictionary<string, OutputBase>();
 
@@ -363,9 +382,11 @@ namespace CircuitSim2.IO
             }
 
             OutputsByName = dict;
+
+            Size = dict.Values.Count();
         }
 
-        public IOBase OutputLookup(string Name)
+        public OutputBase OutputLookup(string Name)
         {
             if (!OutputsByName.ContainsKey(Name)) throw new ArgumentException();
 

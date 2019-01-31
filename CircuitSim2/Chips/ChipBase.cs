@@ -2,7 +2,7 @@
 {
     public abstract class ChipBase
     {
-        public bool AutoTick;
+        public bool AutoTick = true;
 
         public readonly Engine.Engine Engine;
         public readonly string Name;

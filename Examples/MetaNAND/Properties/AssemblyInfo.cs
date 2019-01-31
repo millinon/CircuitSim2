@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CircuitSim2")]
+[assembly: AssemblyTitle("MetaNAND")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CircuitSim2")]
+[assembly: AssemblyProduct("MetaNAND")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("aed0e2d2-e357-429b-b311-ce6bf55fa7cb")]
+[assembly: Guid("3ad32916-1185-4ade-a93c-0a6cacdf8f7c")]
 
 // Version information for an assembly consists of the following four values:
 //

@@ -4,18 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using CircuitSim2.IO;
+
 namespace CircuitSim2.Chips.IO.BasicInputs
 {
-    public sealed class GenericInput<T> : Chips.ChipBase where T : IEquatable<T>
+    public sealed class GenericInput<T> : ChipBase where T : IEquatable<T>
     {
-        public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
+        public readonly GenericOutput<T> Outputs;
 
         public GenericInput(Engine.Engine Engine = null) : base("GenericInput", Engine)
         {
-            Outputs = new CircuitSim2.IO.GenericOutput<T>(this);
+            Outputs = new GenericOutput<T>(this);
 
-            InputSet = new CircuitSim2.IO.NoInputs();
+            InputSet = new NoInputs();
             OutputSet = Outputs;
+
+            Value = default(T);
         }
 
         private T _value;
@@ -38,13 +42,13 @@ namespace CircuitSim2.Chips.IO.BasicInputs
 
     public sealed class Constant<T> : Chips.ChipBase where T : IEquatable<T>
     {
-        public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
+        public readonly GenericOutput<T> Outputs;
 
         public Constant(T Value, Engine.Engine Engine = null) : base("Constant", Engine)
         {
-            Outputs = new CircuitSim2.IO.GenericOutput<T>(this);
+            Outputs = new GenericOutput<T>(this);
 
-            InputSet = new CircuitSim2.IO.NoInputs();
+            InputSet = new NoInputs();
             OutputSet = Outputs;
 
             this.Value = Value;
@@ -55,15 +59,15 @@ namespace CircuitSim2.Chips.IO.BasicInputs
         public override void Output() => Outputs.Out.Value = Value;
     }
 
-    public sealed class Button : Chips.ChipBase
+    public sealed class Button : ChipBase
     {
-        public readonly CircuitSim2.IO.GenericOutput<bool> Outputs;
+        public readonly GenericOutput<bool> Outputs;
 
         public Button(Engine.Engine Engine = null) : base("Button", Engine)
         {
-            Outputs = new CircuitSim2.IO.GenericOutput<bool>(this);
+            Outputs = new GenericOutput<bool>(this);
 
-            InputSet = new CircuitSim2.IO.NoInputs();
+            InputSet = new NoInputs();
             OutputSet = Outputs;
         }
 

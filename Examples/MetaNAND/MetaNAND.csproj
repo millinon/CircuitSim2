@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AED0E2D2-E357-429B-B311-CE6BF55FA7CB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CircuitSim2</RootNamespace>
-    <AssemblyName>CircuitSim2</AssemblyName>
+    <ProjectGuid>{3AD32916-1185-4ADE-A93C-0A6CACDF8F7C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>MetaNAND</RootNamespace>
+    <AssemblyName>MetaNAND</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -41,19 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chips\ChipBase.cs" />
-    <Compile Include="Chips\Digital\Comparison.cs" />
-    <Compile Include="Chips\Digital\Conversion.cs" />
-    <Compile Include="Chips\Digital\Generators.cs" />
-    <Compile Include="Chips\Digital\Logic.cs" />
-    <Compile Include="Chips\Digital\Signals.cs" />
-    <Compile Include="Chips\Functors.cs" />
-    <Compile Include="Chips\IO\BasicInputs.cs" />
-    <Compile Include="Chips\MetaChip.cs" />
-    <Compile Include="Chips\Signals.cs" />
-    <Compile Include="Engine.cs" />
-    <Compile Include="IO.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\CircuitSim2\CircuitSim2.csproj">
+      <Project>{aed0e2d2-e357-429b-b311-ce6bf55fa7cb}</Project>
+      <Name>CircuitSim2</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
