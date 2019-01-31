@@ -202,7 +202,7 @@ namespace CircuitSim2.Chips
 
             foreach (var desc in Description.Connections)
             {
-                Chips[desc.DestID].InputSet[desc.DestInput].Attach(Chips[desc.SrcID].OutputSet.OutputLookup(desc.SrcOutput));
+                Chips[desc.DestID].InputSet[desc.DestInput].Attach(Chips[desc.SrcID].OutputSet[desc.SrcOutput]);
             }
 
             OutputMapping = Description.Outputs;
@@ -214,7 +214,7 @@ namespace CircuitSim2.Chips
             {
                 var output = Outputs[desc.Name];
 
-                var mapped = Chips[desc.MapID].OutputSet.OutputLookup(desc.MapOutput);
+                var mapped = Chips[desc.MapID].OutputSet[desc.MapOutput];
 
                 switch (desc.Type)
                 {

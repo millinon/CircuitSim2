@@ -5,19 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 using CircuitSim2.Chips;
+using CircuitSim2.IO;
 using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Digital.Logic;
 using static CircuitSim2.Chips.MetaChip.MetaChipDescription;
 using static CircuitSim2.Chips.MetaChip.MetaChipDescription.ChipDescription;
 
-namespace MetaNAND
+namespace MetaNANDTest
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var A = new GenericInput<bool>();
-            var B = new GenericInput<bool>();
+            var A = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
+            var B = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
 
             A.Value = false;
             B.Value = false;
@@ -109,11 +110,11 @@ namespace MetaNAND
 
                     Console.Write($"!({valA} & {valB}) => {NAND.Outputs.Out.Value}: ");
 
-                    if((MetaNAND.OutputSet.OutputLookup("Out") as CircuitSim2.IO.Output<bool>).Value == NAND.Outputs.Out.Value)
+                    if((MetaNAND.OutputSet["Out"] as Output<bool>).Value == NAND.Outputs.Out.Value)
                     {
                         Console.WriteLine("PASS");
                     } else {
-                        Console.WriteLine($"FAIL: {(MetaNAND.OutputSet.OutputLookup("Out") as CircuitSim2.IO.Output<bool>).Value}");
+                        Console.WriteLine($"FAIL: {(MetaNAND.OutputSet["Out"] as Output<bool>).Value}");
                     }
                 }
             }

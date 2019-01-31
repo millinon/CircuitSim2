@@ -386,11 +386,14 @@ namespace CircuitSim2.IO
             Size = dict.Values.Count();
         }
 
-        public OutputBase OutputLookup(string Name)
+        public OutputBase this[string Name]
         {
-            if (!OutputsByName.ContainsKey(Name)) throw new ArgumentException();
+            get
+            {
+                if (!OutputsByName.ContainsKey(Name)) throw new ArgumentException();
 
-            return OutputsByName[Name];
+                return OutputsByName[Name];
+            }
         }
 
         public virtual void Detach()
@@ -406,7 +409,7 @@ namespace CircuitSim2.IO
     {
         public readonly Output<T> Out;
 
-        public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip), }) => Out = OutputLookup("Out") as Output<T>;
+        public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip), }) => Out = this["Out"] as Output<T>;
     }
 
     public sealed class NoOutputs : OutputSetBase
