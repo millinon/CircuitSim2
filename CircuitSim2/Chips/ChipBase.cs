@@ -113,8 +113,18 @@ namespace CircuitSim2
 
             public abstract void Output();
 
+#if DEBUG
+            public ulong TickCount
+            {
+                get; private set;
+            } = 0;
+#endif
+
             public virtual void Tick()
             {
+#if DEBUG
+                TickCount++;
+#endif
                 try
                 {
                     HaveError = false;

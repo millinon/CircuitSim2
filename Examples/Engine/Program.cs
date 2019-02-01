@@ -11,7 +11,6 @@ namespace EngineTest
         {
             using (var engine = new Engine())
             {
-
                 var A = new CircuitSim2.Chips.Byte.Generators.Random(1234, engine);
                 Console.WriteLine($"A.ID = {A.ID}");
                 A.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A <- {e.NewValue}");

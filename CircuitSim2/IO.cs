@@ -214,13 +214,13 @@ namespace CircuitSim2.IO
                     input.Notify();
                 }
 
-                if (Chip.AutoTick)
+                if(Chip.Engine != null)
+                {
+                    Chip.Engine.ScheduleUpdate(Chip);
+                }
+                else if (Chip.AutoTick)
                 {
                     Chip.Tick();
-                }
-                else
-                {
-                    Chip.Engine?.ScheduleUpdate(Chip);
                 }
             }
         }
@@ -230,13 +230,69 @@ namespace CircuitSim2.IO
     {
         protected OutputBase(Chips.ChipBase Chip, string Name, Type Type) : base(Chip, Name, Type)
         {
-
+            SubscribedOutputs = new HashSet<OutputBase>();
         }
 
         public abstract IEnumerable<InputBase> Sinks();
 
         public abstract void Detach();
         public abstract void Attach(InputBase Input);
+
+        protected OutputBase binding;
+        public OutputBase Binding {
+            get { lock (lock_obj) { return binding; } }
+        }
+
+        public bool IsBound
+        {
+            get { lock (lock_obj) { return Binding != null; } }
+        }
+
+        public void Bind(OutputBase Output)
+        {
+            if (Output.Type != Type) throw new InvalidOperationException();
+
+            Detach();
+
+            lock (lock_obj)
+            {
+                Output.Subscribe(this);
+
+                binding = Output;
+            }
+        }
+
+        public void Unbind()
+        {
+            lock (lock_obj)
+            {
+                if (Binding != null)
+                {
+                    Binding.Unsubscribe(this);
+                }
+
+                binding = null;
+            }
+        }
+
+        protected void Subscribe(OutputBase Output)
+        {
+            if (Output.Type != Type) throw new InvalidOperationException();
+            lock (lock_obj)
+            {
+                SubscribedOutputs.Add(Output);
+            }
+        }
+
+        protected void Unsubscribe(OutputBase Output)
+        {
+            lock (lock_obj)
+            {
+                if (SubscribedOutputs.Contains(Output)) SubscribedOutputs.Remove(Output);
+            }
+        }
+
+        protected readonly HashSet<OutputBase> SubscribedOutputs;
     }
 
     [DebuggerDisplay("{Chip.Name}.Outputs.{Name}: {Value}")]
@@ -246,7 +302,7 @@ namespace CircuitSim2.IO
 
         public Output(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
         {
-
+            
         }
 
         private bool havevalue;
@@ -295,6 +351,11 @@ namespace CircuitSim2.IO
                     if (changed)
                     {
                         ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
+                    }
+
+                    foreach(var output in SubscribedOutputs)
+                    {
+                        (output as Output<T>).Value = value;
                     }
 
                     foreach (var sink in Sinks())

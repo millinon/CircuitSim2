@@ -1,10 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using CircuitSim2;
 using CircuitSim2.Chips.Components.Adders;
 using CircuitSim2.Chips.IO.BasicInputs;
 

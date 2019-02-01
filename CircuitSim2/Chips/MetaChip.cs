@@ -69,7 +69,7 @@ namespace CircuitSim2.Chips
         private Dictionary<string, CircuitSim2.IO.InputBase> Inputs;
         private Dictionary<string, CircuitSim2.IO.OutputBase> Outputs;
 
-        private List<MetaChipDescription.OutputDescription> OutputMapping;
+        //private List<MetaChipDescription.OutputDescription> OutputMapping;
 
         public void Load(MetaChipDescription Description)
         {
@@ -200,11 +200,16 @@ namespace CircuitSim2.Chips
                 Chips[desc.DestID].InputSet[desc.DestInput].Attach(Chips[desc.SrcID].OutputSet[desc.SrcOutput]);
             }
 
-            OutputMapping = Description.Outputs;
+            foreach(var desc in Description.Outputs)
+            {
+                OutputSet[desc.Name].Bind(Chips[desc.MapID].OutputSet[desc.MapOutput]);
+            }
+            //OutputMapping = Description.Outputs;
         }
 
         public override void Output()
         {
+        }/*
             foreach (var desc in OutputMapping)
             {
                 var output = Outputs[desc.Name];
@@ -249,6 +254,6 @@ namespace CircuitSim2.Chips
                         throw new ArgumentException();
                 }
             }
-        }
+        }*/
     }
 }

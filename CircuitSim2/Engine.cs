@@ -180,6 +180,7 @@ namespace CircuitSim2.Engine
             {
                 this.UpdateNext();
             };
+            Timer.AutoReset = true;
 
             Chips = new Dictionary<string, Chips.ChipBase>();
             Updates = new UpdateQueue();
@@ -234,7 +235,10 @@ namespace CircuitSim2.Engine
                 {
                     var chip = Updates.Pop();
 
-                    if (!chip.IsPure || !Updates.Contains(chip)) // always tick non-pure chips, defer ticks for scheduled chips
+                    if(chip.IsPure && Updates.Contains(chip))
+                    {
+                        ChipSkipped?.Invoke(this, new SkipEventArgs { Chip = chip });
+                    } else
                     {
                         chip.Tick();
 
@@ -242,7 +246,6 @@ namespace CircuitSim2.Engine
 
                         return;
                     }
-                    else ChipSkipped?.Invoke(this, new SkipEventArgs { Chip = chip });
                 }
             }
         }

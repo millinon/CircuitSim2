@@ -42,13 +42,16 @@ namespace CircuitSim2.Chips.Components.Adders
 
             AND.Inputs.A.Bind(Inputs.A);
             AND.Inputs.B.Bind(Inputs.B);
+
+            Outputs.S.Bind(XOR.Outputs.Out);
+            Outputs.C.Bind(AND.Outputs.Out);
         }
 
         public override void Output()
-        {
+        {}/*
             Outputs.S.Value = XOR.Outputs.Out.Value;
             Outputs.C.Value = AND.Outputs.Out.Value;
-        }
+        }*/
     }
 
     [PureChip("FullAdder")]
@@ -115,13 +118,17 @@ namespace CircuitSim2.Chips.Components.Adders
             AND1.Inputs.A.Attach(XOR1.Outputs.Out);
             OR.Inputs.A.Attach(AND1.Outputs.Out);
             OR.Inputs.B.Attach(AND2.Outputs.Out);
+
+            Outputs.S.Bind(XOR2.Outputs.Out);
+            Outputs.Cout.Bind(OR.Outputs.Out);
         }
 
         public override void Output()
         {
+        }/*
             Outputs.S.Value = XOR2.Outputs.Out.Value;
             Outputs.Cout.Value = OR.Outputs.Out.Value;
-        }
+        }*/
     }
 
     [PureChip("ByteAdder")]
@@ -202,12 +209,15 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Composer.Inputs[$"Bit{i}"].Attach(Adders[i].Outputs.S);
             }
+
+            Outputs.S.Bind(Composer.Outputs.Out);
+            Outputs.Cout.Bind(Adders[7].Outputs.Cout);
         }
 
         public override void Output()
-        {
+        { }/*
             Outputs.S.Value = Composer.Outputs.Out.Value;
             Outputs.Cout.Value = Adders[7].Outputs.Cout.Value;
-        }
+        }*/
     }
 }

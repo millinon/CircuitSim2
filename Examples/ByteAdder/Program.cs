@@ -2,6 +2,7 @@ using System;
 
 using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Components.Adders;
+using System.Threading;
 
 namespace ByteAdderTest
 {
@@ -9,36 +10,52 @@ namespace ByteAdderTest
     {
         static void Main(string[] args)
         {
-            var a = new GenericInput<byte>();
-            var b = new GenericInput<byte>();
-
-            var cin = new Constant<bool>(false);
-
-            var adder = new ByteAdder();
-
-            adder.Inputs.A.Attach(a.Outputs.Out);
-            adder.Inputs.B.Attach(b.Outputs.Out);
-            adder.Inputs.Cin.Attach(cin.Outputs.Out);
-
-            string line;
-
-            while ((line = Console.ReadLine()) != null)
+            using (CircuitSim2.Engine.Engine engine = new CircuitSim2.Engine.Engine())
             {
-                try
+                var a = new GenericInput<byte>(engine);
+
+                var b = new GenericInput<byte>(engine);
+
+                var cin = new Constant<bool>(false, engine);
+
+                var adder = new ByteAdder(engine);
+                Console.WriteLine($"adder = {adder.ID}");
+
+                adder.Inputs.A.Attach(a.Outputs.Out);
+                adder.Inputs.B.Attach(b.Outputs.Out);
+                adder.Inputs.Cin.Attach(cin.Outputs.Out);
+
+                engine.ChipUpdated += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} updated");
+                engine.ChipSkipped += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} skipped");
+
+                if (engine != null)
                 {
-                    var toks = line.Split(' ');
-
-                    if (toks.Length != 2) throw new Exception("Invalid input");
-
-                    a.Value = byte.Parse(toks[0].Trim());
-                    b.Value = byte.Parse(toks[1].Trim());
-
-                    if (adder.Outputs.Cout.Value) throw new Exception("Overflow");
-                    Console.WriteLine($"{a.Value.ToString("X2")} + {b.Value.ToString("X2")} = {adder.Outputs.S.Value.ToString("X2")}");
+                    engine.Start(1);
                 }
-                catch (Exception e)
+
+                string line;
+
+                while ((line = Console.ReadLine()) != null)
                 {
-                    Console.WriteLine(e.Message);
+                    try
+                    {
+                        var toks = line.Split(' ');
+
+                        if (toks.Length != 2) throw new Exception("Invalid input");
+
+                        a.Value = byte.Parse(toks[0].Trim());
+                        b.Value = byte.Parse(toks[1].Trim());
+
+                        if (engine != null)
+                            Thread.Sleep(5000);
+
+                        if (adder.Outputs.Cout.Value) throw new Exception("Overflow");
+                        Console.WriteLine($"{a.Value.ToString("X2")} + {b.Value.ToString("X2")} = {adder.Outputs.S.Value.ToString("X2")}");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e.Message);
+                    }
                 }
             }
         }
