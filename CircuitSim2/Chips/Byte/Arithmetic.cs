@@ -1,76 +1,85 @@
-﻿using System;
+using System;
 
 using BF = CircuitSim2.Chips.Functors.BinaryFunctor<byte, byte, byte>;
 
 namespace CircuitSim2.Chips.Byte.Arithmetic
 {
+    [PureChip("ByteAdd")]
     public sealed class Add : BF
     {
-        public Add(Engine.Engine Engine = null) : base("ByteAdd", (a, b) => (byte)(a + b), Engine)
+        public Add(Engine.Engine Engine = null) : base((a, b) => (byte)(a + b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteSubtract")]
     public sealed class Subtract : BF
     {
-        public Subtract(Engine.Engine Engine = null) : base("ByteSubtract", (a, b) => (byte)(a - b), Engine)
+        public Subtract(Engine.Engine Engine = null) : base((a, b) => (byte)(a - b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteMultiply")]
     public sealed class Multiply : BF
     {
-        public Multiply(Engine.Engine Engine = null) : base("ByteMultiply", (a, b) => (byte)(a * b), Engine)
+        public Multiply(Engine.Engine Engine = null) : base((a, b) => (byte)(a * b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteDivide")]
     public sealed class Divide : BF
     {
-        public Divide(Engine.Engine Engine = null) : base("ByteDivide", (a, b) => (byte)(a/b), Engine)
+        public Divide(Engine.Engine Engine = null) : base((a, b) => (byte)(a / b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteModulus")]
     public sealed class Modulus : BF
     {
-        public Modulus(Engine.Engine Engine = null) : base("ByteModulus", (a, b) => (byte)(a%b), Engine)
+        public Modulus(Engine.Engine Engine = null) : base((a, b) => (byte)(a % b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteLeftShift")]
     public sealed class LeftShift : BF
     {
-        public LeftShift(Engine.Engine Engine = null) : base("ByteLeftShift", (a, b) => (byte)(a << b), Engine)
+        public LeftShift(Engine.Engine Engine = null) : base((a, b) => (byte)(a << b), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteRightShift")]
     public sealed class RightShift : BF
     {
-        public RightShift(Engine.Engine Engine = null) : base("ByteRightShift", (a, b) => (byte)(a >> b), Engine)
+        public RightShift(Engine.Engine Engine = null) : base((a, b) => (byte)(a >> b), Engine)
         {
 
         }
     }
-    
+
+    [PureChip("ByteMin")]
     public sealed class Min : BF
     {
-        public Min(Engine.Engine Engine = null) : base("ByteMin", Math.Min, Engine)
+        public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
         {
-            
+
         }
     }
 
+    [PureChip("ByteMax")]
     public sealed class Max : BF
     {
-        public Max(Engine.Engine Engine = null) : base("ByteMax", Math.Max, Engine)
+        public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)
         {
 
         }

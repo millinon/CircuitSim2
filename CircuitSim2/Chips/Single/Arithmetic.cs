@@ -1,60 +1,67 @@
-﻿using System;
+using System;
 
 using BF = CircuitSim2.Chips.Functors.BinaryFunctor<float, float, float>;
 
 namespace CircuitSim2.Chips.Single.Arithmetic
 {
+    [PureChip("SingleAdd")]
     public sealed class Add : BF
     {
-        public Add(Engine.Engine Engine = null) : base("SingleAdd", (a, b) => (a + b), Engine)
+        public Add(Engine.Engine Engine = null) : base((a, b) => (a + b), Engine)
         {
 
         }
     }
 
+    [PureChip("SingleSubtract")]
     public sealed class Subtract : BF
     {
-        public Subtract(Engine.Engine Engine = null) : base("SingleSubtract", (a, b) => (a - b), Engine)
+        public Subtract(Engine.Engine Engine = null) : base((a, b) => (a - b), Engine)
         {
 
         }
     }
 
+    [PureChip("SingleMultiply")]
     public sealed class Multiply : BF
     {
-        public Multiply(Engine.Engine Engine = null) : base("SingleMultiply", (a, b) => (a * b), Engine)
+        public Multiply(Engine.Engine Engine = null) : base((a, b) => (a * b), Engine)
         {
 
         }
     }
 
+    [PureChip("SingleDivide")]
     public sealed class Divide : BF
     {
-        public Divide(Engine.Engine Engine = null) : base("SingleDivide", (a, b) => (a/b), Engine)
+        public Divide(Engine.Engine Engine = null) : base((a, b) => (a / b), Engine)
         {
 
         }
     }
 
+    [PureChip("SingleModulus")]
     public sealed class Modulus : BF
     {
-        public Modulus(Engine.Engine Engine = null) : base("SingleModulus", (a, b) => (a%b), Engine)
+        public Modulus(Engine.Engine Engine = null) : base((a, b) => (a % b), Engine)
         {
 
         }
     }
 
+    [PureChip("SingleMin")]
     public sealed class Min : BF
     {
-        public Min(Engine.Engine Engine = null) : base("SingleMin", Math.Min, Engine)
+        public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
         {
-            
+
         }
     }
 
+    [PureChip("SingleMax")]
     public sealed class Max : BF
     {
-        public Max(Engine.Engine Engine = null) : base("SingleMax", Math.Max, Engine)
+        public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)
         {
 
         }

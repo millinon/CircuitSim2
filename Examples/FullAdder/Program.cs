@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,15 +26,15 @@ namespace FullAdderTest
 
             var vals = new bool[] { false, true };
 
-            foreach(var valA in vals)
+            foreach (var valA in vals)
             {
                 A.Value = valA;
 
-                foreach(var valB in vals)
+                foreach (var valB in vals)
                 {
                     B.Value = valB;
 
-                    foreach(var valC in vals)
+                    foreach (var valC in vals)
                     {
                         Cin.Value = valC;
 

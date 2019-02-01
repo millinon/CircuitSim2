@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace CircuitSim2.IO
@@ -120,6 +121,7 @@ namespace CircuitSim2.IO
         public abstract void Notify();
     }
 
+    [DebuggerDisplay("{Chip.Name}.Inputs.{Name}: {Value}")]
     public sealed class Input<T> : InputBase where T : IEquatable<T>
     {
         private static readonly Type sType;
@@ -152,6 +154,7 @@ namespace CircuitSim2.IO
             {
                 Source.Detach(this);
 
+                SourceBase = null;
                 Source = null;
             }
         }
@@ -195,10 +198,11 @@ namespace CircuitSim2.IO
         public abstract void Attach(InputBase Input);
     }
 
+    [DebuggerDisplay("{Chip.Name}.Outputs.{Name}: {Value}")]
     public sealed class Output<T> : OutputBase where T : IEquatable<T>
     {
         private static readonly Type sType;
-        
+
         static Output() => sType = Type_Map.Lookup(typeof(T));
 
         public Output(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
@@ -206,10 +210,10 @@ namespace CircuitSim2.IO
 
         }
 
-        /*public bool HaveValue
+        public bool HaveValue
         {
             get; private set;
-        }*/
+        }
 
         public class ValueChangedEventArgs
         {
@@ -223,20 +227,22 @@ namespace CircuitSim2.IO
         {
             get
             {
-                //if (!HaveValue) throw new InvalidOperationException();
+                if (Chip.HaveError) throw new InvalidOperationException();
+
+                if (!HaveValue) throw new InvalidOperationException();
                 return value;
             }
             set
             {
                 bool changed = false;
-                //if (HaveValue)
-                //{
+                if (HaveValue)
+                {
                     changed = !Value.Equals(value);
-                //}
-                //else changed = true;
+                }
+                else changed = true;
 
                 this.value = value;
-                //HaveValue = true;
+                HaveValue = true;
 
                 if (changed)
                 {
@@ -268,7 +274,7 @@ namespace CircuitSim2.IO
 
         public sealed override void Detach()
         {
-            foreach(var sink in Sinks())
+            foreach (var sink in Sinks())
             {
                 sink.Detach();
             }
@@ -280,7 +286,7 @@ namespace CircuitSim2.IO
         private readonly IReadOnlyDictionary<string, InputBase> InputsByName;
 
         public IEnumerable<InputBase> AllInputs => InputsByName.Values;
-        
+
         public InputSetBase(IReadOnlyDictionary<string, InputBase> Inputs)
         {
             InputsByName = Inputs;
@@ -310,7 +316,7 @@ namespace CircuitSim2.IO
 
         public virtual void Detach()
         {
-            foreach(var input in AllInputs)
+            foreach (var input in AllInputs)
             {
                 input.Detach();
             }
@@ -398,7 +404,7 @@ namespace CircuitSim2.IO
 
         public virtual void Detach()
         {
-            foreach(var output in AllOutputs)
+            foreach (var output in AllOutputs)
             {
                 output.Detach();
             }

@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 
 namespace CircuitSim2.Chips
 {
+    [Chip("MetaChip")]
     public sealed class MetaChip : ChipBase
     {
         [Serializable]
@@ -57,12 +58,12 @@ namespace CircuitSim2.Chips
             public List<ConnectionDescription> Connections;
         }
 
-        public MetaChip(Engine.Engine Engine = null) : base("MetaChip", Engine)
+        public MetaChip(Engine.Engine Engine = null) : base(Engine)
         {
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = new CircuitSim2.IO.NoOutputs();
         }
-        
+
         private Dictionary<string, Chips.ChipBase> Chips;
 
         private Dictionary<string, CircuitSim2.IO.InputBase> Inputs;
@@ -210,7 +211,7 @@ namespace CircuitSim2.Chips
 
         public override void Output()
         {
-            foreach(var desc in OutputMapping)
+            foreach (var desc in OutputMapping)
             {
                 var output = Outputs[desc.Name];
 

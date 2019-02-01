@@ -1,60 +1,68 @@
-﻿using System.Linq;
+using System.Linq;
 
 using CircuitSim2.Chips.Functors;
 using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Byte.Conversion
 {
+    [PureChip("ByteToChar")]
     public sealed class ToChar : UnaryFunctor<byte, char>
     {
-        public ToChar(Engine.Engine Engine = null) : base("ByteToChar", a => (char) a, Engine)
+        public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
         {
 
         }
     }
 
+    [PureChip("ByteToInteger")]
     public sealed class ToInteger : UnaryFunctor<byte, int>
     {
-        public ToInteger(Engine.Engine Engine = null) : base("ByteToInteger", a => a, Engine)
+        public ToInteger(Engine.Engine Engine = null) : base(a => a, Engine)
         {
 
         }
     }
 
+    [PureChip("ByteToLong")]
     public sealed class ToLong : UnaryFunctor<byte, long>
     {
-        public ToLong(Engine.Engine Engine = null) : base("ByteToLong", a => a, Engine)
+        public ToLong(Engine.Engine Engine = null) : base(a => a, Engine)
         {
 
         }
     }
 
+    [PureChip("ByteToSingle")]
     public sealed class ToSingle : UnaryFunctor<byte, float>
     {
-        public ToSingle(Engine.Engine Engine = null) : base("ByteToSingle", a => a, Engine)
+        public ToSingle(Engine.Engine Engine = null) : base(a => a, Engine)
         {
 
         }
     }
 
+    [PureChip("ByteToDouble")]
     public sealed class ToDouble : UnaryFunctor<byte, double>
     {
-        public ToDouble(Engine.Engine Engine = null) : base("ByteToDouble", a => a, Engine)
+        public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
         {
 
         }
     }
 
+    [PureChip("ByteToString")]
     public sealed class ToString : UnaryFunctor<byte, string>
     {
-        public ToString(Engine.Engine Engine = null) : base("ByteToString", a => a.ToString(), Engine)
+        public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)
         {
 
         }
     }
 
+    [PureChip("ByteDecompose")]
     public sealed class Decompose : ChipBase
     {
+        [PureChip("ByteOutputType")]
         public sealed class OutputType : OutputSetBase
         {
             public readonly Output<bool> Bit0;
@@ -82,7 +90,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         public readonly GenericInput<byte> Inputs;
         public readonly OutputType Outputs;
 
-        public Decompose(Engine.Engine Engine = null) : base("ByteDecompose", Engine)
+        public Decompose(Engine.Engine Engine = null) : base(Engine)
         {
             Inputs = new GenericInput<byte>(this);
             Outputs = new OutputType(this);
@@ -119,8 +127,10 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
+    [PureChip("ByteCompose")]
     public sealed class Compose : ChipBase
     {
+        [PureChip("ByteInputType")]
         public sealed class InputType : InputSetBase
         {
             public readonly Input<bool> Bit0;
@@ -148,7 +158,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         public readonly InputType Inputs;
         public readonly GenericOutput<byte> Outputs;
 
-        public Compose(Engine.Engine Engine = null) : base("ByteCompose", Engine)
+        public Compose(Engine.Engine Engine = null) : base(Engine)
         {
             Inputs = new InputType(this);
             Outputs = new GenericOutput<byte>(this);

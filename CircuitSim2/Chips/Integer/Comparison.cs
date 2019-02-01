@@ -1,50 +1,56 @@
-﻿using BF = CircuitSim2.Chips.Functors.BinaryFunctor<int, int, bool>;
+using BF = CircuitSim2.Chips.Functors.BinaryFunctor<int, int, bool>;
 
 namespace CircuitSim2.Chips.Integer.Comparison
 {
+    [PureChip("IntegerEqual")]
     public sealed class Equal : BF
     {
-        public Equal(Engine.Engine Engine = null) : base("IntegerEqual", (a, b) => a == b, Engine)
+        public Equal(Engine.Engine Engine = null) : base((a, b) => a == b, Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerNotEqual")]
     public sealed class NotEqual : BF
     {
-        public NotEqual(Engine.Engine Engine = null) : base("IntegerNotEqual", (a, b) => a != b, Engine)
+        public NotEqual(Engine.Engine Engine = null) : base((a, b) => a != b, Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerLessThan")]
     public sealed class LessThan : BF
     {
-        public LessThan(Engine.Engine Engine = null) : base("IntegerLessThan", (a, b) => a < b, Engine)
+        public LessThan(Engine.Engine Engine = null) : base((a, b) => a < b, Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerLessThanEqual")]
     public sealed class LessThanEqual : BF
     {
-        public LessThanEqual(Engine.Engine Engine = null) : base("IntegerLessThanEqual", (a, b) => a <= b, Engine)
+        public LessThanEqual(Engine.Engine Engine = null) : base((a, b) => a <= b, Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerGreaterThan")]
     public sealed class GreaterThan : BF
     {
-        public GreaterThan(Engine.Engine Engine = null) : base("IntegerGreaterThan", (a, b) => a > b, Engine)
+        public GreaterThan(Engine.Engine Engine = null) : base((a, b) => a > b, Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerGreaterThanEqual")]
     public sealed class GreaterThanEqual : BF
     {
-        public GreaterThanEqual(Engine.Engine Engine = null) : base("IntegerGreaterThanEqual", (a, b) => a >= b, Engine)
+        public GreaterThanEqual(Engine.Engine Engine = null) : base((a, b) => a >= b, Engine)
         {
 
         }

@@ -1,76 +1,85 @@
-﻿using System;
+using System;
 
 using BF = CircuitSim2.Chips.Functors.BinaryFunctor<int, int, int>;
 
 namespace CircuitSim2.Chips.Integer.Arithmetic
 {
+    [PureChip("IntegerAdd")]
     public sealed class Add : BF
     {
-        public Add(Engine.Engine Engine = null) : base("IntegerAdd", (a, b) => (a + b), Engine)
+        public Add(Engine.Engine Engine = null) : base((a, b) => (a + b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerSubtract")]
     public sealed class Subtract : BF
     {
-        public Subtract(Engine.Engine Engine = null) : base("IntegerSubtract", (a, b) => (a - b), Engine)
+        public Subtract(Engine.Engine Engine = null) : base((a, b) => (a - b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerMultiply")]
     public sealed class Multiply : BF
     {
-        public Multiply(Engine.Engine Engine = null) : base("IntegerMultiply", (a, b) => (a * b), Engine)
+        public Multiply(Engine.Engine Engine = null) : base((a, b) => (a * b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerDivide")]
     public sealed class Divide : BF
     {
-        public Divide(Engine.Engine Engine = null) : base("IntegerDivide", (a, b) => (a/b), Engine)
+        public Divide(Engine.Engine Engine = null) : base((a, b) => (a / b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerModulus")]
     public sealed class Modulus : BF
     {
-        public Modulus(Engine.Engine Engine = null) : base("IntegerModulus", (a, b) => (a%b), Engine)
+        public Modulus(Engine.Engine Engine = null) : base((a, b) => (a % b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerLeftShift")]
     public sealed class LeftShift : BF
     {
-        public LeftShift(Engine.Engine Engine = null) : base("IntegerLeftShift", (a, b) => (a << b), Engine)
+        public LeftShift(Engine.Engine Engine = null) : base((a, b) => (a << b), Engine)
         {
 
         }
     }
 
+    [PureChip("IntegerRightShift")]
     public sealed class RightShift : BF
     {
-        public RightShift(Engine.Engine Engine = null) : base("IntegerRightShift", (a, b) => (a >> b), Engine)
+        public RightShift(Engine.Engine Engine = null) : base((a, b) => (a >> b), Engine)
         {
 
         }
     }
-    
+
+    [PureChip("IntegerMin")]
     public sealed class Min : BF
     {
-        public Min(Engine.Engine Engine = null) : base("IntegerMin", Math.Min, Engine)
+        public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
         {
-            
+
         }
     }
 
+    [PureChip("IntegerMax")]
     public sealed class Max : BF
     {
-        public Max(Engine.Engine Engine = null) : base("IntegerMax", Math.Max, Engine)
+        public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)
         {
 
         }

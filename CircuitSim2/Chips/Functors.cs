@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace CircuitSim2.Chips.Functors
 {
@@ -6,7 +6,7 @@ namespace CircuitSim2.Chips.Functors
     {
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 
-        public Generator(string Name, Engine.Engine Engine = null) : base(Name, Engine)
+        public Generator(Engine.Engine Engine = null) : base(Engine)
         {
             Outputs = new CircuitSim2.IO.GenericOutput<T>(this);
 
@@ -21,31 +21,41 @@ namespace CircuitSim2.Chips.Functors
         public sealed override void Compute() => _out = NextValue();
 
         public sealed override void Output() => Outputs.Out.Value = _out;
+
+        public sealed override void Tick()
+        {
+            base.Tick();
+        }
     }
 
     public abstract class UnaryFunctor<T, U> : ChipBase where T : IEquatable<T> where U : IEquatable<U>
+    {
+        public readonly CircuitSim2.IO.GenericInput<T> Inputs;
+        public readonly CircuitSim2.IO.GenericOutput<U> Outputs;
+
+        private readonly Func<T, U> Func;
+
+        public UnaryFunctor(Func<T, U> Func, Engine.Engine Engine = null) : base(Engine)
         {
-            public readonly CircuitSim2.IO.GenericInput<T> Inputs;
-            public readonly CircuitSim2.IO.GenericOutput<U> Outputs;
+            Inputs = new CircuitSim2.IO.GenericInput<T>(this);
+            Outputs = new CircuitSim2.IO.GenericOutput<U>(this);
 
-            private readonly Func<T, U> Func;
+            InputSet = Inputs;
+            OutputSet = Outputs;
 
-            public UnaryFunctor(string Name, Func<T, U> Func, Engine.Engine Engine = null) : base(Name, Engine)
-            {
-                Inputs = new CircuitSim2.IO.GenericInput<T>(this);
-                Outputs = new CircuitSim2.IO.GenericOutput<U>(this);
+            this.Func = Func;
+        }
 
-                InputSet = Inputs;
-                OutputSet = Outputs;
-
-                this.Func = Func;
-            }
-
-            private U _out;
+        private U _out;
 
         public sealed override void Compute() => _out = Func(Inputs.A.Value);
 
         public sealed override void Output() => Outputs.Out.Value = _out;
+
+        public sealed override void Tick()
+        {
+            base.Tick();
+        }
     }
 
     public abstract class BinaryFunctor<T, U, V> : ChipBase where T : IEquatable<T> where U : IEquatable<U> where V : IEquatable<V>
@@ -55,7 +65,7 @@ namespace CircuitSim2.Chips.Functors
 
         private readonly Func<T, U, V> Func;
 
-        public BinaryFunctor(string Name, Func<T, U, V> Func, Engine.Engine Engine = null) : base(Name, Engine)
+        public BinaryFunctor(Func<T, U, V> Func, Engine.Engine Engine = null) : base(Engine)
         {
             Inputs = new CircuitSim2.IO.GenericInput<T, U>(this);
             Outputs = new CircuitSim2.IO.GenericOutput<V>(this);
@@ -71,5 +81,10 @@ namespace CircuitSim2.Chips.Functors
         public sealed override void Compute() => _out = Func(Inputs.A.Value, Inputs.B.Value);
 
         public sealed override void Output() => Outputs.Out.Value = _out;
+
+        public sealed override void Tick()
+        {
+            base.Tick();
+        }
     }
 }

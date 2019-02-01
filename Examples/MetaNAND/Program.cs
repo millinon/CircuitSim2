@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -100,20 +100,22 @@ namespace MetaNANDTest
 
             var vals = new bool[] { false, true };
 
-            foreach(var valA in vals)
+            foreach (var valA in vals)
             {
                 A.Value = valA;
 
-                foreach(var valB in vals)
+                foreach (var valB in vals)
                 {
                     B.Value = valB;
 
                     Console.Write($"!({valA} & {valB}) => {NAND.Outputs.Out.Value}: ");
 
-                    if((MetaNAND.OutputSet["Out"] as Output<bool>).Value == NAND.Outputs.Out.Value)
+                    if ((MetaNAND.OutputSet["Out"] as Output<bool>).Value == NAND.Outputs.Out.Value)
                     {
                         Console.WriteLine("PASS");
-                    } else {
+                    }
+                    else
+                    {
                         Console.WriteLine($"FAIL: {(MetaNAND.OutputSet["Out"] as Output<bool>).Value}");
                     }
                 }

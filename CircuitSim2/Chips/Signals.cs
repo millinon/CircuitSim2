@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 
 using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Signals
 {
-    public abstract class EdgeDetector<T> : ChipBase where T:IEquatable<T>
+    public abstract class EdgeDetector<T> : ChipBase where T : IEquatable<T>
     {
         public readonly GenericInput<T> Inputs;
         public readonly GenericOutput<bool> Outputs;
 
         private readonly Func<T, T, bool> Detector;
 
-        public EdgeDetector(string Name, Func<T, T, bool> Detector, Engine.Engine Engine = null) : base(Name, Engine)
+        public EdgeDetector(Func<T, T, bool> Detector, Engine.Engine Engine = null) : base(Engine)
         {
             Inputs = new GenericInput<T>(this);
             Outputs = new GenericOutput<bool>(this);

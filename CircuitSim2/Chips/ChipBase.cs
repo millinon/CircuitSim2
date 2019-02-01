@@ -1,46 +1,115 @@
-﻿namespace CircuitSim2.Chips
+using System;
+using System.Linq;
+using System.Diagnostics;
+
+namespace CircuitSim2
 {
-    public abstract class ChipBase
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public class Chip : Attribute
     {
-        public bool AutoTick = true;
-
-        public readonly Engine.Engine Engine;
-        public readonly string Name;
-
-        public ChipBase(string Name, Engine.Engine Engine = null)
+        private string name;
+        public virtual string Name
         {
-            this.Name = Name;
-            this.Engine = Engine;
+            get { return name; }
         }
 
-        public CircuitSim2.IO.InputSetBase InputSet
+        public virtual bool IsPure
         {
-            get; protected set;
+            get
+            {
+                return false;
+            }
         }
 
-        public CircuitSim2.IO.OutputSetBase OutputSet
+        public Chip(string Name)
         {
-            get; protected set;
+            this.name = Name;
+        }
+    }
+
+    public class PureChip : Chip
+    {
+        public override bool IsPure
+        {
+            get
+            {
+                return true;
+            }
         }
 
-        public virtual void Compute()
+        public PureChip(string Name) : base(Name)
         {
 
         }
 
-        public abstract void Output();
+    }
 
-        public virtual void Tick()
+    namespace Chips
+    {
+        [DebuggerDisplay("{Name}")]
+        public abstract class ChipBase
         {
-            Compute();
+            public bool AutoTick = true;
 
-            Output();
-        }
+            public bool HaveError = false;
 
-        public virtual void Detach()
-        {
-            InputSet.Detach();
-            OutputSet.Detach();
+            public readonly Engine.Engine Engine;
+
+            public string Name
+            {
+                get
+                {
+                    var attrs = GetType().GetCustomAttributes(false).Where(attr => attr.GetType() == typeof(Chip) || attr.GetType() == typeof(PureChip));
+
+                    if (!attrs.Any()) throw new ArgumentException("Chip missing [Chip()] attribute");
+
+                    return (attrs.First() as Chip).Name;
+                }
+            }
+
+            public ChipBase(Engine.Engine Engine = null)
+            {
+                this.Engine = Engine;
+            }
+
+            public CircuitSim2.IO.InputSetBase InputSet
+            {
+                get; protected set;
+            }
+
+            public CircuitSim2.IO.OutputSetBase OutputSet
+            {
+                get; protected set;
+            }
+
+            public virtual void Compute()
+            {
+
+            }
+
+            public abstract void Output();
+
+            public virtual void Tick()
+            {
+                try
+                {
+                    HaveError = false;
+
+                    Compute();
+
+                    Output();
+                }
+                catch (Exception)
+                {
+                    HaveError = true;
+                }
+            }
+
+            public virtual void Detach()
+            {
+                InputSet.Detach();
+                OutputSet.Detach();
+            }
         }
     }
 }

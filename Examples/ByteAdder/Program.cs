@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Components.Adders;
@@ -39,6 +39,7 @@ namespace ByteAdderTest
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    throw;
                 }
             }
         }
