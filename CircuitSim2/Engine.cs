@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Concurrent;
 
 namespace CircuitSim2.Engine
 {
@@ -14,14 +13,42 @@ namespace CircuitSim2.Engine
             public class Node
             {
                 public IEnumerable<Node> Parents;
-
                 public IEnumerable<Node> Children;
-
                 public Chips.ChipBase Chip;
 
                 public Node(Chips.ChipBase Chip)
                 {
                     this.Chip = Chip;
+                }
+
+                public IEnumerable<Node> Dependencies
+                {
+                    get
+                    {
+                        var deps = new HashSet<Node>(Parents);
+
+                        foreach(var depset in Parents.Select(parent => parent.Dependencies))
+                        {
+                            deps.UnionWith(depset);
+                        }
+
+                        return deps;
+                    }
+                }
+
+                public IEnumerable<Node> Dependents
+                {
+                    get
+                    {
+                        var deps = new HashSet<Node>(Children);
+
+                        foreach (var depset in Children.Select(child => child.Dependents))
+                        {
+                            deps.UnionWith(depset);
+                        }
+
+                        return deps;
+                    }
                 }
             }
 
@@ -43,7 +70,7 @@ namespace CircuitSim2.Engine
 
             public DependencyGraph(IEnumerable<Chips.ChipBase> Chips)
             {
-                map = new Dictionary<CircuitSim2.Chips.ChipBase, Node>();
+                map = new Dictionary<Chips.ChipBase, Node>();
 
                 foreach (var chip in Chips)
                 {
@@ -56,23 +83,20 @@ namespace CircuitSim2.Engine
 
                     node.Parents = node.Chip.InputSet.AllInputs.Where(input => input.IsAttached).Select(input => map[input.SourceBase.Chip]);
 
-                    HashSet<Chips.ChipBase> sinks = new HashSet<Chips.ChipBase>();
+                    var sinks = new HashSet<Chips.ChipBase>();
 
-                    Action<IO.InputBase> add = null;
-                    add = input =>
+                    void add(IO.InputBase input)
+                    {
+                        foreach (var hook in input.Hooks)
                         {
-                            foreach (var hook in input.Hooks)
-                            {
-                                add(hook);
-                            }
+                            add(hook);
+                        }
 
-                            sinks.Add(input.Chip);
-                        };
+                        sinks.Add(input.Chip);
+                    }
 
                     foreach (var output in chip.OutputSet.AllOutputs)
                     {
-
-
                         foreach (var sink in output.Sinks())
                         {
                             add(sink);
@@ -82,12 +106,9 @@ namespace CircuitSim2.Engine
                     node.Children = sinks.Select(sink => map[sink]);
                 }
 
-                if (Chips.Count() > 0)
+                if (Chips.Count() > 0 && !Roots.Any())
                 {
-                    if (!Roots.Any())
-                    {
-                        throw new Exception("Cyclical circuit detected");
-                    }
+                    throw new Exception("Cyclical circuit detected");
                 }
             }
         }
@@ -98,65 +119,113 @@ namespace CircuitSim2.Engine
 
         public class UpdateQueue
         {
-            private readonly ConcurrentQueue<Chips.ChipBase> Queue;
+            private readonly Queue<Chips.ChipBase> Queue;
 
             public UpdateQueue()
             {
-                Queue = new ConcurrentQueue<CircuitSim2.Chips.ChipBase>();
+                Queue = new Queue<Chips.ChipBase>();
             }
 
-            public void Push(Chips.ChipBase Chip) => Queue.Enqueue(Chip);
-
-            public void Pop()
+            public void Push(Chips.ChipBase Chip)
             {
-                if (Queue.TryDequeue(out Chips.ChipBase chip))
+                lock (Queue)
                 {
-                    chip.Tick();
+                    Queue.Enqueue(Chip);
+                }
+            }
+
+            public Chips.ChipBase Pop()
+            {
+                lock (Queue)
+                {
+                    if (Queue.Count == 0) throw new InvalidOperationException();
+
+                    return Queue.Dequeue();
                 }
             }
 
             public int Size
             {
-                get => Queue.Count();
+                get
+                {
+                    lock (Queue)
+                    {
+                        return Queue.Count();
+                    }
+                }
+            }
+
+            public bool Contains(Chips.ChipBase Chip)
+            {
+                lock (Queue)
+                {
+                    return Queue.Contains(Chip);
+                }
             }
         }
 
         private UpdateQueue Updates;
 
+        private readonly object lock_obj;
+
         public Engine()
         {
+            lock_obj = new object();
+
             Chips = new HashSet<Chips.ChipBase>();
             Updates = new UpdateQueue();
-
         }
 
         public void RegenerateGraph()
         {
-            Graph = new DependencyGraph(Chips);
+            lock (lock_obj)
+            {
+                Graph = new DependencyGraph(Chips);
+            }
         }
 
         public void Register(Chips.ChipBase Chip)
         {
-            Chips.Add(Chip);
-
-            RegenerateGraph();
+            lock (lock_obj)
+            {
+                Chips.Add(Chip);
+                Graph = new DependencyGraph(Chips);
+            }
         }
 
         public void Unregister(Chips.ChipBase Chip)
         {
-            if (Chips.Contains(Chip)) Chips.Remove(Chip);
+            lock (lock_obj)
+            {
+                if (Chips.Contains(Chip)) Chips.Remove(Chip);
 
-            RegenerateGraph();
+                Graph = new DependencyGraph(Chips);
+            }
         }
 
         public void UpdateNext()
         {
-            Updates.Pop();
+            lock (Updates)
+            {
+                while (Updates.Size > 0)
+                {
+                    var chip = Updates.Pop();
+
+                    if (!chip.IsPure || !Updates.Contains(chip)) // always tick non-pure chips, defer ticks for scheduled chips
+                    {
+                        chip.Tick();
+                        return;
+                    }
+                }
+            }
         }
 
         public void ScheduleUpdate(Chips.ChipBase Chip)
         {
-            Updates.Push(Chip);
+            lock (Updates)
+            {
+                Updates.Push(Chip);
+            }
         }
     }
 }

@@ -50,23 +50,31 @@ namespace CircuitSim2.IO
         public readonly string Name;
         public readonly Chips.ChipBase Chip;
 
+        protected readonly object lock_obj;
+
         protected IOBase(Chips.ChipBase Chip, string Name, Type Type)
         {
             this.Chip = Chip;
             this.Name = Name;
             this.Type = Type;
+
+            lock_obj = new object();
         }
     }
 
     public abstract class InputBase : IOBase
     {
+        protected OutputBase sourcebase;
         public OutputBase SourceBase
         {
-            get;
-            protected set;
+            get { lock (lock_obj) { return sourcebase; } }
+            protected set { sourcebase = value; }
         }
 
-        public bool IsAttached => SourceBase != null;
+        public bool IsAttached
+        {
+            get { lock(lock_obj) { return sourcebase != null; } }
+        }
 
         protected InputBase(Chips.ChipBase Chip, string Name, Type Type) : base(Chip, Name, Type)
         {
@@ -75,7 +83,10 @@ namespace CircuitSim2.IO
 
         protected InputBase Binding;
 
-        public bool IsBound => Binding != null;
+        public bool IsBound
+        {
+            get { lock (lock_obj) { return Binding != null; } }
+        }
 
         public abstract void Detach();
 
@@ -85,18 +96,24 @@ namespace CircuitSim2.IO
         {
             if (Input.Type != Type) throw new InvalidOperationException();
 
-            if (IsAttached) Detach();
+            Detach();
+            
+            lock (lock_obj)
+            {
+                Input.Subscribe(this);
 
-            Input.Subscribe(this);
-
-            Binding = Input;
+                Binding = Input;
+            }
         }
 
         public void Unbind()
         {
-            if (IsBound)
+            lock (lock_obj)
             {
-                Binding.Unsubscribe(this);
+                if (Binding != null)
+                {
+                    Binding.Unsubscribe(this);
+                }
 
                 Binding = null;
             }
@@ -104,18 +121,25 @@ namespace CircuitSim2.IO
 
         protected readonly HashSet<InputBase> SubscribedInputs;
 
-        public IEnumerable<InputBase> Hooks => SubscribedInputs;
+        public IEnumerable<InputBase> Hooks {
+            get { lock (lock_obj) { return SubscribedInputs; } }
+        }
 
         protected void Subscribe(InputBase Input)
         {
             if (Input.Type != Type) throw new InvalidOperationException();
-
-            SubscribedInputs.Add(Input);
+            lock (lock_obj)
+            {
+                SubscribedInputs.Add(Input);
+            }
         }
 
         protected void Unsubscribe(InputBase Input)
         {
-            if (SubscribedInputs.Contains(Input)) SubscribedInputs.Remove(Input);
+            lock (lock_obj)
+            {
+                if (SubscribedInputs.Contains(Input)) SubscribedInputs.Remove(Input);
+            }
         }
 
         public abstract void Notify();
@@ -124,63 +148,80 @@ namespace CircuitSim2.IO
     [DebuggerDisplay("{Chip.Name}.Inputs.{Name}: {Value}")]
     public sealed class Input<T> : InputBase where T : IEquatable<T>
     {
-        private static readonly Type sType;
-
-        static Input() => sType = Type_Map.Lookup(typeof(T));
+        private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
         public Input(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
         {
 
         }
 
-        private Output<T> Source = null;
+        private Output<T> source;
+        public Output<T> Source
+        {
+            get { lock (lock_obj) { return source; } }
+            private set { lock (lock_obj) { source = value; } }
+        }
 
         public override void Attach(OutputBase Output)
         {
-            if (IsAttached) Detach();
-
             if (Output.Type != Type) throw new InvalidOperationException();
 
-            SourceBase = Output;
+            lock (lock_obj)
+            {
+                source?.Detach(this);
+                
+                sourcebase = Output;
+                source = Output as Output<T>;
 
-            Source = Output as Output<T>;
+                Output.Attach(this);
+            }
 
-            Output.Attach(this);
+            Chip.Engine?.RegenerateGraph();
         }
 
         public sealed override void Detach()
         {
-            if (IsAttached)
+            lock (lock_obj)
             {
-                Source.Detach(this);
+                source?.Detach(this);
 
-                SourceBase = null;
-                Source = null;
+                sourcebase = null;
+                source = null;
             }
+
+            Chip.Engine?.RegenerateGraph();
         }
 
         public T Value
         {
             get
             {
-                if (IsBound) return (Binding as Input<T>).Value;
-                if (!IsAttached) throw new InvalidOperationException();
+                lock (lock_obj)
+                {
+                    if (Binding != null) return (Binding as Input<T>).Value;
 
-                return Source.Value;
+                    return (source ?? throw new InvalidOperationException()).Value;
+                }
             }
         }
 
         public sealed override void Notify()
         {
-            foreach (InputBase input in SubscribedInputs)
+            lock (lock_obj)
             {
-                input.Notify();
-            }
+                foreach (InputBase input in SubscribedInputs)
+                {
+                    input.Notify();
+                }
 
-            if (Chip.AutoTick)
-            {
-                if (Chip.Engine != null) Chip.Engine.ScheduleUpdate(Chip);
-                else Chip.Tick();
+                if (Chip.AutoTick)
+                {
+                    Chip.Tick();
+                }
+                else
+                {
+                    Chip.Engine?.ScheduleUpdate(Chip);
+                }
             }
         }
     }
@@ -201,18 +242,17 @@ namespace CircuitSim2.IO
     [DebuggerDisplay("{Chip.Name}.Outputs.{Name}: {Value}")]
     public sealed class Output<T> : OutputBase where T : IEquatable<T>
     {
-        private static readonly Type sType;
-
-        static Output() => sType = Type_Map.Lookup(typeof(T));
+        private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
         public Output(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
         {
 
         }
 
+        private bool havevalue;
         public bool HaveValue
         {
-            get; private set;
+            get { lock (lock_obj) { return havevalue; } }
         }
 
         public class ValueChangedEventArgs
@@ -227,31 +267,36 @@ namespace CircuitSim2.IO
         {
             get
             {
-                if (Chip.HaveError) throw new InvalidOperationException();
+                lock (lock_obj)
+                {
+                    if (Chip.HaveError || !havevalue) throw new InvalidOperationException();
 
-                if (!HaveValue) throw new InvalidOperationException();
-                return value;
+                    return value;
+                }
             }
             set
             {
-                bool changed = false;
-                if (HaveValue)
+                lock (lock_obj)
                 {
-                    changed = !Value.Equals(value);
-                }
-                else changed = true;
+                    bool changed = false;
+                    if (HaveValue)
+                    {
+                        changed = !Value.Equals(value);
+                    }
+                    else changed = true;
 
-                this.value = value;
-                HaveValue = true;
+                    this.value = value;
+                    havevalue = true;
 
-                if (changed)
-                {
-                    ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
-                }
+                    if (changed)
+                    {
+                        ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
+                    }
 
-                foreach (var sink in Sinks())
-                {
-                    (sink as Input<T>).Notify();
+                    foreach (var sink in Sinks())
+                    {
+                        (sink as Input<T>).Notify();
+                    }
                 }
             }
         }
@@ -262,38 +307,52 @@ namespace CircuitSim2.IO
         {
             if (Input.Type != Type) throw new InvalidOperationException();
 
-            if (!SinkList.Contains(Input as Input<T>)) SinkList.Add(Input as Input<T>);
+            lock (lock_obj)
+            {
+                if (!SinkList.Contains(Input as Input<T>)) SinkList.Add(Input as Input<T>);
+            }
         }
 
         public void Detach(Input<T> Input)
         {
-            if (SinkList.Contains(Input)) SinkList.Remove(Input);
+            lock (lock_obj)
+            {
+                if (SinkList.Contains(Input)) SinkList.Remove(Input);
+            }
         }
 
-        public sealed override IEnumerable<InputBase> Sinks() => SinkList;
+        public sealed override IEnumerable<InputBase> Sinks()
+        {
+            lock (lock_obj)
+            {
+                return SinkList;
+            }
+        }
 
         public sealed override void Detach()
         {
-            foreach (var sink in Sinks())
+            lock (lock_obj)
             {
-                sink.Detach();
+                foreach (var sink in Sinks())
+                {
+                    sink.Detach();
+                }
             }
         }
     }
 
     public class InputSetBase
     {
+        protected readonly object lock_obj;
+
         private readonly IReadOnlyDictionary<string, InputBase> InputsByName;
 
         public IEnumerable<InputBase> AllInputs => InputsByName.Values;
 
-        public InputSetBase(IReadOnlyDictionary<string, InputBase> Inputs)
-        {
-            InputsByName = Inputs;
-        }
-
         public InputSetBase(IEnumerable<InputBase> Inputs)
         {
+            lock_obj = new object();
+
             var dict = new Dictionary<string, InputBase>();
 
             foreach (var input in Inputs)
@@ -308,17 +367,23 @@ namespace CircuitSim2.IO
         {
             get
             {
-                if (!InputsByName.ContainsKey(Name)) throw new ArgumentException();
+                lock (lock_obj)
+                {
+                    if (!InputsByName.ContainsKey(Name)) throw new ArgumentException();
 
-                return InputsByName[Name];
+                    return InputsByName[Name];
+                }
             }
         }
 
         public virtual void Detach()
         {
-            foreach (var input in AllInputs)
+            lock (lock_obj)
             {
-                input.Detach();
+                foreach (var input in AllInputs)
+                {
+                    input.Detach();
+                }
             }
         }
     }
@@ -355,7 +420,13 @@ namespace CircuitSim2.IO
             }
         }
 
-        public Input<T> this[int idx] => Array[idx];
+        public Input<T> this[int idx]
+        {
+            get
+            {
+                lock (lock_obj) { return Array[idx]; }
+            }
+        }
 
         public int Length => Array.Length;
     }
@@ -370,16 +441,16 @@ namespace CircuitSim2.IO
 
     public class OutputSetBase
     {
-        protected readonly IReadOnlyDictionary<string, OutputBase> OutputsByName;
+        protected readonly object lock_obj;
 
-        public OutputSetBase(IReadOnlyDictionary<string, OutputBase> Outputs) => OutputsByName = Outputs;
+        protected readonly IReadOnlyDictionary<string, OutputBase> OutputsByName;
 
         public IEnumerable<OutputBase> AllOutputs => OutputsByName.Values;
 
-        public readonly int Size;
-
         public OutputSetBase(IEnumerable<OutputBase> Outputs)
         {
+            lock_obj = new object();
+
             var dict = new Dictionary<string, OutputBase>();
 
             foreach (var output in Outputs)
@@ -388,25 +459,29 @@ namespace CircuitSim2.IO
             }
 
             OutputsByName = dict;
-
-            Size = dict.Values.Count();
         }
 
         public OutputBase this[string Name]
         {
             get
             {
-                if (!OutputsByName.ContainsKey(Name)) throw new ArgumentException();
+                lock (lock_obj)
+                {
+                    if (!OutputsByName.ContainsKey(Name)) throw new ArgumentException();
 
-                return OutputsByName[Name];
+                    return OutputsByName[Name];
+                }
             }
         }
 
         public virtual void Detach()
         {
-            foreach (var output in AllOutputs)
+            lock (lock_obj)
             {
-                output.Detach();
+                foreach (var output in AllOutputs)
+                {
+                    output.Detach();
+                }
             }
         }
     }

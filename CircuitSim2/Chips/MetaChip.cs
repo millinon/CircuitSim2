@@ -192,13 +192,7 @@ namespace CircuitSim2.Chips
                 Chips[desc.ID] = Activator.CreateInstance(match, new[] { Engine }) as Chips.ChipBase;
                 Chips[desc.ID].AutoTick = desc.AutoTick;
 
-                if (desc.Bindings != null)
-                {
-                    foreach (var binding in desc.Bindings)
-                    {
-                        Chips[desc.ID].InputSet[binding.Name].Bind(Inputs[binding.BindName]);
-                    }
-                }
+                desc.Bindings?.ForEach(binding => Chips[desc.ID].InputSet[binding.Name].Bind(Inputs[binding.BindName]));
             }
 
             foreach (var desc in Description.Connections)

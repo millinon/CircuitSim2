@@ -2,24 +2,17 @@ using System;
 using System.Linq;
 using System.Diagnostics;
 
+using CircuitSim2.IO;
+
 namespace CircuitSim2
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class Chip : Attribute
     {
         private string name;
-        public virtual string Name
-        {
-            get { return name; }
-        }
+        public virtual string Name => name;
 
-        public virtual bool IsPure
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool IsPure => false;
 
         public Chip(string Name)
         {
@@ -29,29 +22,34 @@ namespace CircuitSim2
 
     public class PureChip : Chip
     {
-        public override bool IsPure
-        {
-            get
-            {
-                return true;
-            }
-        }
+        public override bool IsPure => true;
 
         public PureChip(string Name) : base(Name)
         {
 
         }
-
     }
 
     namespace Chips
     {
         [DebuggerDisplay("{Name}")]
-        public abstract class ChipBase
+        public abstract class ChipBase : IDisposable
         {
-            public bool AutoTick = true;
+            private readonly object lock_obj;
 
-            public bool HaveError = false;
+            private bool autotick;
+            public bool AutoTick
+            {
+                get { lock (lock_obj) return autotick; }
+                set { lock (lock_obj) autotick = value; }
+            }
+
+            private bool haveerror;
+            public bool HaveError
+            {
+                get { lock (lock_obj) return haveerror; }
+                private set { lock (lock_obj) haveerror = value; }
+            }
 
             public readonly Engine.Engine Engine;
 
@@ -67,19 +65,41 @@ namespace CircuitSim2
                 }
             }
 
-            public ChipBase(Engine.Engine Engine = null)
+            public bool IsPure
+            {
+                get
+                {
+                    var attrs = GetType().GetCustomAttributes(false).Where(attr => attr.GetType() == typeof(Chip) || attr.GetType() == typeof(PureChip));
+
+                    if (!attrs.Any()) throw new ArgumentException("Chip missing [Chip()] attribute");
+
+                    return (attrs.First() as Chip).IsPure;
+                }
+            }
+
+            public ChipBase(Engine.Engine Engine)
             {
                 this.Engine = Engine;
+
+                lock_obj = new object();
+
+                AutoTick = (Engine == null);
+
+                Engine?.Register(this);
             }
 
-            public CircuitSim2.IO.InputSetBase InputSet
+            private InputSetBase inputset;
+            public InputSetBase InputSet
             {
-                get; protected set;
+                get { lock (lock_obj) return inputset; }
+                protected set { lock (lock_obj) inputset = value; }
             }
 
-            public CircuitSim2.IO.OutputSetBase OutputSet
+            private OutputSetBase outputset;
+            public OutputSetBase OutputSet
             {
-                get; protected set;
+                get { lock (lock_obj) return outputset; }
+                protected set { lock (lock_obj) outputset = value; }
             }
 
             public virtual void Compute()
@@ -95,9 +115,12 @@ namespace CircuitSim2
                 {
                     HaveError = false;
 
-                    Compute();
+                    lock (lock_obj)
+                    {
+                        Compute();
 
-                    Output();
+                        Output();
+                    }
                 }
                 catch (Exception)
                 {
@@ -110,6 +133,30 @@ namespace CircuitSim2
                 InputSet.Detach();
                 OutputSet.Detach();
             }
+
+            #region IDisposable Support
+            private bool disposedValue = false;
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        lock (lock_obj)
+                        {
+                            Engine?.Unregister(this);
+                        }
+                    }
+
+                    disposedValue = true;
+                }
+            }
+            public void Dispose()
+            {
+                Dispose(true);
+            }
+            #endregion
         }
     }
 }
