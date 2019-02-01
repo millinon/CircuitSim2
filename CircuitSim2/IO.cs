@@ -279,7 +279,11 @@ namespace CircuitSim2.IO
                 lock (lock_obj)
                 {
                     bool changed = false;
-                    if (HaveValue)
+                    if (! Chip.IsPure)
+                    {
+                        changed = true;
+                    }
+                    else if (HaveValue)
                     {
                         changed = !Value.Equals(value);
                     }

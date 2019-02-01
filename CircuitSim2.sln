@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullAdder", "Examples\FullA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteAdder", "Examples\ByteAdder\ByteAdder.csproj", "{8CB31121-54F8-4EEF-8F09-E0B7A17871A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Examples\Engine\Engine.csproj", "{A47C24E0-8AC6-430A-8881-B49E92715FBD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{8CB31121-54F8-4EEF-8F09-E0B7A17871A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CB31121-54F8-4EEF-8F09-E0B7A17871A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CB31121-54F8-4EEF-8F09-E0B7A17871A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A47C24E0-8AC6-430A-8881-B49E92715FBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A47C24E0-8AC6-430A-8881-B49E92715FBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A47C24E0-8AC6-430A-8881-B49E92715FBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A47C24E0-8AC6-430A-8881-B49E92715FBD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -43,6 +49,7 @@ Global
 		{3AD32916-1185-4ADE-A93C-0A6CACDF8F7C} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{63D26B23-F870-45A5-A539-EC2818C7C3BA} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{8CB31121-54F8-4EEF-8F09-E0B7A17871A4} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
+		{A47C24E0-8AC6-430A-8881-B49E92715FBD} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {859F3C67-B6F9-47A6-913E-6B87B1EF5AE4}

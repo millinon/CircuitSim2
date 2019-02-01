@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Timers;
 
 namespace CircuitSim2.Engine
 {
-    public class Engine
+    public class Engine : IDisposable
     {
+        private readonly Timer Timer;
+
         private class DependencyGraph
         {
             protected Dictionary<Chips.ChipBase, Node> map;
@@ -113,7 +116,7 @@ namespace CircuitSim2.Engine
             }
         }
 
-        private readonly HashSet<Chips.ChipBase> Chips;
+        private readonly Dictionary<string, Chips.ChipBase> Chips;
 
         private DependencyGraph Graph;
 
@@ -172,7 +175,13 @@ namespace CircuitSim2.Engine
         {
             lock_obj = new object();
 
-            Chips = new HashSet<Chips.ChipBase>();
+            Timer = new Timer();
+            Timer.Elapsed += (s, e) =>
+            {
+                this.UpdateNext();
+            };
+
+            Chips = new Dictionary<string, Chips.ChipBase>();
             Updates = new UpdateQueue();
         }
 
@@ -180,7 +189,7 @@ namespace CircuitSim2.Engine
         {
             lock (lock_obj)
             {
-                Graph = new DependencyGraph(Chips);
+                Graph = new DependencyGraph(Chips.Values);
             }
         }
 
@@ -188,8 +197,8 @@ namespace CircuitSim2.Engine
         {
             lock (lock_obj)
             {
-                Chips.Add(Chip);
-                Graph = new DependencyGraph(Chips);
+                Chips[Chip.ID] = Chip;
+                //Graph = new DependencyGraph(Chips.Values);
             }
         }
 
@@ -197,11 +206,25 @@ namespace CircuitSim2.Engine
         {
             lock (lock_obj)
             {
-                if (Chips.Contains(Chip)) Chips.Remove(Chip);
+                if (Chips.ContainsKey(Chip.ID)) Chips.Remove(Chip.ID);
 
-                Graph = new DependencyGraph(Chips);
+                //Graph = new DependencyGraph(Chips.Values);
             }
         }
+
+        public class SkipEventArgs : EventArgs
+        {
+            public Chips.ChipBase Chip;
+        }
+
+        public event EventHandler<SkipEventArgs> ChipSkipped;
+
+        public class UpdateEventArgs : EventArgs
+        {
+            public Chips.ChipBase Chip;
+        }
+
+        public event EventHandler<UpdateEventArgs> ChipUpdated;
 
         public void UpdateNext()
         {
@@ -214,8 +237,12 @@ namespace CircuitSim2.Engine
                     if (!chip.IsPure || !Updates.Contains(chip)) // always tick non-pure chips, defer ticks for scheduled chips
                     {
                         chip.Tick();
+
+                        ChipUpdated?.Invoke(this, new UpdateEventArgs { Chip = chip });
+
                         return;
                     }
+                    else ChipSkipped?.Invoke(this, new SkipEventArgs { Chip = chip });
                 }
             }
         }
@@ -227,5 +254,54 @@ namespace CircuitSim2.Engine
                 Updates.Push(Chip);
             }
         }
+
+        public void Start(int period_ms = 10)
+        {
+            lock (lock_obj)
+            {
+                Timer.Interval = period_ms;
+
+                Timer.Start();
+            }
+        }
+
+        public void Stop()
+        {
+            lock (lock_obj)
+            {
+                Timer.Stop();
+            }
+        }
+
+
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    lock (lock_obj)
+                    {
+                        if (Timer.Enabled) Timer.Stop();
+                    }
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

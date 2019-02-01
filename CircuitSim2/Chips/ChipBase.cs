@@ -37,6 +37,8 @@ namespace CircuitSim2
         {
             private readonly object lock_obj;
 
+            public readonly string ID;
+
             private bool autotick;
             public bool AutoTick
             {
@@ -80,6 +82,8 @@ namespace CircuitSim2
             public ChipBase(Engine.Engine Engine)
             {
                 this.Engine = Engine;
+
+                ID = Guid.NewGuid().ToString();
 
                 lock_obj = new object();
 
