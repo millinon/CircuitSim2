@@ -50,6 +50,7 @@
     <Compile Include="Chips\Char\Comparison.cs" />
     <Compile Include="Chips\Char\Conversion.cs" />
     <Compile Include="Chips\ChipBase.cs" />
+    <Compile Include="Chips\Components\Memory.cs" />
     <Compile Include="Chips\Components\Adders.cs" />
     <Compile Include="Chips\Digital\Comparison.cs" />
     <Compile Include="Chips\Digital\Conversion.cs" />

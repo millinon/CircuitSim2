@@ -6,7 +6,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalNOT")]
     public sealed class NOT : UF
     {
-        public NOT(Engine.Engine Engine = null) : base(a => !a)
+        public NOT(Engine.Engine Engine = null) : base(a => !a, Engine)
         {
 
         }
@@ -15,7 +15,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalAND")]
     public sealed class AND : BF
     {
-        public AND(Engine.Engine Engine = null) : base((a, b) => a && b)
+        public AND(Engine.Engine Engine = null) : base((a, b) => a && b, Engine)
         {
 
         }
@@ -24,7 +24,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalOR")]
     public sealed class OR : BF
     {
-        public OR(Engine.Engine Engine = null) : base((a, b) => a || b)
+        public OR(Engine.Engine Engine = null) : base((a, b) => a || b, Engine)
         {
 
         }
@@ -33,7 +33,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalXOR")]
     public sealed class XOR : BF
     {
-        public XOR(Engine.Engine Engine = null) : base((a, b) => a ^ b)
+        public XOR(Engine.Engine Engine = null) : base((a, b) => a ^ b, Engine)
         {
 
         }
@@ -42,7 +42,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalNAND")]
     public sealed class NAND : BF
     {
-        public NAND(Engine.Engine Engine = null) : base((a, b) => !(a && b))
+        public NAND(Engine.Engine Engine = null) : base((a, b) => !(a && b), Engine)
         {
 
         }
@@ -51,7 +51,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [PureChip("DigitalNOR")]
     public sealed class NOR : BF
     {
-        public NOR(Engine.Engine Engine = null) : base((a, b) => !(a || b))
+        public NOR(Engine.Engine Engine = null) : base((a, b) => !(a || b), Engine)
         {
 
         }

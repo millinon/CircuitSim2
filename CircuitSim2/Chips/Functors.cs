@@ -6,7 +6,7 @@ namespace CircuitSim2.Chips.Functors
     {
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 
-        public Generator(Engine.Engine Engine = null) : base(Engine)
+        public Generator(Engine.Engine Engine) : base(Engine)
         {
             Outputs = new CircuitSim2.IO.GenericOutput<T>(this);
 
@@ -35,7 +35,7 @@ namespace CircuitSim2.Chips.Functors
 
         private readonly Func<T, U> Func;
 
-        public UnaryFunctor(Func<T, U> Func, Engine.Engine Engine = null) : base(Engine)
+        public UnaryFunctor(Func<T, U> Func, Engine.Engine Engine) : base(Engine)
         {
             Inputs = new CircuitSim2.IO.GenericInput<T>(this);
             Outputs = new CircuitSim2.IO.GenericOutput<U>(this);
@@ -65,7 +65,7 @@ namespace CircuitSim2.Chips.Functors
 
         private readonly Func<T, U, V> Func;
 
-        public BinaryFunctor(Func<T, U, V> Func, Engine.Engine Engine = null) : base(Engine)
+        public BinaryFunctor(Func<T, U, V> Func, Engine.Engine Engine) : base(Engine)
         {
             Inputs = new CircuitSim2.IO.GenericInput<T, U>(this);
             Outputs = new CircuitSim2.IO.GenericOutput<V>(this);

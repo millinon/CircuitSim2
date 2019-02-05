@@ -90,6 +90,8 @@ namespace CircuitSim2.Engine
 
                     void add(IO.InputBase input)
                     {
+                        if (sinks.Contains(input.Chip)) return;
+
                         foreach (var hook in input.Hooks)
                         {
                             add(hook);
@@ -108,10 +110,13 @@ namespace CircuitSim2.Engine
 
                     node.Children = sinks.Select(sink => map[sink]);
                 }
+            }
 
-                if (Chips.Count() > 0 && !Roots.Any())
+            public Node this[CircuitSim2.Chips.ChipBase Chip]
+            {
+                get
                 {
-                    throw new Exception("Cyclical circuit detected");
+                    return map[Chip];
                 }
             }
         }
@@ -235,7 +240,9 @@ namespace CircuitSim2.Engine
                 {
                     var chip = Updates.Pop();
 
-                    if(chip.IsPure && Updates.Contains(chip))
+                    var node = Graph[chip];
+
+                    if (chip.IsPure && Updates.Contains(chip) && !node.Children.Contains(node))
                     {
                         ChipSkipped?.Invoke(this, new SkipEventArgs { Chip = chip });
                     } else

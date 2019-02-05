@@ -189,7 +189,7 @@ namespace CircuitSim2.Chips
 
                 var match = matches.First();
 
-                Chips[desc.ID] = Activator.CreateInstance(match, new[] { Engine }) as Chips.ChipBase;
+                Chips[desc.ID] = Activator.CreateInstance(match, new object [] { Engine }) as Chips.ChipBase;
                 Chips[desc.ID].AutoTick = desc.AutoTick;
 
                 desc.Bindings?.ForEach(binding => Chips[desc.ID].InputSet[binding.Name].Bind(Inputs[binding.BindName]));

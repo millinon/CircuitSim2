@@ -26,17 +26,21 @@ namespace EngineTest
                 adder.Inputs.A.Attach(A.Outputs.Out);
                 adder.Inputs.B.Attach(B.Outputs.Out);
 
-                engine.ChipUpdated += (s, e) => Console.WriteLine($"{e.Chip.ID} updated");
-                engine.ChipSkipped += (s, e) => Console.WriteLine($"{e.Chip.ID} skipped");
+                if (engine != null)
+                {
+                    engine.ChipUpdated += (s, e) => Console.WriteLine($"{e.Chip.ID} updated");
+                    engine.ChipSkipped += (s, e) => Console.WriteLine($"{e.Chip.ID} skipped");
 
-                engine.Start(100);
+                    engine.Start(1);
+                }
 
                 for (int i = 0; i < 10; i++)
                 {
                     A.Tick();
                     B.Tick();
 
-                    Thread.Sleep(1000);
+                    if(engine != null)
+                    Thread.Sleep(100);
                 }
             }
 

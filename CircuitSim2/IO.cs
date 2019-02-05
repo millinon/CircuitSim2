@@ -245,7 +245,7 @@ namespace CircuitSim2.IO
 
         public bool IsBound
         {
-            get { lock (lock_obj) { return Binding != null; } }
+            get { lock (lock_obj) { return binding != null; } }
         }
 
         public void Bind(OutputBase Output)
@@ -325,7 +325,7 @@ namespace CircuitSim2.IO
             {
                 lock (lock_obj)
                 {
-                    if (Chip.HaveError || !havevalue) throw new InvalidOperationException();
+                    if (Chip.HaveError/* || !havevalue*/) throw new InvalidOperationException();
 
                     return value;
                 }
@@ -351,11 +351,11 @@ namespace CircuitSim2.IO
                     if (changed)
                     {
                         ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
-                    }
 
-                    foreach(var output in SubscribedOutputs)
-                    {
-                        (output as Output<T>).Value = value;
+                        foreach (var output in SubscribedOutputs)
+                        {
+                            (output as Output<T>).Value = value;
+                        }
                     }
 
                     foreach (var sink in Sinks())

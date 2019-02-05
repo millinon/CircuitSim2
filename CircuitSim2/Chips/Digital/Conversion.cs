@@ -10,7 +10,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToByte(byte Low = 0, byte High = 1, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToByte(byte Low = 0, byte High = 1, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -19,7 +19,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
     [PureChip("DigitalToChar")]
     public sealed class ToChar : UnaryFunctor<bool, char>
     {
-        public ToChar(char Low, char High, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToChar(char Low, char High, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -33,7 +33,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToInteger(int Low = 0, int High = 1, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToInteger(int Low = 0, int High = 1, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -47,7 +47,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToLong(long Low = 0L, long High = 1L, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToLong(long Low = 0L, long High = 1L, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -61,7 +61,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToSingle(float Low = 0.0f, float High = 1.0f, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToSingle(float Low = 0.0f, float High = 1.0f, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -75,7 +75,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToDouble(double Low = 0.0, double High = 1.0, Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToDouble(double Low = 0.0, double High = 1.0, Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
@@ -89,7 +89,7 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
         }
 
-        public ToString(string Low = "False", string High = "True", Engine.Engine Engine = null) : base(a => a ? High : Low)
+        public ToString(string Low = "False", string High = "True", Engine.Engine Engine = null) : base(a => a ? High : Low, Engine)
         {
 
         }
