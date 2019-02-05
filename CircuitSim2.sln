@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteAdder", "Examples\ByteA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Examples\Engine\Engine.csproj", "{A47C24E0-8AC6-430A-8881-B49E92715FBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLatch", "DLatch\DLatch\DLatch.csproj", "{8470045F-E0BF-490E-BC41-C29E00538FA7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLatch", "Examples\DLatch\DLatch.csproj", "{8470045F-E0BF-490E-BC41-C29E00538FA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
