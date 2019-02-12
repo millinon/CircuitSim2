@@ -75,6 +75,8 @@
     <Compile Include="Chips\Long\Generators.cs" />
     <Compile Include="Chips\Long\Signals.cs" />
     <Compile Include="Chips\MetaChip.cs" />
+    <Compile Include="Chips\Neural\Networks.cs" />
+    <Compile Include="Chips\Neural\Neuron.cs" />
     <Compile Include="Chips\Signals.cs" />
     <Compile Include="Chips\Single\Arithmetic.cs" />
     <Compile Include="Chips\Single\Comparison.cs" />

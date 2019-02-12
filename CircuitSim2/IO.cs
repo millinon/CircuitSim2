@@ -558,6 +558,30 @@ namespace CircuitSim2.IO
         public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip), }) => Out = this["Out"] as Output<T>;
     }
 
+    public sealed class OutputArray<T> : OutputSetBase where T : IEquatable<T>
+    {
+        private readonly Output<T>[] Array;
+
+        public OutputArray(Chips.ChipBase Chip, int Size) : base(Enumerable.Range(0, Size).Select(idx => new Output<T>($"{idx}", Chip)))
+        {
+            Array = new Output<T>[Size];
+            for (int idx = 0; idx < Size; idx++)
+            {
+                Array[idx] = this[$"{idx}"] as Output<T>;
+            }
+        }
+
+        public Output<T> this[int idx]
+        {
+            get
+            {
+                lock (lock_obj) { return Array[idx]; }
+            }
+        }
+
+        public int Length => Array.Length;
+    }
+
     public sealed class NoOutputs : OutputSetBase
     {
         public NoOutputs() : base(new OutputBase[] { })
