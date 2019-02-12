@@ -13,13 +13,10 @@ namespace CircuitSim2.Chips.Signals
 
         public EdgeDetector(Func<T, T, bool> Detector, Engine.Engine Engine = null) : base(Engine)
         {
-            Inputs = new GenericInput<T>(this);
-            Outputs = new GenericOutput<bool>(this);
+            InputSet = (Inputs = new GenericInput<T>(this));
+            OutputSet = (Outputs = new GenericOutput<bool>(this));
 
             this.Detector = Detector;
-
-            InputSet = Inputs;
-            OutputSet = Outputs;
 
             _last = default(T);
         }

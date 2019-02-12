@@ -111,7 +111,10 @@ namespace CircuitSim2
 
             }
 
-            public abstract void Output();
+            public virtual void Output()
+            {
+
+            }
 
 #if DEBUG
             public ulong TickCount

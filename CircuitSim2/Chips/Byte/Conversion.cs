@@ -59,10 +59,18 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
+    [PureChip("ByteToHexString")]
+    public sealed class ToHexString : UnaryFunctor<byte, string>
+    {
+        public ToHexString(Engine.Engine Engine = null) : base(a => a.ToString("X"), Engine)
+        {
+
+        }
+    }
+
     [PureChip("ByteDecompose")]
     public sealed class Decompose : ChipBase
     {
-        [PureChip("ByteOutputType")]
         public sealed class OutputType : OutputSetBase
         {
             public readonly Output<bool> Bit0;
@@ -130,7 +138,6 @@ namespace CircuitSim2.Chips.Byte.Conversion
     [PureChip("ByteCompose")]
     public sealed class Compose : ChipBase
     {
-        [PureChip("ByteInputType")]
         public sealed class InputType : InputSetBase
         {
             public readonly Input<bool> Bit0;
