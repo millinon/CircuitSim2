@@ -27,6 +27,7 @@ namespace CircuitSim2.Chips.Functors
         }
     }
 
+    [PureChip]
     public abstract class UnaryFunctor<T, U> : ChipBase where T : IEquatable<T> where U : IEquatable<U>
     {
         public readonly CircuitSim2.IO.GenericInput<T> Inputs;
@@ -54,6 +55,7 @@ namespace CircuitSim2.Chips.Functors
         }
     }
 
+    [PureChip]
     public abstract class BinaryFunctor<T, U, V> : ChipBase where T : IEquatable<T> where U : IEquatable<U> where V : IEquatable<V>
     {
         public readonly CircuitSim2.IO.GenericInput<T, U> Inputs;

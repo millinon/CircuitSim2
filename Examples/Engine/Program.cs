@@ -40,7 +40,7 @@ namespace EngineTest
                     B.Tick();
 
                     if(engine != null)
-                    Thread.Sleep(100);
+                        Thread.Sleep(100);
                 }
             }
 

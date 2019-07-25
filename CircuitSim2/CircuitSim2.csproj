@@ -85,6 +85,8 @@
     <Compile Include="Chips\String\Comparison.cs" />
     <Compile Include="Chips\String\Conversion.cs" />
     <Compile Include="Chips\String\Operators.cs" />
+    <Compile Include="Chips\Time\Generators.cs" />
+    <Compile Include="Chips\Time\Signals.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="IO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

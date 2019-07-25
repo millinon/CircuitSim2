@@ -4,7 +4,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<int, int, int>;
 
 namespace CircuitSim2.Chips.Integer.Arithmetic
 {
-    [PureChip("IntegerAdd")]
+    [Chip("IntegerAdd")]
     public sealed class Add : BF
     {
         public Add(Engine.Engine Engine = null) : base((a, b) => (a + b), Engine)
@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerSubtract")]
+    [Chip("IntegerSubtract")]
     public sealed class Subtract : BF
     {
         public Subtract(Engine.Engine Engine = null) : base((a, b) => (a - b), Engine)
@@ -22,7 +22,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerMultiply")]
+    [Chip("IntegerMultiply")]
     public sealed class Multiply : BF
     {
         public Multiply(Engine.Engine Engine = null) : base((a, b) => (a * b), Engine)
@@ -31,7 +31,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerDivide")]
+    [Chip("IntegerDivide")]
     public sealed class Divide : BF
     {
         public Divide(Engine.Engine Engine = null) : base((a, b) => (a / b), Engine)
@@ -40,7 +40,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerModulus")]
+    [Chip("IntegerModulus")]
     public sealed class Modulus : BF
     {
         public Modulus(Engine.Engine Engine = null) : base((a, b) => (a % b), Engine)
@@ -49,7 +49,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerLeftShift")]
+    [Chip("IntegerLeftShift")]
     public sealed class LeftShift : BF
     {
         public LeftShift(Engine.Engine Engine = null) : base((a, b) => (a << b), Engine)
@@ -58,7 +58,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerRightShift")]
+    [Chip("IntegerRightShift")]
     public sealed class RightShift : BF
     {
         public RightShift(Engine.Engine Engine = null) : base((a, b) => (a >> b), Engine)
@@ -67,7 +67,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerMin")]
+    [Chip("IntegerMin")]
     public sealed class Min : BF
     {
         public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
@@ -76,7 +76,7 @@ namespace CircuitSim2.Chips.Integer.Arithmetic
         }
     }
 
-    [PureChip("IntegerMax")]
+    [Chip("IntegerMax")]
     public sealed class Max : BF
     {
         public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)

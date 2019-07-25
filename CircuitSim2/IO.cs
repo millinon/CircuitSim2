@@ -213,14 +213,10 @@ namespace CircuitSim2.IO
                 {
                     input.Notify();
                 }
-
-                if(Chip.Engine != null)
+                if (Chip.AutoTick)
                 {
-                    Chip.Engine.ScheduleUpdate(Chip);
-                }
-                else if (Chip.AutoTick)
-                {
-                    Chip.Tick();
+                    if (Chip.Engine != null) Chip.Engine.ScheduleUpdate(Chip);
+                    else Chip.Tick();
                 }
             }
         }

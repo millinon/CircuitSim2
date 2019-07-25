@@ -5,7 +5,7 @@ using UF = CircuitSim2.Chips.Functors.UnaryFunctor<double, double>;
 
 namespace CircuitSim2.Chips.Double.Arithmetic
 {
-    [PureChip("DoubleAdd")]
+    [Chip("DoubleAdd")]
     public sealed class Add : BF
     {
         public Add(Engine.Engine Engine = null) : base((a, b) => (a + b), Engine)
@@ -14,7 +14,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleSubtract")]
+    [Chip("DoubleSubtract")]
     public sealed class Subtract : BF
     {
         public Subtract(Engine.Engine Engine = null) : base((a, b) => (a - b), Engine)
@@ -23,7 +23,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleMultiply")]
+    [Chip("DoubleMultiply")]
     public sealed class Multiply : BF
     {
         public Multiply(Engine.Engine Engine = null) : base((a, b) => (a * b), Engine)
@@ -32,7 +32,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleDivide")]
+    [Chip("DoubleDivide")]
     public sealed class Divide : BF
     {
         public Divide(Engine.Engine Engine = null) : base((a, b) => (a / b), Engine)
@@ -41,7 +41,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleModulus")]
+    [Chip("DoubleModulus")]
     public sealed class Modulus : BF
     {
         public Modulus(Engine.Engine Engine = null) : base((a, b) => (a % b), Engine)
@@ -50,7 +50,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleSin")]
+    [Chip("DoubleSin")]
     public sealed class Sin : UF
     {
         public Sin(Engine.Engine Engine = null) : base(Math.Sin, Engine)
@@ -59,7 +59,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleSinh")]
+    [Chip("DoubleSinh")]
     public sealed class Sinh : UF
     {
         public Sinh(Engine.Engine Engine = null) : base(Math.Sinh, Engine)
@@ -68,7 +68,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleCos")]
+    [Chip("DoubleCos")]
     public sealed class Cos : UF
     {
         public Cos(Engine.Engine Engine = null) : base(Math.Cos, Engine)
@@ -77,7 +77,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleCosh")]
+    [Chip("DoubleCosh")]
     public sealed class Cosh : UF
     {
         public Cosh(Engine.Engine Engine = null) : base(Math.Cosh, Engine)
@@ -86,7 +86,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleTan")]
+    [Chip("DoubleTan")]
     public sealed class Tan : UF
     {
         public Tan(Engine.Engine Engine = null) : base(Math.Tan, Engine)
@@ -95,7 +95,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleTanh")]
+    [Chip("DoubleTanh")]
     public sealed class Tanh : UF
     {
         public Tanh(Engine.Engine Engine = null) : base(Math.Tanh, Engine)
@@ -104,7 +104,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoublePower")]
+    [Chip("DoublePower")]
     public sealed class Power : BF
     {
         public Power(Engine.Engine Engine = null) : base(Math.Pow, Engine)
@@ -113,7 +113,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleMin")]
+    [Chip("DoubleMin")]
     public sealed class Min : BF
     {
         public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
@@ -122,7 +122,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
     }
 
-    [PureChip("DoubleMax")]
+    [Chip("DoubleMax")]
     public sealed class Max : BF
     {
         public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)

@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace CircuitSim2.Chips.Long.Conversion
 {
-    [PureChip("LongToByte")]
+    [Chip("LongToByte")]
     public sealed class ToByte : UnaryFunctor<long, byte>
     {
         public ToByte(Engine.Engine Engine = null) : base(a => (byte)a, Engine)
@@ -14,7 +14,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToChar")]
+    [Chip("LongToChar")]
     public sealed class ToChar : UnaryFunctor<long, char>
     {
         public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
@@ -23,7 +23,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToInteger")]
+    [Chip("LongToInteger")]
     public sealed class ToInteger : UnaryFunctor<long, int>
     {
         public ToInteger(Engine.Engine Engine = null) : base(a => (int)a, Engine)
@@ -32,7 +32,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToSingle")]
+    [Chip("LongToSingle")]
     public sealed class ToSingle : UnaryFunctor<long, float>
     {
         public ToSingle(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -41,7 +41,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToDouble")]
+    [Chip("LongToDouble")]
     public sealed class ToDouble : UnaryFunctor<long, double>
     {
         public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -50,7 +50,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToString")]
+    [Chip("LongToString")]
     public sealed class ToString : UnaryFunctor<long, string>
     {
         public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)
@@ -59,7 +59,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongToHexString")]
+    [Chip("LongToHexString")]
     public sealed class ToHexString : UnaryFunctor<long, string>
     {
         public ToHexString(Engine.Engine Engine = null) : base(a => a.ToString("X"), Engine)
@@ -68,7 +68,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongDecompose")]
+    [Chip("LongDecompose")]
     public sealed class Decompose : ChipBase
     {
         public readonly GenericInput<long> Inputs;
@@ -125,7 +125,7 @@ namespace CircuitSim2.Chips.Long.Conversion
         }
     }
 
-    [PureChip("LongCompose")]
+    [Chip("LongCompose")]
     public sealed class Compose : ChipBase
     {
         public sealed class InputType : InputSetBase

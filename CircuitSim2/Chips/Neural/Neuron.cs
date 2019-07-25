@@ -5,7 +5,8 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Neural
 {
-    [PureChip("Neuron")]
+    [Chip("Neuron")]
+    [PureChip]
     public sealed class Neuron : ChipBase
     {
         public readonly InputArray<double> Inputs;

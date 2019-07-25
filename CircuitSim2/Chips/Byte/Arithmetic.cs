@@ -4,7 +4,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<byte, byte, byte>;
 
 namespace CircuitSim2.Chips.Byte.Arithmetic
 {
-    [PureChip("ByteAdd")]
+    [Chip("ByteAdd")]
     public sealed class Add : BF
     {
         public Add(Engine.Engine Engine = null) : base((a, b) => (byte)(a + b), Engine)
@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteSubtract")]
+    [Chip("ByteSubtract")]
     public sealed class Subtract : BF
     {
         public Subtract(Engine.Engine Engine = null) : base((a, b) => (byte)(a - b), Engine)
@@ -22,7 +22,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteMultiply")]
+    [Chip("ByteMultiply")]
     public sealed class Multiply : BF
     {
         public Multiply(Engine.Engine Engine = null) : base((a, b) => (byte)(a * b), Engine)
@@ -31,7 +31,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteDivide")]
+    [Chip("ByteDivide")]
     public sealed class Divide : BF
     {
         public Divide(Engine.Engine Engine = null) : base((a, b) => (byte)(a / b), Engine)
@@ -40,7 +40,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteModulus")]
+    [Chip("ByteModulus")]
     public sealed class Modulus : BF
     {
         public Modulus(Engine.Engine Engine = null) : base((a, b) => (byte)(a % b), Engine)
@@ -49,7 +49,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteLeftShift")]
+    [Chip("ByteLeftShift")]
     public sealed class LeftShift : BF
     {
         public LeftShift(Engine.Engine Engine = null) : base((a, b) => (byte)(a << b), Engine)
@@ -58,7 +58,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteRightShift")]
+    [Chip("ByteRightShift")]
     public sealed class RightShift : BF
     {
         public RightShift(Engine.Engine Engine = null) : base((a, b) => (byte)(a >> b), Engine)
@@ -67,7 +67,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteMin")]
+    [Chip("ByteMin")]
     public sealed class Min : BF
     {
         public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
@@ -76,7 +76,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         }
     }
 
-    [PureChip("ByteMax")]
+    [Chip("ByteMax")]
     public sealed class Max : BF
     {
         public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)

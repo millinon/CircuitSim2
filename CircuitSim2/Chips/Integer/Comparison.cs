@@ -2,7 +2,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<int, int, bool>;
 
 namespace CircuitSim2.Chips.Integer.Comparison
 {
-    [PureChip("IntegerEqual")]
+    [Chip("IntegerEqual")]
     public sealed class Equal : BF
     {
         public Equal(Engine.Engine Engine = null) : base((a, b) => a == b, Engine)
@@ -11,7 +11,7 @@ namespace CircuitSim2.Chips.Integer.Comparison
         }
     }
 
-    [PureChip("IntegerNotEqual")]
+    [Chip("IntegerNotEqual")]
     public sealed class NotEqual : BF
     {
         public NotEqual(Engine.Engine Engine = null) : base((a, b) => a != b, Engine)
@@ -20,7 +20,7 @@ namespace CircuitSim2.Chips.Integer.Comparison
         }
     }
 
-    [PureChip("IntegerLessThan")]
+    [Chip("IntegerLessThan")]
     public sealed class LessThan : BF
     {
         public LessThan(Engine.Engine Engine = null) : base((a, b) => a < b, Engine)
@@ -29,7 +29,7 @@ namespace CircuitSim2.Chips.Integer.Comparison
         }
     }
 
-    [PureChip("IntegerLessThanEqual")]
+    [Chip("IntegerLessThanEqual")]
     public sealed class LessThanEqual : BF
     {
         public LessThanEqual(Engine.Engine Engine = null) : base((a, b) => a <= b, Engine)
@@ -38,7 +38,7 @@ namespace CircuitSim2.Chips.Integer.Comparison
         }
     }
 
-    [PureChip("IntegerGreaterThan")]
+    [Chip("IntegerGreaterThan")]
     public sealed class GreaterThan : BF
     {
         public GreaterThan(Engine.Engine Engine = null) : base((a, b) => a > b, Engine)
@@ -47,7 +47,7 @@ namespace CircuitSim2.Chips.Integer.Comparison
         }
     }
 
-    [PureChip("IntegerGreaterThanEqual")]
+    [Chip("IntegerGreaterThanEqual")]
     public sealed class GreaterThanEqual : BF
     {
         public GreaterThanEqual(Engine.Engine Engine = null) : base((a, b) => a >= b, Engine)

@@ -47,13 +47,10 @@ namespace CircuitSim2.Chips.Components.Memory
 
         public DLatch(Engine.Engine Engine) : base(Engine)
         {
-            if (Engine == null) throw new ArgumentNullException("DLatch requires non-null Engine argument");
+            if (Engine == null) throw new ArgumentNullException(nameof(Engine));
 
-            Inputs = new InputType(this);
-            Outputs = new OutputType(this);
-
-            InputSet = Inputs;
-            OutputSet = Outputs;
+            InputSet = (Inputs = new InputType(this));
+            OutputSet = (Outputs = new OutputType(this));
 
             NOT = new NOT(Engine);
             AND1 = new AND(Engine);
@@ -73,26 +70,8 @@ namespace CircuitSim2.Chips.Components.Memory
             NOR1.Inputs.B.Attach(NOR2.Outputs.Out);
             NOR2.Inputs.A.Attach(NOR1.Outputs.Out);
 
-            AND1.Outputs.Out.Value = true;
-            AND2.Outputs.Out.Value = true;
-            NOR1.Outputs.Out.Value = true;
-            NOR2.Outputs.Out.Value = true;
-
-            NOR1.Tick();
-            NOR2.Tick();
-
-            AND1.Outputs.Out.Value = false;
-            AND2.Outputs.Out.Value = false;
-            NOR1.Outputs.Out.Value = false;
-            NOR2.Outputs.Out.Value = false;
-
             Outputs.Q.Bind(NOR1.Outputs.Out);
             Outputs.NQ.Bind(NOR2.Outputs.Out);
-        }
-
-        public override void Output()
-        {
-
         }
     }
 }

@@ -8,8 +8,9 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Neural.Networks
 {
-    [PureChip("FeedForward")]
-    public class FeedForward : ChipBase
+    [Chip("FeedForward")]
+    [PureChip]
+    public sealed class FeedForward : ChipBase
     {
         public readonly InputArray<double> Inputs;
         public readonly OutputArray<double> Outputs;
@@ -64,19 +65,6 @@ namespace CircuitSim2.Chips.Neural.Networks
                             Outputs[neuron].Bind(n.Outputs.Out);
                         }
                     }
-
-                    n.AutoTick = false;
-                }
-            }
-        }
-
-        public override void Compute()
-        {
-            for (int layer = 0; layer < Layers.Length; layer++)
-            {
-                for (int neuron = 0; neuron < Layers[layer]; neuron++)
-                {
-                    Neurons[layer][neuron].Tick();
                 }
             }
         }

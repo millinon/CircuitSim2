@@ -1,13 +1,15 @@
+using CircuitSim2.Chips;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Timers;
 
 namespace CircuitSim2.Engine
 {
     public class Engine : IDisposable
     {
-        private readonly Timer Timer;
+        private readonly System.Timers.Timer Timer;
 
         private class DependencyGraph
         {
@@ -122,6 +124,7 @@ namespace CircuitSim2.Engine
         }
 
         private readonly Dictionary<string, Chips.ChipBase> Chips;
+        private readonly Dictionary<string, Chips.Time.Clock> Clocks;
 
         private DependencyGraph Graph;
 
@@ -180,14 +183,16 @@ namespace CircuitSim2.Engine
         {
             lock_obj = new object();
 
-            Timer = new Timer();
+            Timer = new System.Timers.Timer();
             Timer.Elapsed += (s, e) =>
             {
-                this.UpdateNext();
+                UpdateNext();
+                UpdateClocks();
             };
             Timer.AutoReset = true;
 
             Chips = new Dictionary<string, Chips.ChipBase>();
+            Clocks = new Dictionary<string, Chips.Time.Clock>();
             Updates = new UpdateQueue();
         }
 
@@ -204,7 +209,11 @@ namespace CircuitSim2.Engine
             lock (lock_obj)
             {
                 Chips[Chip.ID] = Chip;
-                //Graph = new DependencyGraph(Chips.Values);
+
+                if(Chip is Chips.Time.Clock ClockChip)
+                {
+                    Clocks[Chip.ID] = ClockChip;
+                }
             }
         }
 
@@ -214,7 +223,10 @@ namespace CircuitSim2.Engine
             {
                 if (Chips.ContainsKey(Chip.ID)) Chips.Remove(Chip.ID);
 
-                //Graph = new DependencyGraph(Chips.Values);
+                if(Chip is Chips.Time.Clock ClockChip)
+                {
+                    Clocks.Remove(Chip.ID);
+                }
             }
         }
 
@@ -232,29 +244,70 @@ namespace CircuitSim2.Engine
 
         public event EventHandler<UpdateEventArgs> ChipUpdated;
 
+        public void UpdateClocks()
+        {
+            lock (lock_obj)
+            {
+                foreach(var Clock in Clocks.Values)
+                {
+                    Clock.Step();
+                }
+            }
+        }
+
         public void UpdateNext()
         {
+            ChipBase chip = null;
+
             lock (Updates)
             {
                 while (Updates.Size > 0)
                 {
-                    var chip = Updates.Pop();
-
+                    chip = Updates.Pop();
                     var node = Graph[chip];
 
                     if (chip.IsPure && Updates.Contains(chip) && !node.Children.Contains(node))
                     {
                         ChipSkipped?.Invoke(this, new SkipEventArgs { Chip = chip });
-                    } else
-                    {
-                        chip.Tick();
-
-                        ChipUpdated?.Invoke(this, new UpdateEventArgs { Chip = chip });
-
-                        return;
                     }
+                    else break;
                 }
             }
+
+            if(chip != null)
+            {
+                chip.Tick();
+
+                ChipUpdated?.Invoke(this, new UpdateEventArgs { Chip = chip });
+            }
+        }
+
+        public void FlushAll()
+        {
+            int size;
+            do
+            {
+                size = Updates.Size;
+
+                if (size > 0)
+                {
+                    UpdateNext();
+                }
+            } while (size > 0);
+        }
+
+        public void Flush(int MaxChips)
+        {
+            int size;
+            do
+            {
+                size = Updates.Size;
+
+                if (size > 0)
+                {
+                    UpdateNext();
+                }
+            } while (size > 0 && --MaxChips > 0);
         }
 
         public void ScheduleUpdate(Chips.ChipBase Chip)
@@ -265,7 +318,22 @@ namespace CircuitSim2.Engine
             }
         }
 
-        public void Start(int period_ms = 10)
+        public void Wait()
+        {
+            int size;
+
+            do
+            {
+                lock (Updates)
+                {
+                    size = Updates.Size;
+
+                    if (size > 0) Thread.Sleep(100);
+                }
+            } while (size > 0);
+        }
+
+        public void Start(double period_ms = 10.0)
         {
             lock (lock_obj)
             {
@@ -286,7 +354,7 @@ namespace CircuitSim2.Engine
 
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -297,13 +365,12 @@ namespace CircuitSim2.Engine
                     lock (lock_obj)
                     {
                         if (Timer.Enabled) Timer.Stop();
+                        foreach(var chip in Chips.Values)
+                        {
+                            chip.Dispose();
+                        }
                     }
-                    // TODO: dispose managed state (managed objects).
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
                 disposedValue = true;
             }
         }

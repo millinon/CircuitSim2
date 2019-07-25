@@ -2,7 +2,7 @@ using CircuitSim2.Chips.Functors;
 
 namespace CircuitSim2.Chips.Single.Conversion
 {
-    [PureChip("SingleToByte")]
+    [Chip("SingleToByte")]
     public sealed class ToByte : UnaryFunctor<float, byte>
     {
         public ToByte(Engine.Engine Engine = null) : base(a => (byte)a, Engine)
@@ -11,7 +11,7 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
     }
 
-    [PureChip("SingleToChar")]
+    [Chip("SingleToChar")]
     public sealed class ToChar : UnaryFunctor<float, char>
     {
         public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
@@ -20,7 +20,7 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
     }
 
-    [PureChip("SingleToInteger")]
+    [Chip("SingleToInteger")]
     public sealed class ToInteger : UnaryFunctor<float, int>
     {
         public ToInteger(Engine.Engine Engine = null) : base(a => (int)a, Engine)
@@ -29,7 +29,7 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
     }
 
-    [PureChip("SingleToLong")]
+    [Chip("SingleToLong")]
     public sealed class ToLong : UnaryFunctor<float, long>
     {
         public ToLong(Engine.Engine Engine = null) : base(a => (long)a, Engine)
@@ -38,7 +38,7 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
     }
 
-    [PureChip("SingleToDouble")]
+    [Chip("SingleToDouble")]
     public sealed class ToDouble : UnaryFunctor<float, double>
     {
         public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -47,7 +47,7 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
     }
 
-    [PureChip("SingleToString")]
+    [Chip("SingleToString")]
     public sealed class ToString : UnaryFunctor<float, string>
     {
         public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)

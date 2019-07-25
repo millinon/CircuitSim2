@@ -6,28 +6,23 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public class Chip : Attribute
     {
-        private string name;
-        public virtual string Name => name;
+        public readonly string Name;
+        public readonly string Description;
 
-        public virtual bool IsPure => false;
-
-        public Chip(string Name)
+        public Chip(string Name, string Description = null)
         {
-            this.name = Name;
+            this.Name = Name;
+            this.Description = Description;
         }
     }
-
-    public class PureChip : Chip
+    
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+    public class PureChip : Attribute
     {
-        public override bool IsPure => true;
-
-        public PureChip(string Name) : base(Name)
-        {
-
-        }
+        
     }
 
     namespace Chips
@@ -39,7 +34,7 @@ namespace CircuitSim2
 
             public readonly string ID;
 
-            private bool autotick;
+            private bool autotick = true;
             public bool AutoTick
             {
                 get { lock (lock_obj) return autotick; }
@@ -55,27 +50,32 @@ namespace CircuitSim2
 
             public readonly Engine.Engine Engine;
 
+            private Chip ChipAttr
+            {
+                get
+                {
+                    var attrs = GetType().GetCustomAttributes(false).Where(attr => attr.GetType() == typeof(Chip));
+                    if (!attrs.Any()) throw new ArgumentException("Chip missing [Chip()] attribute");
+
+                    return attrs.First() as Chip;
+                }
+            }
+
+            public bool IsPure => GetType().GetCustomAttributes(false).Any(attr => attr.GetType() == typeof(PureChip));
+
             public string Name
             {
                 get
                 {
-                    var attrs = GetType().GetCustomAttributes(false).Where(attr => attr.GetType() == typeof(Chip) || attr.GetType() == typeof(PureChip));
-
-                    if (!attrs.Any()) throw new ArgumentException("Chip missing [Chip()] attribute");
-
-                    return (attrs.First() as Chip).Name;
+                    return ChipAttr.Name;
                 }
             }
 
-            public bool IsPure
+            public string Description
             {
                 get
                 {
-                    var attrs = GetType().GetCustomAttributes(false).Where(attr => attr.GetType() == typeof(Chip) || attr.GetType() == typeof(PureChip));
-
-                    if (!attrs.Any()) throw new ArgumentException("Chip missing [Chip()] attribute");
-
-                    return (attrs.First() as Chip).IsPure;
+                    return ChipAttr.Description;
                 }
             }
 
@@ -86,8 +86,6 @@ namespace CircuitSim2
                 ID = Guid.NewGuid().ToString();
 
                 lock_obj = new object();
-
-                AutoTick = (Engine == null);
 
                 Engine?.Register(this);
             }

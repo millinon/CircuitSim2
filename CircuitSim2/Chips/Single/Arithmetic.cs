@@ -4,7 +4,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<float, float, float>;
 
 namespace CircuitSim2.Chips.Single.Arithmetic
 {
-    [PureChip("SingleAdd")]
+    [Chip("SingleAdd")]
     public sealed class Add : BF
     {
         public Add(Engine.Engine Engine = null) : base((a, b) => (a + b), Engine)
@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleSubtract")]
+    [Chip("SingleSubtract")]
     public sealed class Subtract : BF
     {
         public Subtract(Engine.Engine Engine = null) : base((a, b) => (a - b), Engine)
@@ -22,7 +22,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleMultiply")]
+    [Chip("SingleMultiply")]
     public sealed class Multiply : BF
     {
         public Multiply(Engine.Engine Engine = null) : base((a, b) => (a * b), Engine)
@@ -31,7 +31,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleDivide")]
+    [Chip("SingleDivide")]
     public sealed class Divide : BF
     {
         public Divide(Engine.Engine Engine = null) : base((a, b) => (a / b), Engine)
@@ -40,7 +40,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleModulus")]
+    [Chip("SingleModulus")]
     public sealed class Modulus : BF
     {
         public Modulus(Engine.Engine Engine = null) : base((a, b) => (a % b), Engine)
@@ -49,7 +49,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleMin")]
+    [Chip("SingleMin")]
     public sealed class Min : BF
     {
         public Min(Engine.Engine Engine = null) : base(Math.Min, Engine)
@@ -58,7 +58,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
     }
 
-    [PureChip("SingleMax")]
+    [Chip("SingleMax")]
     public sealed class Max : BF
     {
         public Max(Engine.Engine Engine = null) : base(Math.Max, Engine)

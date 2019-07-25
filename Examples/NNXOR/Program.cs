@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using CircuitSim2;
 using CircuitSim2.Engine;
 using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Digital.Conversion;
@@ -17,8 +13,9 @@ namespace NNXOR
     {
         static void Main(string[] args)
         {
-            using (Engine Engine = null) {
-
+            //using (Engine Engine = new Engine())
+            using (Engine Engine = null)
+            {
                 var A = new GenericInput<bool>(Engine);
                 var B = new GenericInput<bool>(Engine);
 
@@ -45,26 +42,39 @@ namespace NNXOR
 
                 var learningRate = 0.1;
 
-                foreach(var epoch in Enumerable.Range(0, 100000))
+                if (Engine != null)
                 {
-                    foreach(var a in vals)
+#if DEBUG
+                    Engine.ChipSkipped += (s, e) => Console.WriteLine($"chip {e.Chip.ID} skipped");
+                    Engine.ChipUpdated += (s, e) => Console.WriteLine($"chip {e.Chip.ID} updated");
+#endif
+                    Engine.Start(0.01);
+                }
+
+                foreach (var epoch in Enumerable.Range(0, 10000))
+                {
+                    foreach (var a in vals)
                     {
-                        foreach(var b in vals)
+                        foreach (var b in vals)
                         {
                             A.Value = a;
                             B.Value = b;
+
+                            Engine?.FlushAll();
 
                             NN.BackPropagate(new double[] { convX.Outputs.Out.Value }, learningRate);
                         }
                     }
                 }
 
-                foreach(var a in vals)
+                foreach (var a in vals)
                 {
-                    foreach(var b in vals)
+                    foreach (var b in vals)
                     {
                         A.Value = a;
                         B.Value = b;
+
+                        Engine?.FlushAll();
 
                         Console.WriteLine($"XOR({a},{b}) = {{ expected: {convX.Outputs.Out.Value}, actual = {NN.Outputs[0].Value} }}");
                     }

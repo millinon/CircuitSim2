@@ -5,7 +5,8 @@ using CircuitSim2.Chips.Digital.Logic;
 
 namespace CircuitSim2.Chips.Components.Adders
 {
-    [PureChip("HalfAdder")]
+    [Chip("HalfAdder")]
+    [PureChip]
     public sealed class HalfAdder : ChipBase
     {
         public sealed class OutputType : OutputSetBase
@@ -28,11 +29,8 @@ namespace CircuitSim2.Chips.Components.Adders
 
         public HalfAdder(Engine.Engine Engine = null) : base(Engine)
         {
-            Inputs = new GenericInput<bool, bool>(this);
-            Outputs = new OutputType(this);
-
-            InputSet = Inputs;
-            OutputSet = Outputs;
+            InputSet = (Inputs = new GenericInput<bool, bool>(this));
+            OutputSet = (Outputs = new OutputType(this));
 
             XOR = new XOR(Engine);
             AND = new AND(Engine);
@@ -46,15 +44,10 @@ namespace CircuitSim2.Chips.Components.Adders
             Outputs.S.Bind(XOR.Outputs.Out);
             Outputs.C.Bind(AND.Outputs.Out);
         }
-
-        public override void Output()
-        {}/*
-            Outputs.S.Value = XOR.Outputs.Out.Value;
-            Outputs.C.Value = AND.Outputs.Out.Value;
-        }*/
     }
 
-    [PureChip("FullAdder")]
+    [Chip("FullAdder")]
+    [PureChip]
     public sealed class FullAdder : ChipBase
     {
         public sealed class InputType : InputSetBase
@@ -122,19 +115,12 @@ namespace CircuitSim2.Chips.Components.Adders
             Outputs.S.Bind(XOR2.Outputs.Out);
             Outputs.Cout.Bind(OR.Outputs.Out);
         }
-
-        public override void Output()
-        {
-        }/*
-            Outputs.S.Value = XOR2.Outputs.Out.Value;
-            Outputs.Cout.Value = OR.Outputs.Out.Value;
-        }*/
     }
 
-    [PureChip("ByteAdder")]
+    [Chip("ByteAdder")]
+    [PureChip]
     public sealed class ByteAdder : ChipBase
     {
-
         public sealed class InputType : InputSetBase
         {
             public readonly Input<byte> A;
@@ -148,7 +134,6 @@ namespace CircuitSim2.Chips.Components.Adders
                 Cin = this["Cin"] as Input<bool>;
             }
         }
-
 
         public sealed class OutputType : OutputSetBase
         {
@@ -173,11 +158,8 @@ namespace CircuitSim2.Chips.Components.Adders
 
         public ByteAdder(Engine.Engine Engine = null) : base(Engine)
         {
-            Inputs = new InputType(this);
-            Outputs = new OutputType(this);
-
-            InputSet = Inputs;
-            OutputSet = Outputs;
+            InputSet = (Inputs = new InputType(this));
+            OutputSet = (Outputs = new OutputType(this));
 
             DecomposerA = new Byte.Conversion.Decompose(Engine);
             DecomposerB = new Byte.Conversion.Decompose(Engine);
@@ -213,11 +195,5 @@ namespace CircuitSim2.Chips.Components.Adders
             Outputs.S.Bind(Composer.Outputs.Out);
             Outputs.Cout.Bind(Adders[7].Outputs.Cout);
         }
-
-        public override void Output()
-        { }/*
-            Outputs.S.Value = Composer.Outputs.Out.Value;
-            Outputs.Cout.Value = Adders[7].Outputs.Cout.Value;
-        }*/
     }
 }

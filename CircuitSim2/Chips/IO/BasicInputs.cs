@@ -42,6 +42,7 @@ namespace CircuitSim2.Chips.IO.BasicInputs
     }
 
     [Chip("Constant")]
+    [PureChip]
     public sealed class Constant<T> : Chips.ChipBase where T : IEquatable<T>
     {
         public readonly GenericOutput<T> Outputs;

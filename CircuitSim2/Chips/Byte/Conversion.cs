@@ -5,7 +5,7 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Byte.Conversion
 {
-    [PureChip("ByteToChar")]
+    [Chip("ByteToChar")]
     public sealed class ToChar : UnaryFunctor<byte, char>
     {
         public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
@@ -14,7 +14,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToInteger")]
+    [Chip("ByteToInteger")]
     public sealed class ToInteger : UnaryFunctor<byte, int>
     {
         public ToInteger(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -23,7 +23,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToLong")]
+    [Chip("ByteToLong")]
     public sealed class ToLong : UnaryFunctor<byte, long>
     {
         public ToLong(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -32,7 +32,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToSingle")]
+    [Chip("ByteToSingle")]
     public sealed class ToSingle : UnaryFunctor<byte, float>
     {
         public ToSingle(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -41,7 +41,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToDouble")]
+    [Chip("ByteToDouble")]
     public sealed class ToDouble : UnaryFunctor<byte, double>
     {
         public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
@@ -50,7 +50,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToString")]
+    [Chip("ByteToString")]
     public sealed class ToString : UnaryFunctor<byte, string>
     {
         public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)
@@ -59,7 +59,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteToHexString")]
+    [Chip("ByteToHexString")]
     public sealed class ToHexString : UnaryFunctor<byte, string>
     {
         public ToHexString(Engine.Engine Engine = null) : base(a => a.ToString("X"), Engine)
@@ -68,7 +68,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteDecompose")]
+    [Chip("ByteDecompose")]
     public sealed class Decompose : ChipBase
     {
         public sealed class OutputType : OutputSetBase
@@ -135,7 +135,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
         }
     }
 
-    [PureChip("ByteCompose")]
+    [Chip("ByteCompose")]
     public sealed class Compose : ChipBase
     {
         public sealed class InputType : InputSetBase

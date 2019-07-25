@@ -2,7 +2,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<char, char, char>;
 
 namespace CircuitSim2.Chips.Char.Arithmetic
 {
-    [PureChip("CharAdd")]
+    [Chip("CharAdd")]
     public sealed class Add : BF
     {
         public Add(Engine.Engine Engine = null) : base((a, b) => (char)(a + b), Engine)
@@ -11,7 +11,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharSubtract")]
+    [Chip("CharSubtract")]
     public sealed class Subtract : BF
     {
         public Subtract(Engine.Engine Engine = null) : base((a, b) => (char)(a - b), Engine)
@@ -20,7 +20,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharMultiply")]
+    [Chip("CharMultiply")]
     public sealed class Multiply : BF
     {
         public Multiply(Engine.Engine Engine = null) : base((a, b) => (char)(a * b), Engine)
@@ -29,7 +29,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharDivide")]
+    [Chip("CharDivide")]
     public sealed class Divide : BF
     {
         public Divide(Engine.Engine Engine = null) : base((a, b) => (char)(a / b), Engine)
@@ -38,7 +38,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharModulus")]
+    [Chip("CharModulus")]
     public sealed class Modulus : BF
     {
         public Modulus(Engine.Engine Engine = null) : base((a, b) => (char)(a % b), Engine)
@@ -47,7 +47,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharLeftShift")]
+    [Chip("CharLeftShift")]
     public sealed class LeftShift : BF
     {
         public LeftShift(Engine.Engine Engine = null) : base((a, b) => (char)(a << b), Engine)
@@ -56,7 +56,7 @@ namespace CircuitSim2.Chips.Char.Arithmetic
         }
     }
 
-    [PureChip("CharRightShift")]
+    [Chip("CharRightShift")]
     public sealed class RightShift : BF
     {
         public RightShift(Engine.Engine Engine = null) : base((a, b) => (char)(a >> b), Engine)

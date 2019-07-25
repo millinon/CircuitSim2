@@ -2,7 +2,7 @@ using BF = CircuitSim2.Chips.Functors.BinaryFunctor<char, char, bool>;
 
 namespace CircuitSim2.Chips.Char.Comparison
 {
-    [PureChip("CharEqual")]
+    [Chip("CharEqual")]
     public sealed class Equal : BF
     {
         public Equal(Engine.Engine Engine = null) : base((a, b) => a == b, Engine)
@@ -11,7 +11,7 @@ namespace CircuitSim2.Chips.Char.Comparison
         }
     }
 
-    [PureChip("CharNotEqual")]
+    [Chip("CharNotEqual")]
     public sealed class NotEqual : BF
     {
         public NotEqual(Engine.Engine Engine = null) : base((a, b) => a != b, Engine)
@@ -20,7 +20,7 @@ namespace CircuitSim2.Chips.Char.Comparison
         }
     }
 
-    [PureChip("CharLessThan")]
+    [Chip("CharLessThan")]
     public sealed class LessThan : BF
     {
         public LessThan(Engine.Engine Engine = null) : base((a, b) => a < b, Engine)
@@ -29,7 +29,7 @@ namespace CircuitSim2.Chips.Char.Comparison
         }
     }
 
-    [PureChip("CharLessThanEqual")]
+    [Chip("CharLessThanEqual")]
     public sealed class LessThanEqual : BF
     {
         public LessThanEqual(Engine.Engine Engine = null) : base((a, b) => a <= b, Engine)
@@ -38,7 +38,7 @@ namespace CircuitSim2.Chips.Char.Comparison
         }
     }
 
-    [PureChip("CharGreaterThan")]
+    [Chip("CharGreaterThan")]
     public sealed class GreaterThan : BF
     {
         public GreaterThan(Engine.Engine Engine = null) : base((a, b) => a > b, Engine)
@@ -47,7 +47,7 @@ namespace CircuitSim2.Chips.Char.Comparison
         }
     }
 
-    [PureChip("CharGreaterThanEqual")]
+    [Chip("CharGreaterThanEqual")]
     public sealed class GreaterThanEqual : BF
     {
         public GreaterThanEqual(Engine.Engine Engine = null) : base((a, b) => a >= b, Engine)
