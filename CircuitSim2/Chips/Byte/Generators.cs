@@ -7,12 +7,19 @@ namespace CircuitSim2.Chips.Byte.Generators
     {
         private readonly System.Random Generator;
 
-        public Random(Engine.Engine Engine = null) : this(1337, Engine)
-        {
+        private Random(int Seed, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine) => Generator = new System.Random(Seed);
 
+        public Random(int Seed, ChipBase ParentChip) : this(Seed, ParentChip, ParentChip?.Engine)
+        {
         }
 
-        public Random(int Seed = -1, Engine.Engine Engine = null) : base(Engine) => Generator = new System.Random(Seed);
+        public Random(int Seed, Engine.Engine Engine) : this(Seed, null, Engine)
+        {
+        }
+
+        public Random(int Seed = 1337) : this(Seed, null, null)
+        {
+        }
 
         private byte[] buf = new byte[1];
 

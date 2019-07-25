@@ -58,12 +58,26 @@ namespace CircuitSim2.Chips
             public List<ConnectionDescription> Connections;
         }
 
-        public MetaChip(Engine.Engine Engine = null) : base(Engine)
+        private MetaChip(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
+
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = new CircuitSim2.IO.NoOutputs();
         }
 
+        public MetaChip(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public MetaChip(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public MetaChip() : this(null, null)
+        {
+
+        }
+        
         private Dictionary<string, Chips.ChipBase> Chips;
 
         private Dictionary<string, CircuitSim2.IO.InputBase> Inputs;

@@ -8,64 +8,155 @@ namespace CircuitSim2.Chips.Integer.Conversion
     [Chip("IntegerToByte")]
     public sealed class ToByte : UnaryFunctor<int, byte>
     {
-        public ToByte(Engine.Engine Engine = null) : base(a => (byte)a, Engine)
+        private ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToByte(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToByte(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToByte() : this(null, null)
+        {
+        }
+
+        public override byte Func(int Value) => (byte)Value;
     }
 
     [Chip("IntegerToChar")]
     public sealed class ToChar : UnaryFunctor<int, char>
     {
-        public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
+        private ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToChar(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToChar(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToChar() : this(null, null)
+        {
+        }
+
+        public override char Func(int Value) => (char)Value;
     }
 
     [Chip("IntegerToLong")]
-    public sealed class ToLong : UnaryFunctor<int, long>
+    public sealed class ToInteger : UnaryFunctor<int, long>
     {
-        public ToLong(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToInteger(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToInteger(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToInteger() : this(null, null)
+        {
+        }
+
+        public override long Func(int Value) => Value;
     }
 
     [Chip("IntegerToSingle")]
     public sealed class ToSingle : UnaryFunctor<int, float>
     {
-        public ToSingle(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToSingle(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToSingle(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToSingle() : this(null, null)
+        {
+        }
+
+        public override float Func(int Value) => Value;
     }
 
     [Chip("IntegerToDouble")]
     public sealed class ToDouble : UnaryFunctor<int, double>
     {
-        public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToDouble(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToDouble(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToDouble() : this(null, null)
+        {
+        }
+
+        public override double Func(int Value) => Value;
     }
 
     [Chip("IntegerToString")]
     public sealed class ToString : UnaryFunctor<int, string>
     {
-        public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)
+        private ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToString(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToString() : this(null, null)
+        {
+        }
+
+        public override string Func(int Value) => Value.ToString();
     }
 
     [Chip("IntegerToHexString")]
     public sealed class ToHexString : UnaryFunctor<int, string>
     {
-        public ToHexString(Engine.Engine Engine = null) : base(a => a.ToString("X"), Engine)
+        private ToHexString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToHexString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToHexString(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToHexString() : this(null, null)
+        {
+        }
+
+        public override string Func(int Value) => Value.ToString("X");
     }
 
     [Chip("IntegerDecompose")]
@@ -90,8 +181,19 @@ namespace CircuitSim2.Chips.Integer.Conversion
         }
 
         public readonly OutputType Outputs;
+        public Decompose() : this(null, null)
+        {
+        }
 
-        public Decompose(Engine.Engine Engine = null) : base(Engine)
+        public Decompose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Decompose(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new GenericInput<int>(this));
             OutputSet = (Outputs = new OutputType(this));
@@ -136,7 +238,19 @@ namespace CircuitSim2.Chips.Integer.Conversion
 
         public readonly GenericOutput<int> Outputs;
 
-        public Compose(Engine.Engine Engine = null) : base(Engine)
+        public Compose() : this(null, null)
+        {
+        }
+
+        public Compose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Compose(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private Compose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new GenericOutput<int>(this));

@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.IO.BasicInputs
     {
         public readonly GenericOutput<T> Outputs;
 
-        public GenericInput(Engine.Engine Engine = null) : base(Engine)
+        private GenericInput(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             Outputs = new GenericOutput<T>(this);
 
@@ -21,6 +21,18 @@ namespace CircuitSim2.Chips.IO.BasicInputs
             OutputSet = Outputs;
 
             Value = default(T);
+        }
+
+        public GenericInput(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public GenericInput(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public GenericInput() : this(null, null)
+        {
         }
 
         private T _value;
@@ -47,7 +59,19 @@ namespace CircuitSim2.Chips.IO.BasicInputs
     {
         public readonly GenericOutput<T> Outputs;
 
-        public Constant(T Value, Engine.Engine Engine = null) : base(Engine)
+        public Constant(T Value, ChipBase ParentChip) : this(Value, ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Constant(T Value, Engine.Engine Engine) : this(Value, null, Engine)
+        {
+        }
+
+        public Constant(T Value) : this(Value, null, null)
+        {
+        }
+
+        private Constant(T Value, ChipBase ParentChip, Engine.Engine Engine ) : base(ParentChip, Engine)
         {
             Outputs = new GenericOutput<T>(this);
 
@@ -69,7 +93,19 @@ namespace CircuitSim2.Chips.IO.BasicInputs
     {
         public readonly GenericOutput<bool> Outputs;
 
-        public Button(Engine.Engine Engine = null) : base(Engine)
+        public Button(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Button(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Button() : this(null, null)
+        {
+        }
+
+        private Button(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             Outputs = new GenericOutput<bool>(this);
 

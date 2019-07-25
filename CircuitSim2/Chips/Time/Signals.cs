@@ -20,7 +20,7 @@ namespace CircuitSim2.Chips.Time
 
         public readonly GenericOutput<bool> Outputs;
 
-        public Clock(ulong Period, Engine.Engine Engine = null) : base(Engine)
+        private Clock(ulong Period, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             this.Period = Period;
 
@@ -29,6 +29,21 @@ namespace CircuitSim2.Chips.Time
 
             ticks_lock_obj = new object();
             Ticks = 0;
+        }
+
+        private Clock(ulong Period, ChipBase ParentChip) : this(Period, ParentChip, ParentChip?.Engine)
+        {
+
+        }
+
+        public Clock(ulong Period, Engine.Engine Engine) : this(Period, null, Engine)
+        {
+
+        }
+
+        public Clock(ulong Period) : this(Period, null, null)
+        {
+
         }
      
         public void Step()

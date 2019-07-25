@@ -1,6 +1,11 @@
 using System;
 using System.Linq;
 using System.Diagnostics;
+using System.Collections.Generic;
+
+#if GRAPHICS
+using System.Drawing;
+#endif
 
 using CircuitSim2.IO;
 
@@ -79,9 +84,16 @@ namespace CircuitSim2
                 }
             }
 
-            public ChipBase(Engine.Engine Engine)
+            public readonly ChipBase ParentChip;
+
+            protected readonly List<ChipBase> ChildChips;
+            
+            public ChipBase(ChipBase ParentChip, Engine.Engine Engine)
             {
+                this.ParentChip = ParentChip;
                 this.Engine = Engine;
+
+                ChildChips = new List<ChipBase>();
 
                 ID = Guid.NewGuid().ToString();
 
@@ -149,6 +161,92 @@ namespace CircuitSim2
                 OutputSet.Detach();
             }
 
+#if GRAPHICS
+            public struct SizeVec
+            {
+                public double Length;
+                public double Width;
+                public double Height;
+            };
+
+            public virtual SizeVec Size
+            {
+                get
+                {
+                    return new SizeVec
+                    {
+                        Length = 2.0,
+                        Width = 2.0,
+                        Height = 1.0,
+                    };
+                }
+            }
+
+            public struct PositionVec
+            {
+                public double X;
+                public double Y;
+                public double Z;
+            }
+
+            public PositionVec Position;
+
+            public struct RotationVec
+            {
+                public double Pitch;
+                public double Yaw;
+                public double Roll;
+            }
+
+            public RotationVec Rotation;
+
+            public double _scale = 1.0;
+            public double Scale
+            {
+                get
+                {
+                    if(ParentChip != null)
+                    {
+                        return _scale * ParentChip.Scale;
+                    }
+
+                    return _scale;
+                }
+                set
+                {
+                    _scale = value;
+                }
+            }
+
+            private bool _visible = true;
+            public bool Visible
+            {
+                get
+                {
+                    if (ParentChip != null && !ParentChip.Visible)
+                    {
+                        return false;
+                    }
+
+                    return _visible;
+                }
+                set
+                {
+                    _visible = value;
+                }
+            }
+
+            public bool ChildrenVisible = false;
+
+            public virtual void Draw2D(Graphics G)
+            {
+                if (!Visible) return;
+
+
+            }
+#endif
+
+
             #region IDisposable Support
             private bool disposedValue = false;
 
@@ -162,6 +260,11 @@ namespace CircuitSim2
                         {
                             Engine?.Unregister(this);
                         }
+
+                        foreach(var chip in ChildChips)
+                        {
+                            chip.Dispose();
+                        }
                     }
 
                     disposedValue = true;
@@ -171,7 +274,7 @@ namespace CircuitSim2
             {
                 Dispose(true);
             }
-            #endregion
+#endregion
         }
     }
 }

@@ -5,67 +5,158 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Byte.Conversion
 {
+    [Chip("ByteToDouble")]
+    public sealed class ToDouble : UnaryFunctor<byte, double>
+    {
+        private ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+        }
+
+        public ToDouble(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToDouble(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToDouble() : this(null, null)
+        {
+        }
+
+        public override double Func(byte Value) => (double)Value;
+    }
+
     [Chip("ByteToChar")]
     public sealed class ToChar : UnaryFunctor<byte, char>
     {
-        public ToChar(Engine.Engine Engine = null) : base(a => (char)a, Engine)
+        private ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
-    }
 
-    [Chip("ByteToInteger")]
-    public sealed class ToInteger : UnaryFunctor<byte, int>
-    {
-        public ToInteger(Engine.Engine Engine = null) : base(a => a, Engine)
+        public ToChar(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
-
         }
+
+        public ToChar(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToChar() : this(null, null)
+        {
+        }
+
+        public override char Func(byte Value) => (char)Value;
     }
 
     [Chip("ByteToLong")]
     public sealed class ToLong : UnaryFunctor<byte, long>
     {
-        public ToLong(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToLong(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToLong(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToLong() : this(null, null)
+        {
+        }
+
+        public override long Func(byte Value) => (long)Value;
     }
 
     [Chip("ByteToSingle")]
     public sealed class ToSingle : UnaryFunctor<byte, float>
     {
-        public ToSingle(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToSingle(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToSingle(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToSingle() : this(null, null)
+        {
+        }
+
+        public override float Func(byte Value) => (float)Value;
     }
 
-    [Chip("ByteToDouble")]
-    public sealed class ToDouble : UnaryFunctor<byte, double>
+    [Chip("ByteToInteger")]
+    public sealed class ToInteger : UnaryFunctor<byte, int>
     {
-        public ToDouble(Engine.Engine Engine = null) : base(a => a, Engine)
+        private ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToInteger(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToInteger(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToInteger() : this(null, null)
+        {
+        }
+
+        public override int Func(byte Value) => (int)Value;
     }
 
     [Chip("ByteToString")]
     public sealed class ToString : UnaryFunctor<byte, string>
     {
-        public ToString(Engine.Engine Engine = null) : base(a => a.ToString(), Engine)
+        private ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToString(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToString() : this(null, null)
+        {
+        }
+
+        public override string Func(byte Value) => Value.ToString();
     }
 
     [Chip("ByteToHexString")]
     public sealed class ToHexString : UnaryFunctor<byte, string>
     {
-        public ToHexString(Engine.Engine Engine = null) : base(a => a.ToString("X"), Engine)
+        private ToHexString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public ToHexString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToHexString(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public ToHexString() : this(null, null)
+        {
+        }
+
+        public override string Func(byte Value) => Value.ToString("X");
     }
 
     [Chip("ByteDecompose")]
@@ -98,7 +189,19 @@ namespace CircuitSim2.Chips.Byte.Conversion
         public readonly GenericInput<byte> Inputs;
         public readonly OutputType Outputs;
 
-        public Decompose(Engine.Engine Engine = null) : base(Engine)
+        public Decompose() : this(null, null)
+        {
+        }
+
+        public Decompose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Decompose(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             Inputs = new GenericInput<byte>(this);
             Outputs = new OutputType(this);
@@ -164,8 +267,19 @@ namespace CircuitSim2.Chips.Byte.Conversion
 
         public readonly InputType Inputs;
         public readonly GenericOutput<byte> Outputs;
+        public Compose() : this(null, null)
+        {
+        }
 
-        public Compose(Engine.Engine Engine = null) : base(Engine)
+        public Compose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Compose(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private Compose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             Inputs = new InputType(this);
             Outputs = new GenericOutput<byte>(this);

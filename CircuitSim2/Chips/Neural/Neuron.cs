@@ -19,12 +19,31 @@ namespace CircuitSim2.Chips.Neural
 
         public readonly Func<double, double> Phi;
 
-        public Neuron(int NumInputs, Random Random, Engine.Engine Engine = null) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, Engine)
+        public Neuron(int NumInputs, Random Random) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, null, null)
         {
-
         }
 
-        public Neuron(int NumInputs, Func<double, double> Phi, Random Random, Engine.Engine Engine = null) : base(Engine)
+        public Neuron(int NumInputs, Random Random, ChipBase ParentChip) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, ParentChip)
+        {
+        }
+
+        public Neuron(int NumInputs, Func<double, double> Phi, Random Random) : this(NumInputs, Phi, Random, null, null)
+        {
+        }
+
+        public Neuron(int NumInputs, Random Random, Engine.Engine Engine) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, Engine)
+        {
+        }
+
+        public Neuron(int NumInputs, Func<double, double> Phi, Random Random, Engine.Engine Engine) : this(NumInputs, Phi, Random, null, Engine)
+        {
+        }
+
+        public Neuron(int NumInputs, Func<double, double> Phi, Random Random, ChipBase ParentChip) : this(NumInputs, Phi, Random, ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        private Neuron(int NumInputs, Func<double, double> Phi, Random Random, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             if (NumInputs <= 0) throw new ArgumentException("Neuron must have a positive number of inputs");
             else if (Phi == null) throw new ArgumentNullException("Phi");

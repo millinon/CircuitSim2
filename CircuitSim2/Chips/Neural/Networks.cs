@@ -19,7 +19,19 @@ namespace CircuitSim2.Chips.Neural.Networks
 
         public readonly int[] Layers;
 
-        public FeedForward(int NumInputs, int[] Layers, Engine.Engine Engine = null) : base(Engine)
+        public FeedForward(int NumInputs, int[] Layers) : this(NumInputs, Layers, null, null)
+        {
+        }
+
+        public FeedForward(int NumInputs, int[] Layers, ChipBase ParentChip) : this(NumInputs, Layers, ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public FeedForward(int NumInputs, int[] Layers, Engine.Engine Engine) : this(NumInputs, Layers, null, Engine)
+        {
+        }
+
+        private FeedForward(int NumInputs, int[] Layers, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             if (Layers == null) throw new ArgumentNullException("Layers");
             else if (Layers.Length < 1) throw new ArgumentException("Layers.Length must be >= 1");
@@ -71,7 +83,7 @@ namespace CircuitSim2.Chips.Neural.Networks
 
         public void BackPropagate(double[] Expected, double LearningRate)
         {
-            if (Expected == null) throw new ArgumentNullException("Expected");
+            if (Expected == null) throw new ArgumentNullException(nameof(Expected));
             else if (Expected.Length != Outputs.Length) throw new ArgumentException("Expected[] length != NumOutputs");
 
             double[][] gradients = new double[Layers.Length][];

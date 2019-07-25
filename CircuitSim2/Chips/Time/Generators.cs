@@ -11,8 +11,21 @@ namespace CircuitSim2.Chips.Time
     [Chip("TickCount")]
     public class TickCount : Generator<int>
     {
-        public TickCount(Engine.Engine Engine = null) : base(Engine)
+        private TickCount(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
+        }
+
+        public TickCount(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public TickCount(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public TickCount() : this(null, null)
+        {
+
         }
 
         protected override int NextValue()

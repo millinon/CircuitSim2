@@ -27,7 +27,19 @@ namespace CircuitSim2.Chips.Components.Adders
         private readonly XOR XOR;
         private readonly AND AND;
 
-        public HalfAdder(Engine.Engine Engine = null) : base(Engine)
+        public HalfAdder() : this(null, null)
+        {
+        }
+
+        public HalfAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public HalfAdder(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private HalfAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new GenericInput<bool, bool>(this));
             OutputSet = (Outputs = new OutputType(this));
@@ -86,7 +98,19 @@ namespace CircuitSim2.Chips.Components.Adders
         private readonly AND AND2;
         private readonly OR OR;
 
-        public FullAdder(Engine.Engine Engine = null) : base(Engine)
+        public FullAdder() : this(null, null)
+        {
+        }
+
+        public FullAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public FullAdder(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private FullAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             Inputs = new InputType(this);
             Outputs = new OutputType(this);
@@ -156,7 +180,19 @@ namespace CircuitSim2.Chips.Components.Adders
 
         private readonly FullAdder[] Adders;
 
-        public ByteAdder(Engine.Engine Engine = null) : base(Engine)
+        public ByteAdder() : this(null, null)
+        {
+        }
+
+        public ByteAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ByteAdder(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private ByteAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));

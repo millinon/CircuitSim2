@@ -45,7 +45,7 @@ namespace CircuitSim2.Chips.Components.Memory
         private readonly NOR NOR1;
         private readonly NOR NOR2;
 
-        public DLatch(Engine.Engine Engine) : base(Engine)
+        public DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             if (Engine == null) throw new ArgumentNullException(nameof(Engine));
 
@@ -72,6 +72,10 @@ namespace CircuitSim2.Chips.Components.Memory
 
             Outputs.Q.Bind(NOR1.Outputs.Out);
             Outputs.NQ.Bind(NOR2.Outputs.Out);
+        }
+
+        public DLatch(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
         }
     }
 }

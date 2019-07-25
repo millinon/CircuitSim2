@@ -8,28 +8,55 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CircuitSim2</RootNamespace>
-    <AssemblyName>CircuitSim2</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
+  
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <AssemblyName>CircuitSim2</AssemblyName>
+	<DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug_Graphics'">
+	<AssemblyName>CircuitSim2_Graphics</AssemblyName>
+    <DefineConstants>DEBUG;TRACE;GRAPHICS</DefineConstants>
+  </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <AssemblyName>CircuitSim2</AssemblyName>
+	<DefineConstants>TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release_Graphics'">
+	<AssemblyName>CircuitSim2_Graphics</AssemblyName>
+    <DefineConstants>TRACE;GRAPHICS</DefineConstants>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug' Or '$(Configuration)' == 'Debug_Graphics'">
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition="'$(Configuration)' == 'Release' Or '$(Configuration)' == 'Release_Graphics'">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+	<DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="'$(Configuration)' == 'Debug_Graphics' Or '$(Configuration)' == 'Release_Graphics'">
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  
+  
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

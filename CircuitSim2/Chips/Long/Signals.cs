@@ -5,18 +5,40 @@ namespace CircuitSim2.Chips.Long.Signals
     [Chip("LongRisingEdge")]
     public sealed class RisingEdge : ED
     {
-        public RisingEdge(Engine.Engine Engine = null) : base((a, b) => (a < b), Engine)
+        private RisingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a < b, ParentChip, Engine)
         {
+        }
 
+        public RisingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public RisingEdge(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public RisingEdge() : this(null, null)
+        {
         }
     }
 
     [Chip("LongFallingEdge")]
     public sealed class FallingEdge : ED
     {
-        public FallingEdge(Engine.Engine Engine = null) : base((a, b) => (a > b), Engine)
+        private FallingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a < b, ParentChip, Engine)
         {
+        }
 
+        public FallingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public FallingEdge(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public FallingEdge() : this(null, null)
+        {
         }
     }
 }

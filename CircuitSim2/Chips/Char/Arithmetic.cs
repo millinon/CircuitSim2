@@ -5,63 +5,110 @@ namespace CircuitSim2.Chips.Char.Arithmetic
     [Chip("CharAdd")]
     public sealed class Add : BF
     {
-        public Add(Engine.Engine Engine = null) : base((a, b) => (char)(a + b), Engine)
+        private Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public Add(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Add(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Add() : this(null, null)
+        {
+        }
+
+        public override char Func(char Val1, char Val2) => (char)(Val1 + Val2);
     }
 
     [Chip("CharSubtract")]
     public sealed class Subtract : BF
     {
-        public Subtract(Engine.Engine Engine = null) : base((a, b) => (char)(a - b), Engine)
+        private Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public Subtract(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Subtract(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Subtract() : this(null, null)
+        {
+        }
+
+        public override char Func(char Val1, char Val2) => (char)(Val1 - Val2);
     }
 
     [Chip("CharMultiply")]
     public sealed class Multiply : BF
     {
-        public Multiply(Engine.Engine Engine = null) : base((a, b) => (char)(a * b), Engine)
+        private Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public Multiply(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Multiply(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Multiply() : this(null, null)
+        {
+        }
+
+        public override char Func(char Val1, char Val2) => (char)(Val1 * Val2);
     }
 
     [Chip("CharDivide")]
     public sealed class Divide : BF
     {
-        public Divide(Engine.Engine Engine = null) : base((a, b) => (char)(a / b), Engine)
+        private Divide(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
+
+        public Divide(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Divide(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Divide() : this(null, null)
+        {
+        }
+
+        public override char Func(char Val1, char Val2) => (char)(Val1 / Val2);
     }
 
     [Chip("CharModulus")]
     public sealed class Modulus : BF
     {
-        public Modulus(Engine.Engine Engine = null) : base((a, b) => (char)(a % b), Engine)
+        private Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
         }
-    }
 
-    [Chip("CharLeftShift")]
-    public sealed class LeftShift : BF
-    {
-        public LeftShift(Engine.Engine Engine = null) : base((a, b) => (char)(a << b), Engine)
+        public Modulus(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
-
         }
-    }
 
-    [Chip("CharRightShift")]
-    public sealed class RightShift : BF
-    {
-        public RightShift(Engine.Engine Engine = null) : base((a, b) => (char)(a >> b), Engine)
+        public Modulus(Engine.Engine Engine) : this(null, Engine)
         {
-
         }
+
+        public Modulus() : this(null, null)
+        {
+        }
+
+        public override char Func(char Val1, char Val2) => (char)(Val1 % Val2);
     }
 }
