@@ -19,11 +19,11 @@ namespace NNXOR
                 var A = new GenericInput<bool>(Engine);
                 var B = new GenericInput<bool>(Engine);
 
-                var convA = new ToDouble(Engine);
-                var convB = new ToDouble(Engine);
+                var convA = new ToDouble(0.0, 1.0, Engine);
+                var convB = new ToDouble(0.0, 1.0, Engine);
 
                 var XOR = new XOR(Engine);
-                var convX = new ToDouble(Engine);
+                var convX = new ToDouble(0.0, 1.0, Engine);
 
                 var NN = new FeedForward(2, new int[] { 3, 1 }, Engine);
 

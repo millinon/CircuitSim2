@@ -66,5 +66,12 @@ namespace CircuitSim2.Chips.Time
                 }
             }
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 1,
+            Width = 2,
+            Height = 1,
+        };
     }
 }

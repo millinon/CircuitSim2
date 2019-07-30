@@ -32,5 +32,12 @@ namespace CircuitSim2.Chips.Signals
         }
 
         public sealed override void Output() => Outputs.Out.Value = _out;
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 1.0,
+            Width = 2.0,
+            Height = 1.0,
+        };
     }
 }

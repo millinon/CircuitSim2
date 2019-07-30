@@ -9,7 +9,6 @@ using CircuitSim2.IO;
 namespace CircuitSim2.Chips.Neural.Networks
 {
     [Chip("FeedForward")]
-    [PureChip]
     public sealed class FeedForward : ChipBase
     {
         public readonly InputArray<double> Inputs;
@@ -56,7 +55,7 @@ namespace CircuitSim2.Chips.Neural.Networks
 
                     if (layer == 0)
                     {
-                        n = (Neurons[layer][neuron] = new Neuron(NumInputs, Random, Engine));
+                        AddSubChip(n = (Neurons[layer][neuron] = new Neuron(NumInputs, Random, this)));
 
                         for (int input = 0; input < NumInputs; input++)
                         {
@@ -65,7 +64,7 @@ namespace CircuitSim2.Chips.Neural.Networks
 
                     } else
                     {
-                        n = (Neurons[layer][neuron] = new Neuron(Layers[layer - 1], Random, Engine));
+                        AddSubChip(n = (Neurons[layer][neuron] = new Neuron(Layers[layer - 1], Random, Engine)));
 
                         for (int input = 0; input < Layers[layer - 1]; input++)
                         {
@@ -133,5 +132,12 @@ namespace CircuitSim2.Chips.Neural.Networks
                 }
             }
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = Layers.Max()+1,
+            Width = Layers.Length+1,
+            Height = 1,
+        };
     }
 }

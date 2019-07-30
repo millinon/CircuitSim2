@@ -74,5 +74,12 @@ namespace CircuitSim2.Chips.Neural
         {
             Outputs.Out.Value = _out;
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 1.0,
+            Width = NumInputs+1.0,
+            Height = 1.0,
+        };
     }
 }

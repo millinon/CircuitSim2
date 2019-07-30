@@ -44,8 +44,26 @@ namespace CircuitSim2.Chips.Components.Adders
             InputSet = (Inputs = new GenericInput<bool, bool>(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            XOR = new XOR(Engine);
-            AND = new AND(Engine);
+            AddSubChip(XOR = new XOR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 0,
+                    Y = 1.0,
+                    Z = 0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(AND = new AND(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 0,
+                    Y = 1.0,
+                    Z = 0,
+                },
+                Scale = 0.5,
+            });
 
             XOR.Inputs.A.Bind(Inputs.A);
             XOR.Inputs.B.Bind(Inputs.B);
@@ -112,17 +130,59 @@ namespace CircuitSim2.Chips.Components.Adders
 
         private FullAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-            Inputs = new InputType(this);
-            Outputs = new OutputType(this);
+            InputSet = (Inputs = new InputType(this));
+            OutputSet = (Outputs = new OutputType(this));
 
-            InputSet = Inputs;
-            OutputSet = Outputs;
-
-            XOR1 = new XOR(Engine);
-            XOR2 = new XOR(Engine);
-            AND1 = new AND(Engine);
-            AND2 = new AND(Engine);
-            OR = new OR(Engine);
+            AddSubChip(XOR1 = new XOR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -1.5,
+                    Y = 1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(XOR2 = new XOR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 1.0,
+                    Y = 1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(AND1 = new AND(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 0.0,
+                    Y = -.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(AND2 = new AND(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -1.5,
+                    Y = -1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(OR = new OR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 2.0,
+                    Y = -1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
 
             XOR1.Inputs.A.Bind(Inputs.A);
             XOR1.Inputs.B.Bind(Inputs.B);
@@ -197,15 +257,51 @@ namespace CircuitSim2.Chips.Components.Adders
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            DecomposerA = new Byte.Conversion.Decompose(Engine);
-            DecomposerB = new Byte.Conversion.Decompose(Engine);
-            Composer = new Byte.Conversion.Compose(Engine);
+            AddSubChip(DecomposerA = new Byte.Conversion.Decompose(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -4.0,
+                    Y = 10.0,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(DecomposerB = new Byte.Conversion.Decompose(this)
+            {
+                Position = new PositionVec
+                {
+                  X = -4.0,
+                  Y = -10.0,
+                  Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(Composer = new Byte.Conversion.Compose(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 4.0,
+                    Y = 0.0,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
 
             Adders = new FullAdder[8];
 
             for (int i = 0; i < 8; i++)
             {
-                Adders[i] = new FullAdder(Engine);
+                AddSubChip(Adders[i] = new FullAdder(this)
+                {
+                    Position = new PositionVec
+                    {
+                        X = 0.0,
+                        Y = (size.Width-1)/8*(i-4),
+                        Z = 0.0,
+                    },
+                    Scale = 0.5,
+                });
             }
 
             DecomposerA.Inputs.A.Bind(Inputs.A);
@@ -231,5 +327,12 @@ namespace CircuitSim2.Chips.Components.Adders
             Outputs.S.Bind(Composer.Outputs.Out);
             Outputs.Cout.Bind(Adders[7].Outputs.Cout);
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 11,
+            Width = 30,
+            Height = 1,
+        };
     }
 }

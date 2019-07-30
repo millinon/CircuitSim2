@@ -42,7 +42,12 @@ namespace CircuitSim2.Chips
                 public string Namespace;
                 public string Name;
                 public string ID;
+
                 public bool AutoTick;
+                public PositionVec Position;
+                public RotationVec Rotation;
+                public double Scale;
+
                 public List<InputBindingDescription> Bindings;
             }
             public List<ChipDescription> Chips;
@@ -60,7 +65,6 @@ namespace CircuitSim2.Chips
 
         private MetaChip(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = new CircuitSim2.IO.NoOutputs();
         }
@@ -75,7 +79,6 @@ namespace CircuitSim2.Chips
 
         public MetaChip() : this(null, null)
         {
-
         }
         
         private Dictionary<string, Chips.ChipBase> Chips;
@@ -83,11 +86,14 @@ namespace CircuitSim2.Chips
         private Dictionary<string, CircuitSim2.IO.InputBase> Inputs;
         private Dictionary<string, CircuitSim2.IO.OutputBase> Outputs;
 
-        //private List<MetaChipDescription.OutputDescription> OutputMapping;
-
         public void Load(MetaChipDescription Description)
         {
             Detach();
+            foreach(var subchip in SubChips)
+            {
+                RemoveSubChip(subchip);
+                subchip.Dispose();
+            }
 
             Chips = new Dictionary<string, ChipBase>();
 
@@ -203,8 +209,13 @@ namespace CircuitSim2.Chips
 
                 var match = matches.First();
 
-                Chips[desc.ID] = Activator.CreateInstance(match, new object [] { Engine }) as Chips.ChipBase;
+                AddSubChip(Chips[desc.ID] = Activator.CreateInstance(match, new object[] { (this as ChipBase) }) as Chips.ChipBase);
                 Chips[desc.ID].AutoTick = desc.AutoTick;
+                Chips[desc.ID].Position = desc.Position;
+                Chips[desc.ID].Rotation = desc.Rotation;
+                Chips[desc.ID].Scale = desc.Scale;
+
+
 
                 desc.Bindings?.ForEach(binding => Chips[desc.ID].InputSet[binding.Name].Bind(Inputs[binding.BindName]));
             }
@@ -218,56 +229,6 @@ namespace CircuitSim2.Chips
             {
                 OutputSet[desc.Name].Bind(Chips[desc.MapID].OutputSet[desc.MapOutput]);
             }
-            //OutputMapping = Description.Outputs;
         }
-
-        public override void Output()
-        {
-        }/*
-            foreach (var desc in OutputMapping)
-            {
-                var output = Outputs[desc.Name];
-
-                var mapped = Chips[desc.MapID].OutputSet[desc.MapOutput];
-
-                switch (desc.Type)
-                {
-                    case CircuitSim2.IO.Type.DIGITAL:
-                        (output as CircuitSim2.IO.Output<bool>).Value = (mapped as CircuitSim2.IO.Output<bool>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.BYTE:
-                        (output as CircuitSim2.IO.Output<byte>).Value = (mapped as CircuitSim2.IO.Output<byte>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.CHAR:
-                        (output as CircuitSim2.IO.Output<char>).Value = (mapped as CircuitSim2.IO.Output<char>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.INT:
-                        (output as CircuitSim2.IO.Output<int>).Value = (mapped as CircuitSim2.IO.Output<int>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.LONG:
-                        (output as CircuitSim2.IO.Output<long>).Value = (mapped as CircuitSim2.IO.Output<long>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.SINGLE:
-                        (output as CircuitSim2.IO.Output<float>).Value = (mapped as CircuitSim2.IO.Output<float>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.DOUBLE:
-                        (output as CircuitSim2.IO.Output<double>).Value = (mapped as CircuitSim2.IO.Output<double>).Value;
-                        break;
-
-                    case CircuitSim2.IO.Type.STRING:
-                        (output as CircuitSim2.IO.Output<string>).Value = (mapped as CircuitSim2.IO.Output<string>).Value;
-                        break;
-
-                    default:
-                        throw new ArgumentException();
-                }
-            }
-        }*/
     }
 }

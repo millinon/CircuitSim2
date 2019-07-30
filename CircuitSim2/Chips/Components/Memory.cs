@@ -1,10 +1,7 @@
-﻿using CircuitSim2.Chips.Digital.Logic;
+﻿using System;
+
+using CircuitSim2.Chips.Digital.Logic;
 using CircuitSim2.IO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CircuitSim2.Chips.Components.Memory
 {
@@ -45,18 +42,72 @@ namespace CircuitSim2.Chips.Components.Memory
         private readonly NOR NOR1;
         private readonly NOR NOR2;
 
-        public DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+
+        public DLatch(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public DLatch(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        private DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             if (Engine == null) throw new ArgumentNullException(nameof(Engine));
 
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            NOT = new NOT(Engine);
-            AND1 = new AND(Engine);
-            AND2 = new AND(Engine);
-            NOR1 = new NOR(Engine);
-            NOR2 = new NOR(Engine);
+            AddSubChip(NOT = new NOT(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -2.5,
+                    Y = 2.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(AND1 = new AND(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -1.5,
+                    Y = 1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(AND2 = new AND(this)
+            {
+                Position = new PositionVec
+                {
+                    X = -1.5,
+                    Y = -1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(NOR1 = new NOR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 1.5,
+                    Y = 1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
+            AddSubChip(NOR2 = new NOR(this)
+            {
+                Position = new PositionVec
+                {
+                    X = 1.5,
+                    Y = -1.5,
+                    Z = 0.0,
+                },
+                Scale = 0.5,
+            });
 
             NOT.Inputs.A.Bind(Inputs.D);
             AND2.Inputs.B.Bind(Inputs.D);
@@ -72,10 +123,6 @@ namespace CircuitSim2.Chips.Components.Memory
 
             Outputs.Q.Bind(NOR1.Outputs.Out);
             Outputs.NQ.Bind(NOR2.Outputs.Out);
-        }
-
-        public DLatch(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
         }
     }
 }

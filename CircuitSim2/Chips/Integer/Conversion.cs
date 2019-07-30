@@ -160,6 +160,7 @@ namespace CircuitSim2.Chips.Integer.Conversion
     }
 
     [Chip("IntegerDecompose")]
+    [PureChip]
     public sealed class Decompose : ChipBase
     {
         public readonly GenericInput<int> Inputs;
@@ -216,6 +217,7 @@ namespace CircuitSim2.Chips.Integer.Conversion
     }
 
     [Chip("IntegerCompose")]
+    [PureChip]
     public sealed class Compose : ChipBase
     {
         public sealed class InputType : InputSetBase

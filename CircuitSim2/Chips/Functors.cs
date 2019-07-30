@@ -25,6 +25,13 @@ namespace CircuitSim2.Chips.Functors
         {
             base.Tick();
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 1,
+            Width = 2,
+            Height = 1,
+        };
     }
 
     [PureChip]
@@ -51,6 +58,13 @@ namespace CircuitSim2.Chips.Functors
         {
             base.Tick();
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 2.0,
+            Width = 1.0,
+            Height = 1.0,
+        };
     }
 
     [PureChip]
@@ -77,5 +91,12 @@ namespace CircuitSim2.Chips.Functors
         {
             base.Tick();
         }
+
+        public override SizeVec size => new SizeVec
+        {
+            Length = 1.0,
+            Width = 3.0,
+            Height = 1.0,
+        };
     }
 }

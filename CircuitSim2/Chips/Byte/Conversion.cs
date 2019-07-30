@@ -160,6 +160,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
     }
 
     [Chip("ByteDecompose")]
+    [PureChip]
     public sealed class Decompose : ChipBase
     {
         public sealed class OutputType : OutputSetBase
@@ -239,6 +240,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
     }
 
     [Chip("ByteCompose")]
+    [PureChip]
     public sealed class Compose : ChipBase
     {
         public sealed class InputType : InputSetBase
