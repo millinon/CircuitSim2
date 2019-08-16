@@ -174,7 +174,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
             public readonly Output<bool> Bit6;
             public readonly Output<bool> Bit7;
 
-            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Output<bool>($"Bit{i}", Chip)))
+            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Output<bool>($"Bit{i}", Chip, i)))
             {
                 Bit0 = this["Bit0"] as Output<bool>;
                 Bit1 = this["Bit1"] as Output<bool>;
@@ -254,7 +254,7 @@ namespace CircuitSim2.Chips.Byte.Conversion
             public readonly Input<bool> Bit6;
             public readonly Input<bool> Bit7;
 
-            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Input<bool>($"Bit{i}", Chip)))
+            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Input<bool>($"Bit{i}", Chip, i)))
             {
                 Bit0 = this["Bit0"] as Input<bool>;
                 Bit1 = this["Bit1"] as Input<bool>;

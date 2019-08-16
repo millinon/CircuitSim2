@@ -14,7 +14,7 @@ namespace CircuitSim2.Chips.Components.Adders
             public readonly Output<bool> S;
             public readonly Output<bool> C;
 
-            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("S", Chip), new Output<bool>("C", Chip) })
+            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("S", Chip, 0), new Output<bool>("C", Chip, 1) })
             {
                 S = this["S"] as Output<bool>;
                 C = this["C"] as Output<bool>;
@@ -86,7 +86,7 @@ namespace CircuitSim2.Chips.Components.Adders
             public readonly Input<bool> B;
             public readonly Input<bool> Cin;
 
-            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<bool>("A", Chip), new Input<bool>("B", Chip), new CircuitSim2.IO.Input<bool>("Cin", Chip) })
+            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<bool>("A", Chip, 0), new Input<bool>("B", Chip, 1), new CircuitSim2.IO.Input<bool>("Cin", Chip, 2) })
             {
                 A = this["A"] as Input<bool>;
                 B = this["B"] as Input<bool>;
@@ -100,7 +100,7 @@ namespace CircuitSim2.Chips.Components.Adders
             public readonly Output<bool> S;
             public readonly Output<bool> Cout;
 
-            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("S", Chip), new Output<bool>("Cout", Chip) })
+            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("S", Chip, 0), new Output<bool>("Cout", Chip, 1) })
             {
                 S = this["S"] as Output<bool>;
                 Cout = this["Cout"] as Output<bool>;
@@ -137,8 +137,8 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = -1.5,
-                    Y = 1.5,
+                    X = -4.5,
+                    Y = 2.5,
                     Z = 0.0,
                 },
                 Scale = 0.5,
@@ -147,7 +147,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = 1.0,
+                    X = 2.0,
                     Y = 1.5,
                     Z = 0.0,
                 },
@@ -157,8 +157,8 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = 0.0,
-                    Y = -.5,
+                    X = -1.5,
+                    Y = 0.0,
                     Z = 0.0,
                 },
                 Scale = 0.5,
@@ -167,8 +167,8 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = -1.5,
-                    Y = -1.5,
+                    X = -4.5,
+                    Y = -2.5,
                     Z = 0.0,
                 },
                 Scale = 0.5,
@@ -177,7 +177,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = 2.0,
+                    X = 4.5,
                     Y = -1.5,
                     Z = 0.0,
                 },
@@ -211,7 +211,7 @@ namespace CircuitSim2.Chips.Components.Adders
             public readonly Input<byte> B;
             public readonly Input<bool> Cin;
 
-            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<byte>("A", Chip), new Input<byte>("B", Chip), new Input<bool>("Cin", Chip) })
+            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<byte>("A", Chip, 0), new Input<byte>("B", Chip, 1), new Input<bool>("Cin", Chip, 2) })
             {
                 A = this["A"] as Input<byte>;
                 B = this["B"] as Input<byte>;
@@ -224,7 +224,7 @@ namespace CircuitSim2.Chips.Components.Adders
             public readonly Output<byte> S;
             public readonly Output<bool> Cout;
 
-            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<byte>("S", Chip), new Output<bool>("Cout", Chip) })
+            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<byte>("S", Chip, 0), new Output<bool>("Cout", Chip, 1) })
             {
                 S = this["S"] as Output<byte>;
                 Cout = this["Cout"] as Output<bool>;
@@ -261,7 +261,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = -4.0,
+                    X = -6.0,
                     Y = 10.0,
                     Z = 0.0,
                 },
@@ -271,7 +271,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                  X = -4.0,
+                  X = -6.0,
                   Y = -10.0,
                   Z = 0.0,
                 },
@@ -281,7 +281,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = 4.0,
+                    X = 6.0,
                     Y = 0.0,
                     Z = 0.0,
                 },
@@ -297,7 +297,7 @@ namespace CircuitSim2.Chips.Components.Adders
                     Position = new PositionVec
                     {
                         X = 0.0,
-                        Y = (size.Width-1)/8*(i-4),
+                        Y = ((size.Width)/8)*(i-3.5),
                         Z = 0.0,
                     },
                     Scale = 0.5,
@@ -330,8 +330,8 @@ namespace CircuitSim2.Chips.Components.Adders
 
         public override SizeVec size => new SizeVec
         {
-            Length = 11,
-            Width = 30,
+            Length = 24,
+            Width = 48,
             Height = 1,
         };
     }

@@ -173,16 +173,6 @@ namespace CircuitSim2
 
             #region Graphics Support
 
-            public struct SizeVec
-            {
-                /// <summary>X dimension</summary>
-                public double Length;
-                /// <summary>Y dimension</summary>
-                public double Width;
-                /// <summary>Z dimension</summary>
-                public double Height;
-            };
-
             public virtual SizeVec size
             {
                 get
@@ -196,8 +186,8 @@ namespace CircuitSim2
 
                     return new SizeVec
                     {
-                        Length = Math.Max((int)(subchips * 1.5), 1),
-                        Width = Math.Max((int)(subchips * 1.5), maxio),
+                        Length = Math.Max((int)((subchips + 2)*2), 2),
+                        Width = Math.Max((int)(subchips * 1.5), maxio*2.5),
                         Height = 1,
                     };
                 }
@@ -207,7 +197,7 @@ namespace CircuitSim2
             {
                 get
                 {
-                    var s = scale;
+                    var s = Scale;
 
                     return new SizeVec
                     {
@@ -216,43 +206,6 @@ namespace CircuitSim2
                         Height = s * size.Height,
                     };
                 }
-            }
-
-            public struct PositionVec
-            {
-                public double X;
-                public double Y;
-                public double Z;
-
-                public PositionVec Add(PositionVec rhs)
-                {
-                    return new PositionVec
-                    {
-                        X = this.X + rhs.X,
-                        Y = this.Y + rhs.Y,
-                        Z = this.Z + rhs.Z,
-                    };
-                }
-
-                public PositionVec Multiply(double[][] Matrix)
-                {
-                    if(Matrix == null)
-                    {
-                        throw new ArgumentNullException(nameof(Matrix));
-                    }
-                    if(Matrix.Length != 3 || Matrix.Any(row => row.Length != 3))
-                    {
-                        throw new InvalidOperationException();
-                    }
-
-                    return new PositionVec
-                    {
-                        X = this.X * Matrix[0][0] + this.Y * Matrix[0][1] + this.Z * Matrix[0][2],
-                        Y = this.X * Matrix[1][0] + this.Y * Matrix[1][1] + this.Z * Matrix[1][2],
-                        Z = this.X * Matrix[2][0] + this.Y * Matrix[2][1] + this.Z * Matrix[2][2],
-                    };
-                }
-
             }
 
             private PositionVec position = new PositionVec
@@ -266,8 +219,18 @@ namespace CircuitSim2
                 get {
                     if(ParentChip != null)
                     {
+
+                        
+                        var parent_scale = ParentChip.Scale;
                         var parent_angle = ParentChip.Rotation;
                         var parent_pos = ParentChip.Position;
+
+                        var pos = new PositionVec
+                        {
+                            X = parent_scale * position.X,
+                            Y = parent_scale * position.Y,
+                            Z = parent_scale * position.Z,
+                        };
 
                         var rotation_matrix = new double[3][]
                         {
@@ -276,7 +239,7 @@ namespace CircuitSim2
                             new double[3] { -Sin(parent_angle.Beta), Sin(parent_angle.Alpha)*Cos(parent_angle.Beta), Cos(parent_angle.Alpha)*Cos(parent_angle.Beta) }
                         };
 
-                        return parent_pos.Add(position.Multiply(rotation_matrix));
+                        return parent_pos.Add(pos.Multiply(rotation_matrix));
                     } else
                     {
                         return position;
@@ -286,16 +249,6 @@ namespace CircuitSim2
                 {
                     position = value;
                 }
-            }
-
-            public struct RotationVec
-            {
-                /// <summary>Rotation about the X-axis in radians</summary>
-                public double Alpha;
-                /// <summary>Rotation about the Y-axis in radians</summary>
-                public double Beta;
-                /// <summary>Rotation about the Z-axis in radians</summary>
-                public double Gamma;
             }
 
             public RotationVec rotation = new RotationVec
@@ -370,7 +323,25 @@ namespace CircuitSim2
                 }
             }
 
-            public bool ChildrenVisible = false;
+            private bool childrenvisible = false;
+
+            public bool ChildrenVisible
+            {
+                get
+                {
+                    return childrenvisible;
+                }
+
+                set
+                {
+                    childrenvisible = value;
+
+                    foreach(var chip in SubChips)
+                    {
+                        chip.ChildrenVisible = true;
+                    }
+                }
+            }
 #endregion
 
             #region IDisposable Support

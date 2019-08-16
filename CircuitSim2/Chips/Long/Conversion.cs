@@ -176,7 +176,7 @@ namespace CircuitSim2.Chips.Long.Conversion
             public readonly Output<byte> Byte6;
             public readonly Output<byte> Byte7;
 
-            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Output<byte>($"Byte{i}", Chip)))
+            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Output<byte>($"Byte{i}", Chip, i)))
             {
                 Byte0 = this["Byte0"] as Output<byte>;
                 Byte1 = this["Byte1"] as Output<byte>;
@@ -245,7 +245,7 @@ namespace CircuitSim2.Chips.Long.Conversion
             public readonly Input<byte> Byte6;
             public readonly Input<byte> Byte7;
 
-            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Input<byte>($"Byte{i}", Chip)))
+            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 8).Select(i => new Input<byte>($"Byte{i}", Chip, i)))
             {
                 Byte0 = this["Byte0"] as Input<byte>;
                 Byte1 = this["Byte1"] as Input<byte>;

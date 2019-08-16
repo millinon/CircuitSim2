@@ -103,6 +103,7 @@ namespace CircuitSim2.Chips
             Inputs = new Dictionary<string, CircuitSim2.IO.InputBase>();
 
             var InputList = new List<CircuitSim2.IO.InputBase>();
+            var input_idx = 0;
             foreach (var desc in Description.Inputs)
             {
                 CircuitSim2.IO.InputBase input;
@@ -110,35 +111,35 @@ namespace CircuitSim2.Chips
                 switch (desc.Type)
                 {
                     case CircuitSim2.IO.Type.DIGITAL:
-                        input = new CircuitSim2.IO.Input<bool>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<bool>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.BYTE:
-                        input = new CircuitSim2.IO.Input<byte>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<byte>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.CHAR:
-                        input = new CircuitSim2.IO.Input<char>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<char>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.INT:
-                        input = new CircuitSim2.IO.Input<int>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<int>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.LONG:
-                        input = new CircuitSim2.IO.Input<long>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<long>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.SINGLE:
-                        input = new CircuitSim2.IO.Input<float>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<float>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.DOUBLE:
-                        input = new CircuitSim2.IO.Input<double>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<double>(desc.Name, this, input_idx);
                         break;
 
                     case CircuitSim2.IO.Type.STRING:
-                        input = new CircuitSim2.IO.Input<string>(desc.Name, this);
+                        input = new CircuitSim2.IO.Input<string>(desc.Name, this, input_idx);
                         break;
 
                     default:
@@ -154,6 +155,7 @@ namespace CircuitSim2.Chips
             Outputs = new Dictionary<string, CircuitSim2.IO.OutputBase>();
 
             var OutputList = new List<CircuitSim2.IO.OutputBase>();
+            var output_idx = 0;
             foreach (var desc in Description.Outputs)
             {
                 CircuitSim2.IO.OutputBase output;
@@ -161,35 +163,35 @@ namespace CircuitSim2.Chips
                 switch (desc.Type)
                 {
                     case CircuitSim2.IO.Type.DIGITAL:
-                        output = new CircuitSim2.IO.Output<bool>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<bool>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.BYTE:
-                        output = new CircuitSim2.IO.Output<byte>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<byte>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.CHAR:
-                        output = new CircuitSim2.IO.Output<char>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<char>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.INT:
-                        output = new CircuitSim2.IO.Output<int>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<int>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.LONG:
-                        output = new CircuitSim2.IO.Output<long>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<long>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.SINGLE:
-                        output = new CircuitSim2.IO.Output<float>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<float>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.DOUBLE:
-                        output = new CircuitSim2.IO.Output<double>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<double>(desc.Name, this, output_idx);
                         break;
 
                     case CircuitSim2.IO.Type.STRING:
-                        output = new CircuitSim2.IO.Output<string>(desc.Name, this);
+                        output = new CircuitSim2.IO.Output<string>(desc.Name, this, output_idx);
                         break;
 
                     default:
@@ -198,6 +200,8 @@ namespace CircuitSim2.Chips
 
                 Outputs[desc.Name] = output;
                 OutputList.Add(output);
+
+                output_idx++;
             }
             OutputSet = new CircuitSim2.IO.OutputSetBase(OutputList);
 

@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.Components.Memory
             public readonly Input<bool> D;
             public readonly Input<bool> E;
 
-            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<bool>("D", Chip), new Input<bool>("E", Chip) })
+            public InputType(ChipBase Chip) : base(new InputBase[] { new Input<bool>("D", Chip, 0), new Input<bool>("E", Chip, 1) })
             {
                 D = this["D"] as Input<bool>;
                 E = this["E"] as Input<bool>;
@@ -27,7 +27,7 @@ namespace CircuitSim2.Chips.Components.Memory
             public readonly Output<bool> Q;
             public readonly Output<bool> NQ;
 
-            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("Q", Chip), new Output<bool>("NQ", Chip) })
+            public OutputType(ChipBase Chip) : base(new OutputBase[] { new Output<bool>("Q", Chip, 0), new Output<bool>("NQ", Chip, 1) })
             {
                 Q = this["Q"] as Output<bool>;
                 NQ = this["NQ"] as Output<bool>;

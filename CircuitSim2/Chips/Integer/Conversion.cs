@@ -172,7 +172,7 @@ namespace CircuitSim2.Chips.Integer.Conversion
             public readonly Output<byte> Byte2;
             public readonly Output<byte> Byte3;
 
-            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 4).Select(i => new Output<byte>($"Byte{i}", Chip)))
+            public OutputType(ChipBase Chip) : base(Enumerable.Range(0, 4).Select(i => new Output<byte>($"Byte{i}", Chip, i)))
             {
                 Byte0 = this["Byte0"] as Output<byte>;
                 Byte1 = this["Byte1"] as Output<byte>;
@@ -227,7 +227,7 @@ namespace CircuitSim2.Chips.Integer.Conversion
             public readonly Input<byte> Byte2;
             public readonly Input<byte> Byte3;
 
-            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 4).Select(i => new Input<byte>($"Byte{i}", Chip)))
+            public InputType(ChipBase Chip) : base(Enumerable.Range(0, 4).Select(i => new Input<byte>($"Byte{i}", Chip, i)))
             {
                 Byte0 = this["Byte0"] as Input<byte>;
                 Byte1 = this["Byte1"] as Input<byte>;

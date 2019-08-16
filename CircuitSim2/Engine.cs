@@ -179,6 +179,8 @@ namespace CircuitSim2.Engine
 
         private readonly object lock_obj;
 
+        public IEnumerable<ChipBase> AllChips => Chips.Values;
+
         public Engine()
         {
             lock_obj = new object();

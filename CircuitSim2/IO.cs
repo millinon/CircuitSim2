@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
+using static System.Math;
+
 namespace CircuitSim2.IO
 {
     public enum Type
@@ -49,16 +51,76 @@ namespace CircuitSim2.IO
         public readonly Type Type;
         public readonly string Name;
         public readonly Chips.ChipBase Chip;
+        public readonly int Index;
 
         protected readonly object lock_obj;
 
-        protected IOBase(Chips.ChipBase Chip, string Name, Type Type)
+        protected IOBase(Chips.ChipBase Chip, string Name, Type Type, int Index)
         {
             this.Chip = Chip;
             this.Name = Name;
             this.Type = Type;
+            this.Index = Index;
 
             lock_obj = new object();
+        }
+
+        public PositionVec Position
+        {
+            get
+            {
+                var is_input = this is InputBase;
+
+                var parent_angle = Chip.Rotation;
+                var parent_pos = Chip.Position;
+                var parent_size = Chip.Size;
+
+                var x_pos = (is_input ? -parent_size.Length / 2 : parent_size.Length / 2);
+
+                var y_space = parent_size.Width - 1;
+                var num_ios = is_input ? Chip.InputSet.AllInputs.Count() : Chip.OutputSet.AllOutputs.Count();
+                var y_space_per_io = y_space / num_ios;
+                double y_pos;
+
+                if(num_ios % 2 == 1)
+                {
+                    if(num_ios == 1)
+                    {
+                        y_pos = 0;
+                    } else if(Index < (num_ios+1) / 2)
+                    {
+                        y_pos = -y_space_per_io * Index;
+                    } else
+                    {
+                        y_pos = y_space_per_io * (Index-num_ios/2);
+                    }
+                } else
+                {
+                    if(Index <  num_ios / 2)
+                    {
+                        y_pos = -y_space_per_io * (Index + 0.5);
+                    } else
+                    {
+                        y_pos = y_space_per_io * (Index - num_ios/2 + 0.5);
+                    }
+                }
+                               
+                var position = new PositionVec
+                    {
+                        X = x_pos,
+                        Y = y_pos,
+                        Z = parent_pos.Z,
+                    };
+
+                var rotation_matrix = new double[3][]
+                {
+                            new double[3] { Cos(parent_angle.Beta)*Cos(parent_angle.Gamma), -Cos(parent_angle.Alpha)*Sin(parent_angle.Gamma)+Sin(parent_angle.Alpha)*Sin(parent_angle.Beta)*Cos(parent_angle.Gamma), Sin(parent_angle.Alpha)*Sin(parent_angle.Gamma)+Cos(parent_angle.Alpha)*Sin(parent_angle.Beta)*Cos(parent_angle.Gamma) },
+                            new double[3] { Cos(parent_angle.Beta)*Sin(parent_angle.Gamma), Cos(parent_angle.Alpha)*Cos(parent_angle.Gamma)+Sin(parent_angle.Alpha)*Sin(parent_angle.Beta)*Sin(parent_angle.Gamma), -Sin(parent_angle.Alpha)*Cos(parent_angle.Gamma)+Cos(parent_angle.Alpha)*Sin(parent_angle.Beta)*Sin(parent_angle.Gamma) },
+                            new double[3] { -Sin(parent_angle.Beta), Sin(parent_angle.Alpha)*Cos(parent_angle.Beta), Cos(parent_angle.Alpha)*Cos(parent_angle.Beta) }
+                };
+
+                return parent_pos.Add(position.Multiply(rotation_matrix));
+            }
         }
     }
 
@@ -73,10 +135,10 @@ namespace CircuitSim2.IO
 
         public bool IsAttached
         {
-            get { lock(lock_obj) { return sourcebase != null; } }
+            get { lock (lock_obj) { return sourcebase != null; } }
         }
 
-        protected InputBase(Chips.ChipBase Chip, string Name, Type Type) : base(Chip, Name, Type)
+        protected InputBase(Chips.ChipBase Chip, string Name, Type Type, int Index) : base(Chip, Name, Type, Index)
         {
             SubscribedInputs = new HashSet<InputBase>();
         }
@@ -97,7 +159,7 @@ namespace CircuitSim2.IO
             if (Input.Type != Type) throw new InvalidOperationException();
 
             Detach();
-            
+
             lock (lock_obj)
             {
                 Input.Subscribe(this);
@@ -121,7 +183,8 @@ namespace CircuitSim2.IO
 
         protected readonly HashSet<InputBase> SubscribedInputs;
 
-        public IEnumerable<InputBase> Hooks {
+        public IEnumerable<InputBase> Hooks
+        {
             get { lock (lock_obj) { return SubscribedInputs; } }
         }
 
@@ -150,7 +213,7 @@ namespace CircuitSim2.IO
     {
         private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
-        public Input(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
+        public Input(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, sType, Index)
         {
 
         }
@@ -169,7 +232,7 @@ namespace CircuitSim2.IO
             lock (lock_obj)
             {
                 source?.Detach(this);
-                
+
                 sourcebase = Output;
                 source = Output as Output<T>;
 
@@ -224,7 +287,7 @@ namespace CircuitSim2.IO
 
     public abstract class OutputBase : IOBase
     {
-        protected OutputBase(Chips.ChipBase Chip, string Name, Type Type) : base(Chip, Name, Type)
+        protected OutputBase(Chips.ChipBase Chip, string Name, Type Type, int Index) : base(Chip, Name, Type, Index)
         {
             SubscribedOutputs = new HashSet<OutputBase>();
         }
@@ -235,7 +298,8 @@ namespace CircuitSim2.IO
         public abstract void Attach(InputBase Input);
 
         protected OutputBase binding;
-        public OutputBase Binding {
+        public OutputBase Binding
+        {
             get { lock (lock_obj) { return binding; } }
         }
 
@@ -296,9 +360,9 @@ namespace CircuitSim2.IO
     {
         private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
-        public Output(string Name, Chips.ChipBase Chip) : base(Chip, Name, sType)
+        public Output(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, sType, Index)
         {
-            
+
         }
 
         private bool havevalue;
@@ -331,7 +395,7 @@ namespace CircuitSim2.IO
                 lock (lock_obj)
                 {
                     bool changed = false;
-                    if (! Chip.IsPure)
+                    if (!Chip.IsPure)
                     {
                         changed = true;
                     }
@@ -453,7 +517,7 @@ namespace CircuitSim2.IO
     {
         public Input<T> A;
 
-        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip), }) => A = this["A"] as Input<T>;
+        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip, 0), }) => A = this["A"] as Input<T>;
     }
 
     public sealed class GenericInput<T, U> : InputSetBase where T : IEquatable<T> where U : IEquatable<U>
@@ -461,7 +525,7 @@ namespace CircuitSim2.IO
         public readonly Input<T> A;
         public readonly Input<U> B;
 
-        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip), new Input<U>("B", Chip), })
+        public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip, 0), new Input<U>("B", Chip, 1), })
         {
             A = this["A"] as Input<T>;
             B = this["B"] as Input<U>;
@@ -472,7 +536,7 @@ namespace CircuitSim2.IO
     {
         private readonly Input<T>[] Array;
 
-        public InputArray(Chips.ChipBase Chip, int Size) : base(Enumerable.Range(0, Size).Select(idx => new Input<T>($"{idx}", Chip)))
+        public InputArray(Chips.ChipBase Chip, int Size) : base(Enumerable.Range(0, Size).Select(idx => new Input<T>($"{idx}", Chip, idx)))
         {
             Array = new Input<T>[Size];
             for (int idx = 0; idx < Size; idx++)
@@ -551,14 +615,14 @@ namespace CircuitSim2.IO
     {
         public readonly Output<T> Out;
 
-        public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip), }) => Out = this["Out"] as Output<T>;
+        public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip, 0), }) => Out = this["Out"] as Output<T>;
     }
 
     public sealed class OutputArray<T> : OutputSetBase where T : IEquatable<T>
     {
         private readonly Output<T>[] Array;
 
-        public OutputArray(Chips.ChipBase Chip, int Size) : base(Enumerable.Range(0, Size).Select(idx => new Output<T>($"{idx}", Chip)))
+        public OutputArray(Chips.ChipBase Chip, int Size) : base(Enumerable.Range(0, Size).Select(idx => new Output<T>($"{idx}", Chip, idx)))
         {
             Array = new Output<T>[Size];
             for (int idx = 0; idx < Size; idx++)
