@@ -28,6 +28,12 @@ namespace CircuitSim2
         
     }
 
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
+    public class ChipProperty : Attribute
+    {
+
+    }
+
     namespace Chips
     {
         [DebuggerDisplay("{Name}")]
@@ -47,7 +53,12 @@ namespace CircuitSim2
             private bool haveerror;
             public bool HaveError
             {
-                get { lock (lock_obj) return haveerror; }
+                get {
+                    if(SubChips.Any(chip => chip.HaveError))
+                    {
+                        return true;
+                    }
+                    lock (lock_obj) return haveerror; }
                 private set { lock (lock_obj) haveerror = value; }
             }
 
@@ -131,9 +142,19 @@ namespace CircuitSim2
 
             }
 
-            public virtual void Output()
+            public virtual void Commit()
             {
 
+            }
+
+            public virtual void Reset()
+            {
+                this.HaveError = false;
+
+                foreach(var chip in SubChips)
+                {
+                    chip.Reset();
+                }
             }
 
 #if DEBUG
@@ -156,12 +177,22 @@ namespace CircuitSim2
                     {
                         Compute();
 
-                        Output();
+                        Commit();
                     }
                 }
                 catch (Exception)
                 {
                     HaveError = true;
+                }
+            }
+
+            public void SuperTick()
+            {
+                Tick();
+
+                foreach(var chip in SubChips)
+                {
+                    chip.SuperTick();
                 }
             }
 
@@ -186,7 +217,7 @@ namespace CircuitSim2
 
                     return new SizeVec
                     {
-                        Length = Math.Max((int)((subchips + 2)*2), 2),
+                        Length = Math.Max((int)((subchips + 2)*4), 2),
                         Width = Math.Max((int)(subchips * 1.5), maxio*2.5),
                         Height = 1,
                     };
@@ -357,6 +388,8 @@ namespace CircuitSim2
                         {
                             Engine?.Unregister(this);
                         }
+
+                        Detach();
 
                         foreach(var chip in SubChips)
                         {

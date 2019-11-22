@@ -32,6 +32,16 @@ namespace CircuitSim2
             };
         }
 
+        public PositionVec Subtract(PositionVec rhs)
+        {
+            return new PositionVec
+            {
+                X = this.X - rhs.X,
+                Y = this.Y - rhs.Y,
+                Z = this.Z - rhs.Z,
+            };
+        }
+
         public PositionVec Multiply(double[][] Matrix)
         {
             if (Matrix == null)

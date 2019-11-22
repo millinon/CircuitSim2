@@ -11,7 +11,6 @@ namespace CircuitSim2.Chips.Signals
 
         private readonly Func<T, T, bool> Detector;
 
-
         public EdgeDetector(Func<T, T, bool> Detector, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new GenericInput<T>(this));
@@ -19,7 +18,7 @@ namespace CircuitSim2.Chips.Signals
 
             this.Detector = Detector;
 
-            _last = default(T);
+            _last = default;
         }
 
         private T _last;
@@ -31,7 +30,7 @@ namespace CircuitSim2.Chips.Signals
             _last = Inputs.A.Value;
         }
 
-        public sealed override void Output() => Outputs.Out.Value = _out;
+        public sealed override void Commit() => Outputs.Out.Value = _out;
 
         public override SizeVec size => new SizeVec
         {

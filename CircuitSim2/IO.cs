@@ -17,6 +17,9 @@ namespace CircuitSim2.IO
         SINGLE,
         DOUBLE,
         STRING,
+        DATETIME,
+        TIMESPAN,
+        CONSOLECOLOR,
     }
 
     public static class Type_Map
@@ -34,7 +37,10 @@ namespace CircuitSim2.IO
                 [typeof(long)] = IO.Type.LONG,
                 [typeof(float)] = IO.Type.SINGLE,
                 [typeof(double)] = IO.Type.DOUBLE,
-                [typeof(string)] = IO.Type.STRING
+                [typeof(string)] = IO.Type.STRING,
+                [typeof(DateTime)] = IO.Type.DATETIME,
+                [typeof(TimeSpan)] = IO.Type.TIMESPAN,
+                [typeof(ConsoleColor)] = IO.Type.CONSOLECOLOR,
             };
         }
 
@@ -82,20 +88,29 @@ namespace CircuitSim2.IO
                 var y_space_per_io = y_space / num_ios;
                 double y_pos;
 
-                if(num_ios % 2 == 1)
+                //(size.Width/8)*-(8-i)+size.Width/2,
+
+                y_pos = y_space_per_io * -(num_ios - Index - 0.5) + y_space / 2;
+
+/*                if (num_ios % 2 == 1)
                 {
-                    if(num_ios == 1)
+  */                  
+
+
+/*                    if(num_ios == 1)
                     {
                         y_pos = 0;
-                    } else if(Index < (num_ios+1) / 2)
+                    } else if(Index < (num_ios) / 2)
                     {
-                        y_pos = -y_space_per_io * Index;
+                        y_pos = y_space_per_io * (num_ios-Index);
                     } else
                     {
                         y_pos = y_space_per_io * (Index-num_ios/2);
-                    }
-                } else
+                    } */
+ /*               } else
                 {
+                    y_pos = y_space_per_io * (-)
+
                     if(Index <  num_ios / 2)
                     {
                         y_pos = -y_space_per_io * (Index + 0.5);
@@ -103,7 +118,7 @@ namespace CircuitSim2.IO
                     {
                         y_pos = y_space_per_io * (Index - num_ios/2 + 0.5);
                     }
-                }
+                }*/
                                
                 var position = new PositionVec
                     {
@@ -143,11 +158,14 @@ namespace CircuitSim2.IO
             SubscribedInputs = new HashSet<InputBase>();
         }
 
-        protected InputBase Binding;
-
+        protected InputBase binding;
+        public InputBase Binding
+        {
+            get { lock (lock_obj) { return binding; } }
+        }
         public bool IsBound
         {
-            get { lock (lock_obj) { return Binding != null; } }
+            get { lock (lock_obj) { return binding != null; } }
         }
 
         public abstract void Detach();
@@ -164,7 +182,7 @@ namespace CircuitSim2.IO
             {
                 Input.Subscribe(this);
 
-                Binding = Input;
+                binding = Input;
             }
         }
 
@@ -172,12 +190,12 @@ namespace CircuitSim2.IO
         {
             lock (lock_obj)
             {
-                if (Binding != null)
+                if (binding != null)
                 {
-                    Binding.Unsubscribe(this);
+                    binding.Unsubscribe(this);
                 }
 
-                Binding = null;
+                binding = null;
             }
         }
 
@@ -209,7 +227,7 @@ namespace CircuitSim2.IO
     }
 
     [DebuggerDisplay("{Chip.Name}.Inputs.{Name}: {Value}")]
-    public sealed class Input<T> : InputBase where T : IEquatable<T>
+    public class Input<T> : InputBase where T : IEquatable<T>
     {
         private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
@@ -261,14 +279,14 @@ namespace CircuitSim2.IO
             {
                 lock (lock_obj)
                 {
-                    if (Binding != null) return (Binding as Input<T>).Value;
+                    if (binding != null) return (binding as Input<T>).Value;
 
                     return (source ?? throw new InvalidOperationException()).Value;
                 }
             }
         }
 
-        public sealed override void Notify()
+        public override void Notify()
         {
             lock (lock_obj)
             {
@@ -282,6 +300,35 @@ namespace CircuitSim2.IO
                     else Chip.Tick();
                 }
             }
+        }
+    }
+
+    public sealed class ClockInput : Input<bool>
+    {
+        public ClockInput(Chips.ChipBase Chip, int Index) : base("Clk", Chip, Index)
+        {
+        }
+
+        private bool last = false;
+
+        public override void Notify()
+        {
+            if(Value && !last) // detect rising edge
+            {
+                base.Notify();
+            }
+
+            last = Value;
+        }
+    }
+
+    public sealed class ClockInputOnly : InputSetBase
+    {
+        public readonly ClockInput Clk;
+
+        public ClockInputOnly(Chips.ChipBase Chip) : base(new InputBase[] { new ClockInput(Chip, 0) })
+        {
+            Clk = this["Clk"] as ClockInput;
         }
     }
 

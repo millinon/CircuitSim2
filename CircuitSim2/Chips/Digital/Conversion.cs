@@ -1,193 +1,176 @@
 using CircuitSim2.Chips.Functors;
+using CircuitSim2.IO;
+using System;
 
 namespace CircuitSim2.Chips.Digital.Conversion
 {
-    [Chip("DigitalToByte")]
-    public sealed class ToByte : UnaryFunctor<bool, byte>
+    public abstract class DigitalConverter<T> : ChipBase where T : IEquatable<T>
     {
-        private readonly byte Low;
-        private readonly byte High;
-
-        private ToByte(byte Low, byte High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        private T low;
+        [ChipProperty]
+        public T Low
         {
-            this.Low = Low;
-            this.High = High;
+            get => low;
+            set
+            {
+                low = value;
+
+                Tick();
+            }
         }
 
-        public ToByte(byte Low, byte High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
+        private T high;
+        [ChipProperty]
+        public T High
+        {
+            get => high;
+            set
+            {
+                high = value;
+
+                Tick();
+            }
+        }
+
+        public readonly GenericInput<bool> Inputs;
+        public readonly GenericOutput<T> Outputs;
+
+        public DigitalConverter(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+            InputSet = (Inputs = new GenericInput<bool>(this));
+            OutputSet = (Outputs = new GenericOutput<T>(this));
+        }
+
+        private T _out;
+
+        public override void Compute()
+        {
+            _out = Inputs.A.Value ? High : Low;
+        }
+
+        public override void Commit()
+        {
+            Outputs.Out.Value = _out;
+        }
+
+        public sealed override void Tick()
+        {
+            base.Tick();
+        }
+    }
+
+
+    [Chip("DigitalToByte")]
+    public sealed class ToByte : DigitalConverter<byte>
+    {
+        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public ToByte(byte Low, byte High, Engine.Engine Engine) : this(Low, High, null, Engine)
+        public ToByte(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public ToByte(byte Low = 0, byte High = 1) : this(Low, High, null, null)
+        public ToByte(Engine.Engine Engine) : base(null, Engine)
         {
         }
-
-        public override byte Func(bool Value) => Value ? High : Low;
     }
 
     [Chip("DigitalToChar")]
-    public sealed class ToChar : UnaryFunctor<bool, char>
+    public sealed class ToChar : DigitalConverter<char>
     {
-        private readonly char Low;
-        private readonly char High;
-
-        private ToChar(char Low, char High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-
-        public ToChar(char Low, char High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
+        public ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public ToChar(char Low, char High, Engine.Engine Engine) : this(Low, High, null, Engine)
+        public ToChar(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public ToChar(char Low, char High) : this(Low, High, null, null)
+        public ToChar(Engine.Engine Engine) : base(null, Engine)
         {
         }
-
-        public override char Func(bool Value) => Value ? High : Low;
-    }
-
-    [Chip("DigitalToInteger")]
-    public sealed class ToInteger : UnaryFunctor<bool, int>
-    {
-        private readonly int Low;
-        private readonly int High;
-
-        private ToInteger(int Low, int High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-
-        public ToInteger(int Low, int High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToInteger(int Low, int High, Engine.Engine Engine) : this(Low, High, null, Engine)
-        {
-        }
-
-        public ToInteger(int Low = 0, int High = 1) : this(Low, High, null, null)
-        {
-        }
-
-        public override int Func(bool Value) => Value ? High : Low;
-    }
-
-    [Chip("DigitalToLong")]
-    public sealed class ToLong : UnaryFunctor<bool, long>
-    {
-        private readonly long Low;
-        private readonly long High;
-
-        private ToLong(long Low, long High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-
-        public ToLong(long Low, long High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToLong(long Low, long High, Engine.Engine Engine) : this(Low, High, null, Engine)
-        {
-        }
-
-        public ToLong(long Low = 0, long High = 1) : this(Low, High, null, null)
-        {
-        }
-
-        public override long Func(bool Value) => Value ? High : Low;
-    }
-
-    [Chip("DigitalToSingle")]
-    public sealed class ToSingle : UnaryFunctor<bool, float>
-    {
-        private readonly float Low;
-        private readonly float High;
-
-        private ToSingle(float Low, float High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-
-        public ToSingle(float Low, float High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToSingle(float Low, float High, Engine.Engine Engine) : this(Low, High, null, Engine)
-        {
-        }
-
-        public ToSingle(float Low = 0.0f, float High = 1.0f) : this(Low, High, null, null)
-        {
-        }
-
-        public override float Func(bool Value) => Value ? High : Low;
     }
 
     [Chip("DigitalToDouble")]
-    public sealed class ToDouble : UnaryFunctor<bool, double>
+    public sealed class ToDouble : DigitalConverter<double>
     {
-        private readonly double Low;
-        private readonly double High;
-
-        private ToDouble(double Low, double High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            this.Low = Low;
-            this.High = High;
-        }
-
-        public ToDouble(double Low, double High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
+        public ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public ToDouble(double Low, double High, Engine.Engine Engine) : this(Low, High, null, Engine)
+        public ToDouble(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public ToDouble(double Low = 0.0, double High = 1.0) : this(Low, High, null, null)
+        public ToDouble(Engine.Engine Engine) : base(null, Engine)
+        {
+        }
+    }
+
+    [Chip("DigitalToInteger")]
+    public sealed class ToInteger : DigitalConverter<int>
+    {
+        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public override double Func(bool Value) => Value ? High : Low;
+        public ToInteger(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToInteger(Engine.Engine Engine) : base(null, Engine)
+        {
+        }
+    }
+
+    [Chip("DigitalToLong")]
+    public sealed class ToLong : DigitalConverter<long>
+    {
+        public ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+        }
+
+        public ToLong(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToLong(Engine.Engine Engine) : base(null, Engine)
+        {
+        }
+    }
+
+    [Chip("DigitalToSingle")]
+    public sealed class ToSingle : DigitalConverter<float>
+    {
+        public ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+        }
+
+        public ToSingle(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public ToSingle(Engine.Engine Engine) : base(null, Engine)
+        {
+        }
     }
 
     [Chip("DigitalToString")]
-    public sealed class ToString : UnaryFunctor<bool, string>
+    public sealed class ToString : DigitalConverter<string>
     {
-        private readonly string Low;
-        private readonly string High;
-
-        private ToString(string Low, string High, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-            this.Low = Low;
-            this.High = High;
+            Low = "False";
+            High = "True";
         }
 
-        public ToString(string Low, string High, ChipBase ParentChip) : this(Low, High, ParentChip, ParentChip?.Engine)
+        public ToString(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public ToString(string Low, string High, Engine.Engine Engine) : this(Low, High, null, Engine)
+        public ToString(Engine.Engine Engine) : base(null, Engine)
         {
         }
-
-        public ToString(string Low = "False", string High = "True") : this(Low, High, null, null)
-        {
-        }
-
-        public override string Func(bool Value) => Value ? High : Low;
     }
 }

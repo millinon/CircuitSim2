@@ -7,7 +7,7 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
     [Chip("ByteAdd")]
     public sealed class Add : BF
     {
-        private Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -19,17 +19,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Add() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => (byte)(Val1 + Val2);
     }
 
     [Chip("ByteSubtract")]
     public sealed class Subtract : BF
     {
-        private Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -41,17 +37,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Subtract() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => (byte)(Val1 - Val2);
     }
 
     [Chip("ByteMultiply")]
     public sealed class Multiply : BF
     {
-        private Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -63,17 +55,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Multiply() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => (byte)(Val1 * Val2);
     }
 
     [Chip("ByteDivide")]
     public sealed class Divide : BF
     {
-        private Divide(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Divide(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -85,17 +73,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Divide() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => (byte)(Val1 / Val2);
     }
 
     [Chip("ByteModulus")]
     public sealed class Modulus : BF
     {
-        private Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -107,17 +91,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Modulus() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => (byte)(Val1 % Val2);
     }
 
     [Chip("ByteMin")]
     public sealed class Min : BF
     {
-        private Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -129,17 +109,13 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Min() : this(null, null)
-        {
-        }
-
         public override byte Func(byte Val1, byte Val2) => Math.Min(Val1, Val2);
     }
 
     [Chip("ByteMax")]
     public sealed class Max : BF
     {
-        private Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -151,9 +127,6 @@ namespace CircuitSim2.Chips.Byte.Arithmetic
         {
         }
 
-        public Max() : this(null, null)
-        {
-        }
         public override byte Func(byte Val1, byte Val2) => Math.Max(Val1, Val2);
     }
 }

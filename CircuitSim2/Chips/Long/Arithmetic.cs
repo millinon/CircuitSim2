@@ -7,7 +7,7 @@ namespace CircuitSim2.Chips.Long.Arithmetic
     [Chip("LongAdd")]
     public sealed class Add : BF
     {
-        private Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -19,17 +19,13 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Add() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Val1 + Val2;
     }
 
     [Chip("LongSubtract")]
     public sealed class Subtract : BF
     {
-        private Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -41,17 +37,13 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Subtract() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Val1 - Val2;
     }
 
     [Chip("LongMultiply")]
     public sealed class Multiply : BF
     {
-        private Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -63,17 +55,13 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Multiply() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Val1 * Val2;
     }
 
     [Chip("LongDivide")]
     public sealed class Divide : BF
     {
-        private Divide(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Divide(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -85,17 +73,13 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Divide() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Val1 / Val2;
     }
 
     [Chip("LongModulus")]
     public sealed class Modulus : BF
     {
-        private Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -107,17 +91,13 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Modulus() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Val1 % Val2;
     }
 
     [Chip("LongMin")]
     public sealed class Min : BF
     {
-        private Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -129,31 +109,24 @@ namespace CircuitSim2.Chips.Long.Arithmetic
         {
         }
 
-        public Min() : this(null, null)
-        {
-        }
-
         public override long Func(long Val1, long Val2) => Math.Min(Val1, Val2);
     }
 
     [Chip("LongMax")]
     public sealed class Max : BF
     {
-        private  Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public  Max(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        public Max(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public  Max(Engine.Engine Engine) : this(null, Engine)
+        public Max(Engine.Engine Engine) : this(null, Engine)
         {
         }
 
-        public  Max() : this(null, null)
-        {
-        }
         public override long Func(long Val1, long Val2) => Math.Max(Val1, Val2);
     }
 }

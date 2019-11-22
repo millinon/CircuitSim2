@@ -11,11 +11,17 @@ namespace EngineTest
         {
             using (var engine = new Engine())
             {
-                var A = new CircuitSim2.Chips.Byte.Generators.Random(1234, engine);
+                var A = new CircuitSim2.Chips.Byte.Generators.Random(engine)
+                {
+                    Seed = 1234,
+                };
                 Console.WriteLine($"A.ID = {A.ID}");
                 A.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A <- {e.NewValue}");
 
-                var B = new CircuitSim2.Chips.Byte.Generators.Random(4321, engine);
+                var B = new CircuitSim2.Chips.Byte.Generators.Random(engine)
+                {
+                    Seed = 4321,
+                };
                 Console.WriteLine($"B.ID = {B.ID}");
                 B.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"B <- {e.NewValue}");
 

@@ -11,7 +11,10 @@ namespace Time
         {
             using (Engine Engine = new Engine())
             {
-                var clock = new Clock(5, Engine);
+                var clock = new RealTimeClock(Engine)
+                {
+                    Period = TimeSpan.FromSeconds(5),
+                };
                 var tickcount = new TickCount(Engine);
 
                 clock.Outputs.Out.ValueChanged += (s, e) =>

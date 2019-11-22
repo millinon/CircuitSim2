@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using CircuitSim2.Chips;
 using CircuitSim2.IO;
-using CircuitSim2.Chips.IO.BasicInputs;
+//using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Digital.Logic;
 using static CircuitSim2.Chips.MetaChip.MetaChipDescription;
 using static CircuitSim2.Chips.MetaChip.MetaChipDescription.ChipDescription;
@@ -17,13 +17,16 @@ namespace MetaNANDTest
     {
         static void Main(string[] args)
         {
-            var A = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
-            var B = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
+            //var A = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
+            //var B = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
+
+            var A = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+            var B = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
 
             A.Value = false;
             B.Value = false;
 
-            var NAND = new NAND();
+            var NAND = new NAND(null, null);
             NAND.Inputs.A.Attach(A.Outputs.Out);
             NAND.Inputs.B.Attach(B.Outputs.Out);
 

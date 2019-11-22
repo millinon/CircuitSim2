@@ -1,26 +1,39 @@
-using G = CircuitSim2.Chips.Functors.Generator<int>;
+using CircuitSim2.Chips.Functors;
+using R = CircuitSim2.Chips.Functors.Random<int>;
 
 namespace CircuitSim2.Chips.Integer.Generators
 {
     [Chip("IntegerRandom")]
-    public sealed class Random : G
+    public sealed class Random : R
     {
-        private readonly System.Random Generator;
-
-        private Random(int Seed, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine) => Generator = new System.Random(Seed);
-
-        public Random(int Seed, ChipBase ParentChip) : this(Seed, ParentChip, ParentChip?.Engine)
+        public Random(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
-        public Random(int Seed, Engine.Engine Engine) : this(Seed, null, Engine)
+        public Random(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
         }
 
-        public Random(int Seed = 1337) : this(Seed, null, null)
+        public Random(Engine.Engine Engine) : this(null, Engine)
         {
         }
 
-        protected sealed override int NextValue() => Generator.Next();
+        protected sealed override int NextValue() => RNG.Next();
+    }
+
+    [Chip("IntegerConstant")]
+    public sealed class Constant : Constant<int>
+    {
+        public Constant(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+        }
+
+        public Constant(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Constant(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
     }
 }

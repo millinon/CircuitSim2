@@ -5,7 +5,7 @@ namespace CircuitSim2.Chips.Single.Conversion
     [Chip("SingleToByte")]
     public sealed class ToByte : UnaryFunctor<float, byte>
     {
-        private ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -17,17 +17,13 @@ namespace CircuitSim2.Chips.Single.Conversion
         {
         }
 
-        public ToByte() : this(null, null)
-        {
-        }
-
         public override byte Func(float Value) => (byte)Value;
     }
 
     [Chip("SingleToChar")]
     public sealed class ToChar : UnaryFunctor<float, char>
     {
-        private ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -39,17 +35,13 @@ namespace CircuitSim2.Chips.Single.Conversion
         {
         }
 
-        public ToChar() : this(null, null)
-        {
-        }
-
         public override char Func(float Value) => (char)Value;
     }
 
     [Chip("SingleToInteger")]
     public sealed class ToInteger : UnaryFunctor<float, int>
     {
-        private ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -61,17 +53,13 @@ namespace CircuitSim2.Chips.Single.Conversion
         {
         }
 
-        public ToInteger() : this(null, null)
-        {
-        }
-
         public override int Func(float Value) => (int)Value;
     }
 
     [Chip("SingleToLong")]
     public sealed class ToLong : UnaryFunctor<float, long>
     {
-        private ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -83,16 +71,13 @@ namespace CircuitSim2.Chips.Single.Conversion
         {
         }
 
-        public ToLong() : this(null, null)
-        {
-        }
         public override long Func(float Value) => (long)Value;
     }
 
     [Chip("SingleToDouble")]
     public sealed class ToDouble : UnaryFunctor<float, double>
     {
-        private ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -104,17 +89,13 @@ namespace CircuitSim2.Chips.Single.Conversion
         {
         }
 
-        public ToDouble() : this(null, null)
-        {
-        }
-
         public override double Func(float Value) => Value;
     }
 
     [Chip("SingleToString")]
     public sealed class ToString : UnaryFunctor<float, string>
     {
-        private ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -123,10 +104,6 @@ namespace CircuitSim2.Chips.Single.Conversion
         }
 
         public ToString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public ToString() : this(null, null)
         {
         }
 

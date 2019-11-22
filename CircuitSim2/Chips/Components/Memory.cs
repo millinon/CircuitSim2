@@ -51,7 +51,7 @@ namespace CircuitSim2.Chips.Components.Memory
         {
         }
 
-        private DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             if (Engine == null) throw new ArgumentNullException(nameof(Engine));
 

@@ -27,10 +27,6 @@ namespace CircuitSim2.Chips.Components.Adders
         private readonly XOR XOR;
         private readonly AND AND;
 
-        public HalfAdder() : this(null, null)
-        {
-        }
-
         public HalfAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
         }
@@ -39,7 +35,7 @@ namespace CircuitSim2.Chips.Components.Adders
         {
         }
 
-        private HalfAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public HalfAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new GenericInput<bool, bool>(this));
             OutputSet = (Outputs = new OutputType(this));
@@ -116,10 +112,6 @@ namespace CircuitSim2.Chips.Components.Adders
         private readonly AND AND2;
         private readonly OR OR;
 
-        public FullAdder() : this(null, null)
-        {
-        }
-
         public FullAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
         }
@@ -128,7 +120,7 @@ namespace CircuitSim2.Chips.Components.Adders
         {
         }
 
-        private FullAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public FullAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
@@ -240,10 +232,6 @@ namespace CircuitSim2.Chips.Components.Adders
 
         private readonly FullAdder[] Adders;
 
-        public ByteAdder() : this(null, null)
-        {
-        }
-
         public ByteAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
         {
         }
@@ -252,7 +240,7 @@ namespace CircuitSim2.Chips.Components.Adders
         {
         }
 
-        private ByteAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ByteAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
@@ -261,8 +249,8 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = -6.0,
-                    Y = 10.0,
+                    X = -12.0,
+                    Y = -10.0,
                     Z = 0.0,
                 },
                 Scale = 0.5,
@@ -271,8 +259,8 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                  X = -6.0,
-                  Y = -10.0,
+                  X = -12.0,
+                  Y = 10.0,
                   Z = 0.0,
                 },
                 Scale = 0.5,
@@ -281,7 +269,7 @@ namespace CircuitSim2.Chips.Components.Adders
             {
                 Position = new PositionVec
                 {
-                    X = 6.0,
+                    X = 12.0,
                     Y = 0.0,
                     Z = 0.0,
                 },
@@ -291,13 +279,23 @@ namespace CircuitSim2.Chips.Components.Adders
             Adders = new FullAdder[8];
 
             for (int i = 0; i < 8; i++)
-            {
+            {/*
+                if (i < num_ios / 2)
+                {
+                    y_pos = -y_space_per_io * (i + 0.5);
+                }
+                else
+                {
+                    y_pos = y_space_per_io * (i - 8 / 2 + 0.5);
+                }*/
+
                 AddSubChip(Adders[i] = new FullAdder(this)
                 {
                     Position = new PositionVec
                     {
                         X = 0.0,
-                        Y = ((size.Width)/8)*(i-3.5),
+                        Y = (size.Width/8)*-(8-i-0.5)+size.Width/2,
+                        //Y = (i < 5 ? (size.Width/8)*-(4-i)+size.Width/2 : (size.Width/8)*(i-4)) + 3,
                         Z = 0.0,
                     },
                     Scale = 0.5,
@@ -330,7 +328,7 @@ namespace CircuitSim2.Chips.Components.Adders
 
         public override SizeVec size => new SizeVec
         {
-            Length = 24,
+            Length = 32,
             Width = 48,
             Height = 1,
         };

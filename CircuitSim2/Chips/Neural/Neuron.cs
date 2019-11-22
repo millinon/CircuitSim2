@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 using CircuitSim2.IO;
@@ -6,71 +8,167 @@ using CircuitSim2.IO;
 namespace CircuitSim2.Chips.Neural
 {
     [Chip("Neuron")]
-    [PureChip]
-    public sealed class Neuron : ChipBase
+    public class Neuron : ChipBase
     {
-        public readonly InputArray<double> Inputs;
-        public readonly GenericOutput<double> Outputs;
-
-        public readonly int NumInputs;
-
-        public readonly double[] Weights;
-        public double Bias;
-
-        public readonly Func<double, double> Phi;
-
-        public Neuron(int NumInputs, Random Random) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, null, null)
+        public class WeightCollection : IEnumerable<double>
         {
+            private double[] values;
+
+            public IEnumerator<double> GetEnumerator()
+            {
+                return ((IEnumerable<double>)values).GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return ((IEnumerable<double>)values).GetEnumerator();
+            }
+
+            public double this[int idx]
+            {
+                get
+                {
+                    return values[idx];
+                } set
+                {
+                    values[idx] = value;
+
+                    if (Chip.AutoTick)
+                    {
+                        Chip.Tick();
+                    }
+                }
+            }
+
+            private readonly Neuron Chip;
+
+            public WeightCollection(Neuron Chip, int Capacity, Random RNG)
+            {
+                values = Enumerable.Range(0, Capacity).Select(_ => RNG.NextDouble()).ToArray();
+                this.Chip = Chip;
+            }
         }
 
-        public Neuron(int NumInputs, Random Random, ChipBase ParentChip) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, ParentChip)
+        public InputArray<double> Inputs
         {
+            get; private set;
         }
 
-        public Neuron(int NumInputs, Func<double, double> Phi, Random Random) : this(NumInputs, Phi, Random, null, null)
+        public GenericOutput<double> Outputs
         {
+            get; private set;
         }
 
-        public Neuron(int NumInputs, Random Random, Engine.Engine Engine) : this(NumInputs, a => 1.0 / (1.0 + Math.Exp(-a)), Random, Engine)
+
+        public WeightCollection Weights
         {
+            get; private set;
         }
 
-        public Neuron(int NumInputs, Func<double, double> Phi, Random Random, Engine.Engine Engine) : this(NumInputs, Phi, Random, null, Engine)
+        private double bias = 0.0;
+        [ChipProperty]
+        public double Bias
         {
+            get
+            {
+                return bias;
+            }
+            set
+            {
+                bias = value;
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
         }
 
-        public Neuron(int NumInputs, Func<double, double> Phi, Random Random, ChipBase ParentChip) : this(NumInputs, Phi, Random, ParentChip, ParentChip?.Engine)
+        private int numInputs = 1;
+        [ChipProperty]
+        public int NumInputs
         {
+            get
+            {
+                return numInputs;
+            }
+            set
+            {
+                if(value <= 0)
+                {
+                    throw new ArgumentException(nameof(NumInputs));
+                }
+
+                numInputs = value;
+
+                CreateInputs();
+                
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
         }
 
-        private Neuron(int NumInputs, Func<double, double> Phi, Random Random, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+
+        private Random rng = new Random();
+        public Random RNG
+        {
+            get
+            {
+                return rng;
+            }
+            set
+            {
+                rng = value;
+
+                CreateInputs();
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
+        }
+
+
+        private void CreateInputs()
         {
             if (NumInputs <= 0) throw new ArgumentException("Neuron must have a positive number of inputs");
-            else if (Phi == null) throw new ArgumentNullException("Phi");
 
             InputSet = (Inputs = new InputArray<double>(this, NumInputs));
             OutputSet = (Outputs = new GenericOutput<double>(this));
 
-            Weights = new double[NumInputs];
-            for (int i = 0; i < NumInputs; i++) Weights[i] = Random.NextDouble();
-
-            this.Phi = Phi;
+            Weights = new WeightCollection(this, NumInputs, RNG);
 
             Bias = 0.0;
+        }
 
-            this.NumInputs = NumInputs;
+        protected virtual double Phi(double A) => 1.0 / (1.0 + Math.Exp(-A));
+
+        public Neuron(Engine.Engine Engine) : this(null, Engine)
+        {
+        }
+
+        public Neuron(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        {
+        }
+
+        public Neuron(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+            CreateInputs();   
         }
 
         private double _out;
 
-        public override void Compute()
+        public sealed override void Compute()
         {
             var sum = Enumerable.Range(0, NumInputs).Select(i => Inputs[i].Value * Weights[i]).Sum() + Bias;
 
             _out = Phi(sum);
         }
 
-        public override void Output()
+        public override void Commit()
         {
             Outputs.Out.Value = _out;
         }

@@ -7,7 +7,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
     [Chip("SingleAdd")]
     public sealed class Add : BF
     {
-        private Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -19,17 +19,13 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         {
         }
 
-        public Add() : this(null, null)
-        {
-        }
-
         public override float Func(float Val1, float Val2) => Val1 + Val2;
     }
 
     [Chip("SingleSubtract")]
     public sealed class Subtract : BF
     {
-        private Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -51,7 +47,7 @@ namespace CircuitSim2.Chips.Single.Arithmetic
     [Chip("SingleMultiply")]
     public sealed class Multiply : BF
     {
-        private Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -60,10 +56,6 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         }
 
         public Multiply(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Multiply() : this(null, null)
         {
         }
 
@@ -85,10 +77,6 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         {
         }
 
-        public Divide() : this(null, null)
-        {
-        }
-
         public override float Func(float Val1, float Val2) => Val1 / Val2;
     }
 
@@ -107,17 +95,13 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         {
         }
 
-        public Modulus() : this(null, null)
-        {
-        }
-
         public override float Func(float Val1, float Val2) => Val1 % Val2;
     }
 
     [Chip("SingleMin")]
     public sealed class Min : BF
     {
-        private Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -129,17 +113,13 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         {
         }
 
-        public Min() : this(null, null)
-        {
-        }
-
         public override float Func(float Val1, float Val2) => Math.Min(Val1, Val2);
     }
 
     [Chip("SingleMax")]
     public sealed class Max : BF
     {
-        private Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -151,9 +131,6 @@ namespace CircuitSim2.Chips.Single.Arithmetic
         {
         }
 
-        public Max() : this(null, null)
-        {
-        }
         public override float Func(float Val1, float Val2) => Math.Max(Val1, Val2);
     }
 }

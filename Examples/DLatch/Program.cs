@@ -3,8 +3,6 @@ using System.Threading;
 
 using CircuitSim2.Chips.Components.Memory;
 
-using CircuitSim2.Chips.IO.BasicInputs;
-
 namespace DLatchTest
 {
     class Program
@@ -13,8 +11,10 @@ namespace DLatchTest
         {
             using (CircuitSim2.Engine.Engine Engine = new CircuitSim2.Engine.Engine())
             {
-                var E = new GenericInput<bool>(Engine);
-                var D = new GenericInput<bool>(Engine);
+                /*var E = new GenericInput<bool>(Engine);
+                var D = new GenericInput<bool>(Engine); */
+                var E = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
+                var D = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
 
                 var latch = new DLatch(Engine);
 

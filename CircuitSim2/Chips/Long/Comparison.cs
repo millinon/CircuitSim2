@@ -5,7 +5,7 @@ namespace CircuitSim2.Chips.Long.Comparison
     [Chip("LongEqual")]
     public sealed class Equal : BF
     {
-        private Equal(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Equal(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -17,17 +17,13 @@ namespace CircuitSim2.Chips.Long.Comparison
         {
         }
 
-        public Equal() : this(null, null)
-        {
-        }
-
         public override bool Func(long Val1, long Val2) => Val1 == Val2;
     }
 
     [Chip("LongNotEqual")]
     public sealed class NotEqual : BF
     {
-        private NotEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public NotEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -39,17 +35,13 @@ namespace CircuitSim2.Chips.Long.Comparison
         {
         }
 
-        public NotEqual() : this(null, null)
-        {
-        }
-
         public override bool Func(long Val1, long Val2) => Val1 != Val2;
     }
 
     [Chip("LongLessThan")]
     public sealed class LessThan : BF
     {
-        private LessThan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public LessThan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -61,17 +53,13 @@ namespace CircuitSim2.Chips.Long.Comparison
         {
         }
 
-        public LessThan() : this(null, null)
-        {
-        }
-
         public override bool Func(long Val1, long Val2) => Val1 < Val2;
     }
 
     [Chip("LongLessThanEqual")]
     public sealed class LessThanEqual : BF
     {
-        private LessThanEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public LessThanEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -93,7 +81,7 @@ namespace CircuitSim2.Chips.Long.Comparison
     [Chip("LongGreaterThan")]
     public sealed class GreaterThan : BF
     {
-        private GreaterThan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public GreaterThan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -115,7 +103,7 @@ namespace CircuitSim2.Chips.Long.Comparison
     [Chip("LongGreaterThanEqual")]
     public sealed class GreaterThanEqual : BF
     {
-        private GreaterThanEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public GreaterThanEqual(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 

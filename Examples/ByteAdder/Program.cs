@@ -1,8 +1,8 @@
 using System;
 
-using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Components.Adders;
 using System.Threading;
+using CircuitSim2.Chips.Functors;
 
 namespace ByteAdderTest
 {
@@ -12,12 +12,15 @@ namespace ByteAdderTest
         {
             using (CircuitSim2.Engine.Engine engine = new CircuitSim2.Engine.Engine())
             {
-                var a = new GenericInput<byte>(engine);
+                /*                var a = new GenericInput<byte>(engine);
+                                var b = new GenericInput<byte>(engine);
+                                var cin = new Constant<bool>(engine);
+                                */
 
-                var b = new GenericInput<byte>(engine);
-
-                var cin = new Constant<bool>(false, engine);
-
+                var a = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
+                var b = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
+                var cin = new CircuitSim2.Chips.Digital.Generators.Constant(engine);
+               
                 var adder = new ByteAdder(engine);
                 Console.WriteLine($"adder = {adder.ID}");
 

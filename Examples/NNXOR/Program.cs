@@ -2,7 +2,6 @@
 using System.Linq;
 
 using CircuitSim2.Engine;
-using CircuitSim2.Chips.IO.BasicInputs;
 using CircuitSim2.Chips.Digital.Conversion;
 using CircuitSim2.Chips.Digital.Logic;
 using CircuitSim2.Chips.Neural.Networks;
@@ -16,16 +15,33 @@ namespace NNXOR
             //using (Engine Engine = new Engine())
             using (Engine Engine = null)
             {
-                var A = new GenericInput<bool>(Engine);
-                var B = new GenericInput<bool>(Engine);
+                var A = new CircuitSim2.Chips.Digital.Inputs.Switch(Engine);
+                var B = new CircuitSim2.Chips.Digital.Inputs.Switch(Engine);
 
-                var convA = new ToDouble(0.0, 1.0, Engine);
-                var convB = new ToDouble(0.0, 1.0, Engine);
+                var convA = new ToDouble(Engine)
+                {
+                    Low = 0.0,
+                    High = 1.0,
+                };
+
+                var convB = new ToDouble(Engine)
+                {
+                    Low = 0.0,
+                    High = 1.0,
+                };
 
                 var XOR = new XOR(Engine);
-                var convX = new ToDouble(0.0, 1.0, Engine);
+                var convX = new CircuitSim2.Chips.Digital.Conversion.ToDouble(Engine)
+                {
+                    Low = 0.0,
+                    High = 1.0,
+                };
 
-                var NN = new FeedForward(2, new int[] { 3, 1 }, Engine);
+                var NN = new FeedForward(Engine)
+                {
+                    NumInputs = 2,
+                    Layers = new int[] { 3, 1 },
+                };
 
                 XOR.Inputs.A.Attach(A.Outputs.Out);
                 XOR.Inputs.B.Attach(B.Outputs.Out);
@@ -53,12 +69,13 @@ namespace NNXOR
 
                 foreach (var epoch in Enumerable.Range(0, 10000))
                 {
-                    foreach (var a in vals)
+                    foreach(var _ in Enumerable.Range(0, 2))
                     {
-                        foreach (var b in vals)
+                        A.Toggle();
+
+                        foreach (var __ in Enumerable.Range(0, 2))
                         {
-                            A.Value = a;
-                            B.Value = b;
+                            B.Toggle();
 
                             Engine?.FlushAll();
 
@@ -67,16 +84,21 @@ namespace NNXOR
                     }
                 }
 
-                foreach (var a in vals)
+                /*foreach (var a in vals)
                 {
                     foreach (var b in vals)
                     {
                         A.Value = a;
-                        B.Value = b;
+                        B.Value = b;*/
+
+                foreach(var _ in Enumerable.Range(0, 2))
+                {
+                    foreach(var __ in Enumerable.Range(0, 2))
+                    {
 
                         Engine?.FlushAll();
 
-                        Console.WriteLine($"XOR({a},{b}) = {{ expected: {convX.Outputs.Out.Value}, actual = {NN.Outputs[0].Value} }}");
+                        Console.WriteLine($"XOR({A.Outputs.Out.Value},{B.Outputs.Out.Value}) = {{ expected: {convX.Outputs.Out.Value}, actual = {NN.Outputs[0].Value} }}");
                     }
                 }
 

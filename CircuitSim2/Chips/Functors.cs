@@ -4,13 +4,15 @@ namespace CircuitSim2.Chips.Functors
 {
     public abstract class Generator<T> : ChipBase where T : IEquatable<T>
     {
+        public readonly CircuitSim2.IO.ClockInputOnly Inputs;
+
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 
         public Generator(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-            OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
+            InputSet = (Inputs = new CircuitSim2.IO.ClockInputOnly(this));
 
-            InputSet = new CircuitSim2.IO.NoInputs();
+            OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
         }
 
         protected abstract T NextValue();
@@ -19,7 +21,7 @@ namespace CircuitSim2.Chips.Functors
 
         public sealed override void Compute() => _out = NextValue();
 
-        public sealed override void Output() => Outputs.Out.Value = _out;
+        public sealed override void Commit() => Outputs.Out.Value = _out;
 
         public sealed override void Tick()
         {
@@ -32,6 +34,37 @@ namespace CircuitSim2.Chips.Functors
             Width = 2,
             Height = 1,
         };*/
+    }
+
+    public abstract class Random<T> : Generator<T> where T : IEquatable<T>
+    {
+        protected Random RNG;
+
+        private int seed;
+
+        [ChipProperty]
+        public int Seed
+        {
+            get
+            {
+                return seed;
+            }
+            set
+            {
+                seed = value;
+                RNG = new Random(seed);
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
+        }
+
+        public Random(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        {
+            RNG = new Random(seed);
+        }
     }
 
     [PureChip]
@@ -52,12 +85,9 @@ namespace CircuitSim2.Chips.Functors
 
         public sealed override void Compute() => _out = Func(Inputs.A.Value);
 
-        public sealed override void Output() => Outputs.Out.Value = _out;
+        public sealed override void Commit() => Outputs.Out.Value = _out;
 
-        public sealed override void Tick()
-        {
-            base.Tick();
-        }
+        public sealed override void Tick() => base.Tick();
 
         /*public override SizeVec size => new SizeVec
         {
@@ -85,18 +115,41 @@ namespace CircuitSim2.Chips.Functors
 
         public sealed override void Compute() => _out = Func(Inputs.A.Value, Inputs.B.Value);
 
-        public sealed override void Output() => Outputs.Out.Value = _out;
+        public sealed override void Commit() => Outputs.Out.Value = _out;
 
-        public sealed override void Tick()
+        public sealed override void Tick() => base.Tick();
+    }
+
+    public abstract class Constant<T> : ChipBase where T : IEquatable<T>
+    {
+        public readonly CircuitSim2.IO.NoInputs Inputs;
+        public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
+
+        private T value;
+
+        [ChipProperty]
+        public T Value
         {
-            base.Tick();
+            get => value;
+            set
+            {
+                this.value = Value;
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
         }
 
-        /*public override SizeVec size => new SizeVec
+        public Constant(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-            Length = 1.0,
-            Width = 3.0,
-            Height = 1.0,
-        };*/
+            InputSet = (Inputs = new CircuitSim2.IO.NoInputs());
+            OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
+        }
+
+        private T _out;
+        public sealed override void Compute() => _out = Value;
+        public sealed override void Commit() => Outputs.Out.Value = _out;
+        public sealed override void Tick() => base.Tick();
     }
 }

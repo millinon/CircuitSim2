@@ -8,7 +8,7 @@ namespace CircuitSim2.Chips.Double.Arithmetic
     [Chip("DoubleAdd")]
     public sealed class Add : BF
     {
-        private Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Add(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -20,17 +20,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Add() : this(null, null)
-        {
-        }
-
         public override double Func(double Val1, double Val2) => Val1 + Val2;
     }
 
     [Chip("DoubleSubtract")]
     public sealed class Subtract : BF
     {
-        private Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Subtract(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -42,17 +38,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Subtract() : this(null, null)
-        {
-        }
-
         public override double Func(double Val1, double Val2) => Val1 - Val2;
     }
 
     [Chip("DoubleMultiply")]
     public sealed class Multiply : BF
     {
-        private Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Multiply(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -61,10 +53,6 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
 
         public Multiply(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Multiply() : this(null, null)
         {
         }
 
@@ -86,17 +74,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Divide() : this(null, null)
-        {
-        }
-
         public override double Func(double Val1, double Val2) => Val1 / Val2;
     }
 
     [Chip("DoubleModulus")]
     public sealed class Modulus : BF
     {
-        private Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Modulus(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -108,17 +92,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Modulus() : this(null, null)
-        {
-        }
-
         public override double Func(double Val1, double Val2) => Val1 % Val2;
     }
 
     [Chip("DoubleMin")]
     public sealed class Min : BF
     {
-        private Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Min(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -130,17 +110,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Min() : this(null, null)
-        {
-        }
-
         public override double Func(double Val1, double Val2) => Math.Min(Val1, Val2);
     }
 
     [Chip("DoubleMax")]
     public sealed class Max : BF
     {
-        private Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Max(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -152,16 +128,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Max() : this(null, null)
-        {
-        }
         public override double Func(double Val1, double Val2) => Math.Max(Val1, Val2);
     }
 
     [Chip("DoubleSin")]
     public sealed class Sin : UF
     {
-        private Sin(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Sin(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -173,17 +146,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Sin() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Sin(Value);
     }
 
     [Chip("DoubleSinh")]
     public sealed class Sinh : UF
     {
-        private Sinh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Sinh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -195,17 +164,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Sinh() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Sinh(Value);
     }
 
     [Chip("DoubleCos")]
     public sealed class Cos : UF
     {
-        private Cos(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Cos(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -217,17 +182,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Cos() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Cos(Value);
     }
 
     [Chip("DoubleCosh")]
     public sealed class Cosh : UF
     {
-        private Cosh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Cosh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -239,17 +200,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Cosh() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Cos(Value);
     }
 
     [Chip("DoubleTan")]
     public sealed class Tan : UF
     {
-        private Tan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Tan(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -261,17 +218,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Tan() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Tan(Value);
     }
 
     [Chip("DoubleTanh")]
     public sealed class Tanh : UF
     {
-        private Tanh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Tanh(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -283,17 +236,13 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         {
         }
 
-        public Tanh() : this(null, null)
-        {
-        }
-
         public override double Func(double Value) => Math.Tanh(Value);
     }
 
     [Chip("DoublePower")]
     public sealed class Power : BF
     {
-        private Power(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Power(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -302,10 +251,6 @@ namespace CircuitSim2.Chips.Double.Arithmetic
         }
 
         public Power(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Power() : this(null, null)
         {
         }
 

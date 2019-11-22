@@ -6,7 +6,7 @@ namespace CircuitSim2.Chips.Digital.Logic
     [Chip("DigitalNOT")]
     public sealed class NOT : UF
     {
-        private NOT(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public NOT(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -18,17 +18,13 @@ namespace CircuitSim2.Chips.Digital.Logic
         {
         }
 
-        public NOT() : this(null, null)
-        {
-        }
-
         public override bool Func(bool Value) => !Value;
     }
 
     [Chip("DigitalAND")]
     public sealed class AND : BF
     {
-        private AND(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public AND(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -40,17 +36,13 @@ namespace CircuitSim2.Chips.Digital.Logic
         {
         }
 
-        public AND() : this(null, null)
-        {
-        }
-
         public override bool Func(bool Val1, bool Val2) => Val1 && Val2;
     }
 
     [Chip("DigitalOR")]
     public sealed class OR : BF
     {
-        private OR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public OR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -62,17 +54,13 @@ namespace CircuitSim2.Chips.Digital.Logic
         {
         }
 
-        public OR() : this(null, null)
-        {
-        }
-
         public override bool Func(bool Val1, bool Val2) => Val1 || Val2;
     }
 
     [Chip("DigitalXOR")]
     public sealed class XOR : BF
     {
-        private XOR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public XOR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -84,17 +72,13 @@ namespace CircuitSim2.Chips.Digital.Logic
         {
         }
 
-        public XOR() : this(null, null)
-        {
-        }
-
         public override bool Func(bool Val1, bool Val2) => Val1 ^ Val2;
     }
 
     [Chip("DigitalNAND")]
     public sealed class NAND : BF
     {
-        private NAND(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public NAND(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -106,17 +90,13 @@ namespace CircuitSim2.Chips.Digital.Logic
         {
         }
 
-        public NAND() : this(null, null)
-        {
-        }
-
         public override bool Func(bool Val1, bool Val2) => !(Val1 && Val2);
     }
 
     [Chip("DigitalNOR")]
     public sealed class NOR : BF
     {
-        private NOR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public NOR(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -125,10 +105,6 @@ namespace CircuitSim2.Chips.Digital.Logic
         }
 
         public NOR(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public NOR() : this(null, null)
         {
         }
 

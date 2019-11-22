@@ -5,7 +5,7 @@ namespace CircuitSim2.Chips.Char.Conversion
     [Chip("CharToByte")]
     public sealed class ToByte : UnaryFunctor<char, byte>
     {
-        private ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -17,17 +17,13 @@ namespace CircuitSim2.Chips.Char.Conversion
         {
         }
 
-        public ToByte() : this(null, null)
-        {
-        }
-
         public override byte Func(char Value) => (byte)Value;
     }
 
     [Chip("CharToInteger")]
     public sealed class ToInteger : UnaryFunctor<char, int>
     {
-        private ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -39,17 +35,13 @@ namespace CircuitSim2.Chips.Char.Conversion
         {
         }
 
-        public ToInteger() : this(null, null)
-        {
-        }
-
         public override int Func(char Value) => (int)Value;
     }
 
     [Chip("CharToLong")]
     public sealed class ToLong : UnaryFunctor<char, long>
     {
-        private ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -61,17 +53,13 @@ namespace CircuitSim2.Chips.Char.Conversion
         {
         }
 
-        public ToLong() : this(null, null)
-        {
-        }
-
         public override long Func(char Value) => Value;
     }
 
     [Chip("CharToString")]
     public sealed class ToString : UnaryFunctor<char, string>
     {
-        private ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
         }
 
@@ -80,10 +68,6 @@ namespace CircuitSim2.Chips.Char.Conversion
         }
 
         public ToString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public ToString() : this(null, null)
         {
         }
 

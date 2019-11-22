@@ -252,7 +252,7 @@ namespace CircuitSim2.Engine
             {
                 foreach(var Clock in Clocks.Values)
                 {
-                    Clock.Step();
+                    Clock.Update();
                 }
             }
         }
@@ -366,7 +366,14 @@ namespace CircuitSim2.Engine
                 {
                     lock (lock_obj)
                     {
-                        if (Timer.Enabled) Timer.Stop();
+                        if(Timer != null)
+                        {
+                            if (Timer.Enabled)
+                            {
+                                Timer.Stop();
+                            }
+                            Timer.Dispose();
+                        }
                         foreach(var chip in Chips.Values)
                         {
                             chip.Dispose();

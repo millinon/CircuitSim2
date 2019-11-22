@@ -1,7 +1,7 @@
 using System;
 
 using CircuitSim2.Chips.Components.Adders;
-using CircuitSim2.Chips.IO.BasicInputs;
+//using CircuitSim2.Chips.IO.BasicInputs;
 
 namespace FullAdderTest
 {
@@ -9,11 +9,15 @@ namespace FullAdderTest
     {
         static void Main(string[] args)
         {
-            var A = new GenericInput<bool>();
+            /*var A = new GenericInput<bool>();
             var B = new GenericInput<bool>();
-            var Cin = new GenericInput<bool>();
+            var Cin = new GenericInput<bool>();*/
 
-            var Adder = new FullAdder();
+            var A = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+            var B = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+            var Cin = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+
+            var Adder = new FullAdder(null, null);
 
             Adder.Inputs.A.Attach(A.Outputs.Out);
             Adder.Inputs.B.Attach(B.Outputs.Out);
