@@ -36,8 +36,9 @@ namespace CircuitEditor
                     var chip = Activator.CreateInstance(chiptype, new object[] { (circuitCanvasControl1.Engine) }) as ChipBase;
 
                     chip.Position = circuitCanvasControl1.Position;
+                    chip.Rotation = new RotationVec { Gamma = 45, };
 
-                    chip.ChildrenVisible = true;
+                    //chip.ChildrenVisible = true;
 
                     foreach(var output in chip.OutputSet.AllOutputs)
                     {

@@ -104,6 +104,7 @@ namespace CircuitSim2.Chips.IO.Inputs
 
         public Switch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
+            InputSet = new NoInputs();
             OutputSet = (Outputs = new GenericOutput<T>(this));
         }
 

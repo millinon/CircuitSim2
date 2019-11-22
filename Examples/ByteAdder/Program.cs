@@ -10,30 +10,25 @@ namespace ByteAdderTest
     {
         static void Main(string[] args)
         {
-            using (CircuitSim2.Engine.Engine engine = new CircuitSim2.Engine.Engine())
-            {
-                /*                var a = new GenericInput<byte>(engine);
-                                var b = new GenericInput<byte>(engine);
-                                var cin = new Constant<bool>(engine);
-                                */
+            bool use_engine = false;
 
+            using (CircuitSim2.Engine.Engine engine = use_engine ? new CircuitSim2.Engine.Engine() : null)
+            {
                 var a = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
                 var b = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
                 var cin = new CircuitSim2.Chips.Digital.Generators.Constant(engine);
                
                 var adder = new ByteAdder(engine);
-                Console.WriteLine($"adder = {adder.ID}");
 
                 adder.Inputs.A.Attach(a.Outputs.Out);
                 adder.Inputs.B.Attach(b.Outputs.Out);
                 adder.Inputs.Cin.Attach(cin.Outputs.Out);
 
-                engine.ChipUpdated += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} updated");
-                engine.ChipSkipped += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} skipped");
-
                 if (engine != null)
                 {
-                    engine.Start(1);
+                    engine.ChipUpdated += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} updated");
+                    engine.ChipSkipped += (s, e) => Console.WriteLine($"Chip {e.Chip.ID} skipped");
+                    engine.Start(0.000001);
                 }
 
                 string line;
@@ -49,8 +44,7 @@ namespace ByteAdderTest
                         a.Value = byte.Parse(toks[0].Trim());
                         b.Value = byte.Parse(toks[1].Trim());
 
-                        if (engine != null)
-                            Thread.Sleep(5000);
+                        engine?.FlushAll();
 
                         if (adder.Outputs.Cout.Value) throw new Exception("Overflow");
                         Console.WriteLine($"{a.Value.ToString("X2")} + {b.Value.ToString("X2")} = {adder.Outputs.S.Value.ToString("X2")}");

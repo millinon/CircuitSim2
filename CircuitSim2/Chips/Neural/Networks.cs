@@ -11,8 +11,15 @@ namespace CircuitSim2.Chips.Neural.Networks
     [Chip("FeedForward")]
     public sealed class FeedForward : ChipBase
     {
-        public InputArray<double> Inputs;
-        public OutputArray<double> Outputs;
+        public InputArray<double> Inputs
+        {
+            get; private set;
+        }
+
+        public OutputArray<double> Outputs
+        {
+            get; private set;
+        }
 
         private Neuron[][] Neurons;
 
@@ -131,6 +138,8 @@ namespace CircuitSim2.Chips.Neural.Networks
                     }
                 }
             }
+
+            Reset();
         }
 
         public FeedForward(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)

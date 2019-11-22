@@ -198,8 +198,8 @@ namespace CircuitSim2
 
             public virtual void Detach()
             {
-                InputSet.Detach();
-                OutputSet.Detach();
+                InputSet?.Detach();
+                OutputSet?.Detach();
             }
 
             #region Graphics Support

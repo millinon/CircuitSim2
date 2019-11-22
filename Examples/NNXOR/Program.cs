@@ -2,9 +2,9 @@
 using System.Linq;
 
 using CircuitSim2.Engine;
-using CircuitSim2.Chips.Digital.Conversion;
 using CircuitSim2.Chips.Digital.Logic;
 using CircuitSim2.Chips.Neural.Networks;
+using CircuitSim2.Chips.Digital.Conversion;
 
 namespace NNXOR
 {
@@ -15,8 +15,8 @@ namespace NNXOR
             //using (Engine Engine = new Engine())
             using (Engine Engine = null)
             {
-                var A = new CircuitSim2.Chips.Digital.Inputs.Switch(Engine);
-                var B = new CircuitSim2.Chips.Digital.Inputs.Switch(Engine);
+                var A = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
+                var B = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
 
                 var convA = new ToDouble(Engine)
                 {
@@ -31,7 +31,7 @@ namespace NNXOR
                 };
 
                 var XOR = new XOR(Engine);
-                var convX = new CircuitSim2.Chips.Digital.Conversion.ToDouble(Engine)
+                var convX = new ToDouble(Engine)
                 {
                     Low = 0.0,
                     High = 1.0,
@@ -67,15 +67,15 @@ namespace NNXOR
                     Engine.Start(0.01);
                 }
 
-                foreach (var epoch in Enumerable.Range(0, 10000))
+                foreach (var epoch in Enumerable.Range(0, 100000))
                 {
-                    foreach(var _ in Enumerable.Range(0, 2))
+                    foreach(var a_val in vals)
                     {
-                        A.Toggle();
+                        A.Value = a_val;
 
-                        foreach (var __ in Enumerable.Range(0, 2))
+                        foreach(var b_val in vals)
                         {
-                            B.Toggle();
+                            B.Value = b_val;
 
                             Engine?.FlushAll();
 
@@ -84,17 +84,13 @@ namespace NNXOR
                     }
                 }
 
-                /*foreach (var a in vals)
+                foreach (var a_val in vals)
                 {
-                    foreach (var b in vals)
-                    {
-                        A.Value = a;
-                        B.Value = b;*/
+                    A.Value = a_val;
 
-                foreach(var _ in Enumerable.Range(0, 2))
-                {
-                    foreach(var __ in Enumerable.Range(0, 2))
+                    foreach (var b_val in vals)
                     {
+                        B.Value = b_val;
 
                         Engine?.FlushAll();
 

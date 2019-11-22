@@ -257,6 +257,8 @@ namespace CircuitSim2.IO
                 Output.Attach(this);
             }
 
+            Chip.Reset();
+
             Chip.Engine?.RegenerateGraph();
         }
 
@@ -269,6 +271,8 @@ namespace CircuitSim2.IO
                 sourcebase = null;
                 source = null;
             }
+
+            Chip.Reset();
 
             Chip.Engine?.RegenerateGraph();
         }

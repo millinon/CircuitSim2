@@ -122,7 +122,6 @@ namespace CircuitSim2.Chips.Functors
 
     public abstract class Constant<T> : ChipBase where T : IEquatable<T>
     {
-        public readonly CircuitSim2.IO.NoInputs Inputs;
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 
         private T value;
@@ -133,17 +132,18 @@ namespace CircuitSim2.Chips.Functors
             get => value;
             set
             {
-                this.value = Value;
-                if (AutoTick)
-                {
+                this.value = value;
+
+               if (AutoTick)
+               {
                     Tick();
-                }
+               }
             }
         }
 
         public Constant(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
-            InputSet = (Inputs = new CircuitSim2.IO.NoInputs());
+            InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
         }
 

@@ -33,6 +33,8 @@ namespace CircuitSim2.Chips.Neural
                 {
                     values[idx] = value;
 
+                    Chip.Reset();
+
                     if (Chip.AutoTick)
                     {
                         Chip.Tick();
@@ -76,6 +78,8 @@ namespace CircuitSim2.Chips.Neural
             set
             {
                 bias = value;
+
+                Reset();
 
                 if (AutoTick)
                 {
@@ -142,6 +146,8 @@ namespace CircuitSim2.Chips.Neural
             Weights = new WeightCollection(this, NumInputs, RNG);
 
             Bias = 0.0;
+
+            Reset();
         }
 
         protected virtual double Phi(double A) => 1.0 / (1.0 + Math.Exp(-A));

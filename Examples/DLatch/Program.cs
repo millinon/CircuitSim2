@@ -21,7 +21,7 @@ namespace DLatchTest
                 latch.Inputs.D.Attach(D.Outputs.Out);
                 latch.Inputs.E.Attach(E.Outputs.Out);
 
-                Engine.Start(1);
+                Engine.Start(0.001);
 
                 string line;
 
@@ -39,7 +39,7 @@ namespace DLatchTest
                         E.Value = true;
                         D.Value = true;
                         Thread.Sleep(300);
-                        E.Value = false;
+                        E.Value = false; 
                     }
 
                     Thread.Sleep(100);
