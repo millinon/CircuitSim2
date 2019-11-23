@@ -24,7 +24,7 @@ namespace CircuitSim2.IO
 
     public static class Type_Map
     {
-        private static readonly IReadOnlyDictionary<System.Type, IO.Type> Dictionary;
+        private static readonly Dictionary<System.Type, IO.Type> Dictionary;
 
         static Type_Map()
         {
@@ -422,7 +422,7 @@ namespace CircuitSim2.IO
             get { lock (lock_obj) { return havevalue; } }
         }
 
-        public class ValueChangedEventArgs
+        public class ValueChangedEventArgs : EventArgs
         {
             public T NewValue;
         }
@@ -521,7 +521,7 @@ namespace CircuitSim2.IO
     {
         protected readonly object lock_obj;
 
-        private readonly IReadOnlyDictionary<string, InputBase> InputsByName;
+        private readonly Dictionary<string, InputBase> InputsByName;
 
         public IEnumerable<InputBase> AllInputs => InputsByName.Values;
 
@@ -619,7 +619,7 @@ namespace CircuitSim2.IO
     {
         protected readonly object lock_obj;
 
-        protected readonly IReadOnlyDictionary<string, OutputBase> OutputsByName;
+        protected readonly Dictionary<string, OutputBase> OutputsByName;
 
         public IEnumerable<OutputBase> AllOutputs => OutputsByName.Values;
 

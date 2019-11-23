@@ -1,133 +1,45 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿ <Project Sdk="Microsoft.NET.Sdk">
+
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+ 
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <Configuration Condition="'$(Configuration)' == '' ">Release</Configuration>
     <ProjectGuid>{AED0E2D2-E357-429B-B311-CE6BF55FA7CB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CircuitSim2</RootNamespace>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <Deterministic>true</Deterministic>
-    <OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+	<OutputPath>bin\$(Platform)\$(Configuration)</OutputPath>
+	<ErrorReport>none</ErrorReport>
+	<CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
+	<PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)' == 'x86'">
+	<PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Platform)' == 'x64'">
+	<PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <AssemblyName>CircuitSim2</AssemblyName>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <AssemblyName>CircuitSim2</AssemblyName>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DebugType>full</DebugType>
+	<DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <DebugSymbols>true</DebugSymbols>
+	<UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
+  
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DebugType>pdbonly</DebugType>
+    <DefineConstants>TRACE</DefineConstants>
+	<DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Platform)' == 'x64'">
-    <PlatformTarget>x64</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Catalog.cs" />
-    <Compile Include="Chips\Byte\Arithmetic.cs" />
-    <Compile Include="Chips\Byte\Comparison.cs" />
-    <Compile Include="Chips\Byte\Conversion.cs" />
-    <Compile Include="Chips\Byte\Generators.cs" />
-    <Compile Include="Chips\Byte\Inputs.cs" />
-    <Compile Include="Chips\Byte\Signals.cs" />
-    <Compile Include="Chips\Char\Arithmetic.cs" />
-    <Compile Include="Chips\Char\Comparison.cs" />
-    <Compile Include="Chips\Char\Conversion.cs" />
-    <Compile Include="Chips\Char\Generators.cs" />
-    <Compile Include="Chips\Char\Inputs.cs" />
-    <Compile Include="Chips\ChipBase.cs" />
-    <Compile Include="Chips\Components\Memory.cs" />
-    <Compile Include="Chips\Components\Adders.cs" />
-    <Compile Include="Chips\DateTime\Arithmetic.cs" />
-    <Compile Include="Chips\DateTime\Comparison.cs" />
-    <Compile Include="Chips\DateTime\Conversion.cs" />
-    <Compile Include="Chips\DateTime\Generators.cs" />
-    <Compile Include="Chips\DateTime\Inputs.cs" />
-    <Compile Include="Chips\DateTime\Signals.cs" />
-    <Compile Include="Chips\Digital\Comparison.cs" />
-    <Compile Include="Chips\Digital\Conversion.cs" />
-    <Compile Include="Chips\Digital\Generators.cs" />
-    <Compile Include="Chips\Digital\Inputs.cs" />
-    <Compile Include="Chips\Digital\Logic.cs" />
-    <Compile Include="Chips\Digital\Signals.cs" />
-    <Compile Include="Chips\Double\Arithmetic.cs" />
-    <Compile Include="Chips\Double\Comparison.cs" />
-    <Compile Include="Chips\Double\Conversion.cs" />
-    <Compile Include="Chips\Double\Generators.cs" />
-    <Compile Include="Chips\Double\Inputs.cs" />
-    <Compile Include="Chips\Double\Signals.cs" />
-    <Compile Include="Chips\Functors.cs" />
-    <Compile Include="Chips\Integer\Arithmetic.cs" />
-    <Compile Include="Chips\Integer\Comparison.cs" />
-    <Compile Include="Chips\Integer\Conversion.cs" />
-    <Compile Include="Chips\Integer\Generators.cs" />
-    <Compile Include="Chips\Integer\Inputs.cs" />
-    <Compile Include="Chips\Integer\Signals.cs" />
-    <Compile Include="Chips\Inputs.cs" />
-    <Compile Include="Chips\Long\Arithmetic.cs" />
-    <Compile Include="Chips\Long\Comparison.cs" />
-    <Compile Include="Chips\Long\Conversion.cs" />
-    <Compile Include="Chips\Long\Generators.cs" />
-    <Compile Include="Chips\Long\Inputs.cs" />
-    <Compile Include="Chips\Long\Signals.cs" />
-    <Compile Include="Chips\MetaChip.cs" />
-    <Compile Include="Chips\Neural\Networks.cs" />
-    <Compile Include="Chips\Neural\Neuron.cs" />
-    <Compile Include="Chips\Signals.cs" />
-    <Compile Include="Chips\Single\Arithmetic.cs" />
-    <Compile Include="Chips\Single\Comparison.cs" />
-    <Compile Include="Chips\Single\Conversion.cs" />
-    <Compile Include="Chips\Single\Generators.cs" />
-    <Compile Include="Chips\Single\Inputs.cs" />
-    <Compile Include="Chips\Single\Signals.cs" />
-    <Compile Include="Chips\String\Comparison.cs" />
-    <Compile Include="Chips\String\Conversion.cs" />
-    <Compile Include="Chips\String\Generators.cs" />
-    <Compile Include="Chips\String\Inputs.cs" />
-    <Compile Include="Chips\String\Operators.cs" />
-    <Compile Include="Chips\TimeSpan\Arithmetic.cs" />
-    <Compile Include="Chips\TimeSpan\Comparison.cs" />
-    <Compile Include="Chips\TimeSpan\Conversion.cs" />
-    <Compile Include="Chips\TimeSpan\Generators.cs" />
-    <Compile Include="Chips\TimeSpan\Signals.cs" />
-    <Compile Include="Chips\Time\Generators.cs" />
-    <Compile Include="Chips\Time\Signals.cs" />
-    <Compile Include="Engine.cs" />
-    <Compile Include="Graphics.cs" />
-    <Compile Include="IO.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup />
+  
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
