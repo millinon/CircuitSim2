@@ -4,7 +4,7 @@ using System;
 
 namespace CircuitSim2.Chips.Digital.Conversion
 {
-    public abstract class DigitalConverter<T> : ChipBase where T : IEquatable<T>
+    public abstract class DigitalConverter<T> : ChipBase
     {
         private T low;
         [ChipProperty]

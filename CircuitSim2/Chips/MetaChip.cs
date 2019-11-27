@@ -180,8 +180,8 @@ namespace CircuitSim2.Chips
             var input_idx = 0;
             foreach (var desc in Description.Inputs)
             {
-                var input_type = typeof(CircuitSim2.IO.Input<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null)); // TODO: ensure input_type implements IEquatable<input_type>?
-                var input = Activator.CreateInstance(input_type, desc.Name, this, input_idx) as CircuitSim2.IO.InputBase;
+                var input_type = typeof(CircuitSim2.IO.Input<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null));
+                var input = Activator.CreateInstance(input_type, new object[] { desc.Name, this, input_idx }) as CircuitSim2.IO.InputBase;
 
                 Inputs[desc.Name] = input;
                 InputList.Add(input);
@@ -194,8 +194,8 @@ namespace CircuitSim2.Chips
             var output_idx = 0;
             foreach (var desc in Description.Outputs)
             {
-                var output_type = typeof(CircuitSim2.IO.Output<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null)); // TODO: ensure output_type implements IEquatable<output_type>?
-                var output = Activator.CreateInstance(output_type, desc.Name, this, output_idx) as CircuitSim2.IO.OutputBase;
+                var output_type = typeof(CircuitSim2.IO.Output<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null));
+                var output = Activator.CreateInstance(output_type, new object[] { desc.Name, this, output_idx }) as CircuitSim2.IO.OutputBase;
 
                 Outputs[desc.Name] = output;
                 OutputList.Add(output);
@@ -213,7 +213,7 @@ namespace CircuitSim2.Chips
             foreach (var desc in Description.Chips)
             {
                 var chip_type = FindType(desc.Type, typeof(CircuitSim2.Chips.ChipBase), chip_ctor_types, null);
-                var chip = Activator.CreateInstance(chip_type, this as ChipBase, this.Engine) as ChipBase;
+                var chip = Activator.CreateInstance(chip_type, new object[] { this as ChipBase, this.Engine }) as ChipBase;
 
                 chip.AutoTick = desc.AutoTick;
                 chip.Position = desc.Position;

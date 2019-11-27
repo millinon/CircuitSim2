@@ -2,7 +2,7 @@ using System;
 
 namespace CircuitSim2.Chips.Functors
 {
-    public abstract class Generator<T> : ChipBase where T : IEquatable<T>
+    public abstract class Generator<T> : ChipBase
     {
         public readonly CircuitSim2.IO.ClockInputOnly Inputs;
 
@@ -25,7 +25,10 @@ namespace CircuitSim2.Chips.Functors
 
         public sealed override void Tick()
         {
-            base.Tick();
+            if (Inputs.Clk.Trigger)
+            {
+                base.Tick();
+            }
         }
 
         /*public override SizeVec size => new SizeVec
@@ -36,7 +39,7 @@ namespace CircuitSim2.Chips.Functors
         };*/
     }
 
-    public abstract class Random<T> : Generator<T> where T : IEquatable<T>
+    public abstract class Random<T> : Generator<T>
     {
         protected Random RNG;
 
@@ -68,7 +71,7 @@ namespace CircuitSim2.Chips.Functors
     }
 
     [PureChip]
-    public abstract class UnaryFunctor<T, U> : ChipBase where T : IEquatable<T> where U : IEquatable<U>
+    public abstract class UnaryFunctor<T, U> : ChipBase
     {
         public readonly CircuitSim2.IO.GenericInput<T> Inputs;
         public readonly CircuitSim2.IO.GenericOutput<U> Outputs;
@@ -98,7 +101,7 @@ namespace CircuitSim2.Chips.Functors
     }
 
     [PureChip]
-    public abstract class BinaryFunctor<T, U, V> : ChipBase where T : IEquatable<T> where U : IEquatable<U> where V : IEquatable<V>
+    public abstract class BinaryFunctor<T, U, V> : ChipBase
     {
         public readonly CircuitSim2.IO.GenericInput<T, U> Inputs;
         public readonly CircuitSim2.IO.GenericOutput<V> Outputs;
@@ -120,7 +123,7 @@ namespace CircuitSim2.Chips.Functors
         public sealed override void Tick() => base.Tick();
     }
 
-    public abstract class Constant<T> : ChipBase where T : IEquatable<T>
+    public class Constant<T> : ChipBase
     {
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 

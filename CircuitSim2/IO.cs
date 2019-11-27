@@ -232,7 +232,7 @@ namespace CircuitSim2.IO
     }
 
     [DebuggerDisplay("{Chip.Name}.Inputs.{Name}: {Value}")]
-    public class Input<T> : InputBase where T : IEquatable<T>
+    public class Input<T> : InputBase
     {
         //private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
@@ -328,14 +328,25 @@ namespace CircuitSim2.IO
 
         private bool last = false;
 
+        private bool rising_edge = false;
+
         public override void Notify()
         {
             if(Value && !last) // detect rising edge
             {
+                rising_edge = true;
                 base.Notify();
+            } else
+            {
+                rising_edge = false;
             }
 
             last = Value;
+        }
+
+        public bool Trigger
+        {
+            get => rising_edge;
         }
     }
 
@@ -433,7 +444,7 @@ namespace CircuitSim2.IO
     }
 
     [DebuggerDisplay("{Chip.Name}.Outputs.{Name}: {Value}")]
-    public sealed class Output<T> : OutputBase where T : IEquatable<T>
+    public sealed class Output<T> : OutputBase
     {
         //private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
@@ -478,7 +489,42 @@ namespace CircuitSim2.IO
                     }
                     else if (HaveValue)
                     {
-                        changed = !Value.Equals(value);
+                        if (!typeof(T).IsValueType)
+                        {
+                            if (value == null || Value == null)
+                            {
+                                if (value != null || Value != null)
+                                {
+                                    changed = true;
+                                }
+                                else
+                                {
+                                    changed = false;
+                                }
+                            } else
+                            {
+                                if(value is IEnumerable<T> seq_val1 && Value is IEnumerable<T> seq_val2)
+                                {
+                                    changed = !seq_val1.SequenceEqual(seq_val2);
+                                } else if(value is IEquatable<T> eq_val1 && Value is IEquatable<T> eq_val2)
+                                {
+                                    changed = !eq_val1.Equals(eq_val2);
+                                } else
+                                {
+                                    changed = true; // can't detect if value changed - assume it did
+                                }
+                            }
+                        } else
+                        {
+                            if (value is IEquatable<T> val1 && Value is IEquatable<T> val2)
+                            {
+                                changed = !val1.Equals(val2);
+                            }
+                            else
+                            {
+                                changed = true; // can't detect if value changed - assume it did
+                            }
+                        }
                     }
                     else changed = true;
 
@@ -601,14 +647,14 @@ namespace CircuitSim2.IO
         }
     }
 
-    public sealed class GenericInput<T> : InputSetBase where T : IEquatable<T>
+    public sealed class GenericInput<T> : InputSetBase
     {
         public Input<T> A;
 
         public GenericInput(Chips.ChipBase Chip) : base(new InputBase[] { new Input<T>("A", Chip, 0), }) => A = this["A"] as Input<T>;
     }
 
-    public sealed class GenericInput<T, U> : InputSetBase where T : IEquatable<T> where U : IEquatable<U>
+    public sealed class GenericInput<T, U> : InputSetBase
     {
         public readonly Input<T> A;
         public readonly Input<U> B;
@@ -620,7 +666,7 @@ namespace CircuitSim2.IO
         }
     }
 
-    public sealed class InputArray<T> : InputSetBase where T : IEquatable<T>
+    public sealed class InputArray<T> : InputSetBase
     {
         private readonly Input<T>[] Array;
 
@@ -699,14 +745,14 @@ namespace CircuitSim2.IO
         }
     }
 
-    public sealed class GenericOutput<T> : OutputSetBase where T : IEquatable<T>
+    public sealed class GenericOutput<T> : OutputSetBase
     {
         public readonly Output<T> Out;
 
         public GenericOutput(Chips.ChipBase Chip) : base(new OutputBase[] { new Output<T>("Out", Chip, 0), }) => Out = this["Out"] as Output<T>;
     }
 
-    public sealed class OutputArray<T> : OutputSetBase where T : IEquatable<T>
+    public sealed class OutputArray<T> : OutputSetBase
     {
         private readonly Output<T>[] Array;
 

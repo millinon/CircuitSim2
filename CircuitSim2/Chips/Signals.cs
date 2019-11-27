@@ -4,7 +4,7 @@ using CircuitSim2.IO;
 
 namespace CircuitSim2.Chips.Signals
 {
-    public abstract class EdgeDetector<T> : ChipBase where T : IEquatable<T>
+    public abstract class EdgeDetector<T> : ChipBase
     {
         public readonly GenericInput<T> Inputs;
         public readonly GenericOutput<bool> Outputs;

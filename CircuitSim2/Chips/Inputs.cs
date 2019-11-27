@@ -58,7 +58,7 @@ namespace CircuitSim2.Chips.IO.Inputs
         public override void Commit() => Outputs.Out.Value = _out;
     }
 
-    public abstract class Switch<T> : ChipBase where T:IEquatable<T>
+    public abstract class Switch<T> : ChipBase
     {
         private bool state = false;
         public bool State
