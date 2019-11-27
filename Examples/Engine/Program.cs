@@ -16,18 +16,18 @@ namespace EngineTest
                     Seed = 1234,
                 };
                 Console.WriteLine($"A.ID = {A.ID}");
-                A.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A <- {e.NewValue}");
+                A.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A <- {A.Outputs.Out.Value}");
 
                 var B = new CircuitSim2.Chips.Byte.Generators.Random(engine)
                 {
                     Seed = 4321,
                 };
                 Console.WriteLine($"B.ID = {B.ID}");
-                B.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"B <- {e.NewValue}");
+                B.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"B <- {B.Outputs.Out.Value}");
 
                 var adder = new CircuitSim2.Chips.Byte.Arithmetic.Add(engine);
                 Console.WriteLine($"adder.ID = {adder.ID}");
-                adder.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A + B = {e.NewValue}");
+                adder.Outputs.Out.ValueChanged += (s, e) => Console.WriteLine($"A + B = {adder.Outputs.Out.Value}");
 
                 adder.Inputs.A.Attach(A.Outputs.Out);
                 adder.Inputs.B.Attach(B.Outputs.Out);

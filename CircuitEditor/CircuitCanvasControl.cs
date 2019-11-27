@@ -582,62 +582,24 @@ namespace CircuitEditor
         public Color WireColor(IOBase IO)
         {
 
-            if (IO is OutputBase Output)
+            if (IO is OutputBase Chip_Output)
             {
+                
+
                 try
                 {
-                    switch (Output.Type)
-                    {
-                        case CircuitSim2.IO.Type.DIGITAL:
-                            return (Output as Output<bool>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.BYTE:
-                            return (Output as Output<byte>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.CHAR:
-                            return (Output as Output<char>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.INT:
-                            return (Output as Output<int>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.LONG:
-                            return (Output as Output<long>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.SINGLE:
-                            return (Output as Output<float>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.DOUBLE:
-                            return (Output as Output<double>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.STRING:
-                            return (Output as Output<string>).Value != default ? Wire_On : Wire_Off;
-                        default:
-                            return Wire_Error;
-                    }
+                    return Chip_Output.HasDefaultValue ? Wire_Off : Wire_On;
                 }
                 catch (Exception)
                 {
                     return Wire_Error;
                 }
             }
-            else if (IO is InputBase Input)
+            else if (IO is InputBase Chip_Input)
             {
                 try
                 {
-                    switch (Input.Type)
-                    {
-                        case CircuitSim2.IO.Type.DIGITAL:
-                            return (Input as Input<bool>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.BYTE:
-                            return (Input as Input<byte>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.CHAR:
-                            return (Input as Input<char>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.INT:
-                            return (Input as Input<int>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.LONG:
-                            return (Input as Input<long>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.SINGLE:
-                            return (Input as Input<float>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.DOUBLE:
-                            return (Input as Input<double>).Value != default ? Wire_On : Wire_Off;
-                        case CircuitSim2.IO.Type.STRING:
-                            return (Input as Input<string>).Value != default ? Wire_On : Wire_Off;
-                        default:
-                            return Wire_Error;
-                    }
+                    return Chip_Input.HasDefaultValue ? Wire_Off : Wire_On;
                 }
                 catch (Exception)
                 {

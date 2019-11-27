@@ -42,35 +42,8 @@ namespace CircuitEditor
 
                     foreach(var output in chip.OutputSet.AllOutputs)
                     {
-                        switch (output.Type)
-                        {
-                            case CircuitSim2.IO.Type.DIGITAL:
-                                (output as Output<bool>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.BYTE:
-                                (output as Output<byte>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.CHAR:
-                                (output as Output<char>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.INT:
-                                (output as Output<int>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.LONG:
-                                (output as Output<long>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.SINGLE:
-                                (output as Output<float>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.DOUBLE:
-                                (output as Output<double>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            case CircuitSim2.IO.Type.STRING:
-                                (output as Output<string>).ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
-                                break;
-                            default:
-                                break;
-                        }
+                        output.ValueChanged += (_, __) => circuitCanvasControl1.Refresh();
+
                     }
 
                     circuitCanvasControl1.Spawn(chip);

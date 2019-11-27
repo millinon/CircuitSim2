@@ -7,7 +7,7 @@ using static System.Math;
 
 namespace CircuitSim2.IO
 {
-    public enum Type
+    /*public enum Type
     {
         DIGITAL,
         BYTE,
@@ -50,7 +50,7 @@ namespace CircuitSim2.IO
 
             throw new ArgumentException($"Type map lookup failed for {Type.Namespace}.{Type.Name}");
         }
-    }
+    }*/
 
     public abstract class IOBase
     {
@@ -223,15 +223,20 @@ namespace CircuitSim2.IO
             }
         }
 
+        public abstract bool HasDefaultValue
+        {
+            get;
+        }
+
         public abstract void Notify();
     }
 
     [DebuggerDisplay("{Chip.Name}.Inputs.{Name}: {Value}")]
     public class Input<T> : InputBase where T : IEquatable<T>
     {
-        private static readonly Type sType = Type_Map.Lookup(typeof(T));
+        //private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
-        public Input(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, sType, Index)
+        public Input(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, typeof(T), Index)
         {
 
         }
@@ -303,6 +308,14 @@ namespace CircuitSim2.IO
                     if (Chip.Engine != null) Chip.Engine.ScheduleUpdate(Chip);
                     else Chip.Tick();
                 }
+            }
+        }
+
+        public override bool HasDefaultValue
+        {
+            get
+            {
+                return Value != default;
             }
         }
     }
@@ -403,15 +416,28 @@ namespace CircuitSim2.IO
             }
         }
 
+        public abstract bool HasDefaultValue
+        {
+            get;
+        }
+
+        public event EventHandler ValueChanged;
+
+        protected void Trigger(EventArgs Args)
+        {
+            ValueChanged?.Invoke(this, Args);
+        }
+
+
         protected readonly HashSet<OutputBase> SubscribedOutputs;
     }
 
     [DebuggerDisplay("{Chip.Name}.Outputs.{Name}: {Value}")]
     public sealed class Output<T> : OutputBase where T : IEquatable<T>
     {
-        private static readonly Type sType = Type_Map.Lookup(typeof(T));
+        //private static readonly Type sType = Type_Map.Lookup(typeof(T));
 
-        public Output(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, sType, Index)
+        public Output(string Name, Chips.ChipBase Chip, int Index) : base(Chip, Name, typeof(T), Index)
         {
 
         }
@@ -427,7 +453,7 @@ namespace CircuitSim2.IO
             public T NewValue;
         }
 
-        public event EventHandler<ValueChangedEventArgs> ValueChanged;
+        /* public event EventHandler<ValueChangedEventArgs> ValueChanged; */
 
         private T value;
         public T Value
@@ -461,7 +487,8 @@ namespace CircuitSim2.IO
 
                     if (changed)
                     {
-                        ValueChanged?.Invoke(this, new ValueChangedEventArgs { NewValue = value });
+                        base.Trigger(new ValueChangedEventArgs { NewValue = value });
+                        //ValueChanged?.Invoke(this);
 
                         foreach (var output in SubscribedOutputs)
                         {
@@ -474,6 +501,16 @@ namespace CircuitSim2.IO
                         (sink as Input<T>).Notify();
                     }
                 }
+            }
+        }
+
+        public override bool HasDefaultValue
+        {
+            get
+            {
+                if (!HaveValue) return true;
+
+                return Value != default;
             }
         }
 

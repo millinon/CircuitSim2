@@ -16,6 +16,7 @@ namespace CircuitSim2
         public double Height;
     };
 
+    [Serializable]
     public struct PositionVec
     {
         public double X;
@@ -62,6 +63,7 @@ namespace CircuitSim2
         }
     }
 
+    [Serializable]
     public struct RotationVec
     {
         /// <summary>Rotation about the X-axis in radians</summary>

@@ -30,7 +30,29 @@ namespace MetaNANDTest
             NAND.Inputs.A.Attach(A.Outputs.Out);
             NAND.Inputs.B.Attach(B.Outputs.Out);
 
-            MetaChip MetaNAND = new MetaChip();
+            MetaChip MetaNAND = new MetaChip(null, null);
+
+            var bool_type = new MetaChip.TypeDescription
+            {
+                AssemblyFullName = typeof(bool).Assembly.FullName,
+                Namespace = typeof(bool).Namespace,
+                Name = typeof(bool).Name,
+            };
+
+            var and_type = new MetaChip.TypeDescription
+            {
+                AssemblyFullName = typeof(AND).Assembly.FullName,
+                Namespace = typeof(AND).Namespace,
+                Name = typeof(AND).Name,
+            };
+
+            var not_type = new MetaChip.TypeDescription
+            {
+                AssemblyFullName = typeof(NOT).Assembly.FullName,
+                Namespace = typeof(NOT).Namespace,
+                Name = typeof(NOT).Name,
+            };
+
             MetaNAND.Load(new MetaChip.MetaChipDescription
             {
                 Inputs = new List<InputDescription>
@@ -38,12 +60,12 @@ namespace MetaNANDTest
                     new InputDescription
                     {
                         Name = "A",
-                        Type = CircuitSim2.IO.Type.DIGITAL,
+                        Type = bool_type,
                     },
                     new InputDescription
                     {
                         Name = "B",
-                        Type = CircuitSim2.IO.Type.DIGITAL,
+                        Type = bool_type,
                     }
                 },
                 Outputs = new List<OutputDescription>
@@ -51,7 +73,7 @@ namespace MetaNANDTest
                     new OutputDescription
                     {
                         Name = "Out",
-                        Type = CircuitSim2.IO.Type.DIGITAL,
+                        Type =  bool_type,
                         MapID = "NOT",
                         MapOutput = "Out",
                     }
@@ -60,8 +82,7 @@ namespace MetaNANDTest
                 {
                     new ChipDescription
                     {
-                        Name = "AND",
-                        Namespace = "CircuitSim2.Chips.Digital.Logic",
+                        Type = and_type,
                         ID = "AND",
                         AutoTick = true,
                         Bindings = new List<InputBindingDescription>
@@ -80,8 +101,7 @@ namespace MetaNANDTest
                     },
                     new ChipDescription
                     {
-                        Name = "NOT",
-                        Namespace = "CircuitSim2.Chips.Digital.Logic",
+                        Type = not_type,
                         ID = "NOT",
                         AutoTick = true,
                     }

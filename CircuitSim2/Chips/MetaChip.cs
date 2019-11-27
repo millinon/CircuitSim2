@@ -9,13 +9,21 @@ namespace CircuitSim2.Chips
     public sealed class MetaChip : ChipBase
     {
         [Serializable]
+        public sealed class TypeDescription
+        {
+            public string AssemblyFullName;
+            public string Namespace;
+            public string Name;
+        }
+
+        [Serializable]
         public sealed class MetaChipDescription
         {
             [Serializable]
             public sealed class InputDescription
             {
                 public string Name;
-                public CircuitSim2.IO.Type Type;
+                public TypeDescription Type;
             }
             public List<InputDescription> Inputs;
 
@@ -23,7 +31,7 @@ namespace CircuitSim2.Chips
             public sealed class OutputDescription
             {
                 public string Name;
-                public CircuitSim2.IO.Type Type;
+                public TypeDescription Type;
                 public string MapID;
                 public string MapOutput;
             }
@@ -39,8 +47,8 @@ namespace CircuitSim2.Chips
                     public string BindName;
                 }
 
-                public string Namespace;
-                public string Name;
+                public TypeDescription Type;
+
                 public string ID;
 
                 public bool AutoTick;
@@ -63,10 +71,20 @@ namespace CircuitSim2.Chips
             public List<ConnectionDescription> Connections;
         }
 
-        private MetaChip(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        [ChipProperty]
+        public List<Assembly> AssemblySearchPath;
+
+        public MetaChip(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
         {
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = new CircuitSim2.IO.NoOutputs();
+
+            AssemblySearchPath = new List<Assembly>()
+            {
+                typeof(object).Assembly,
+                typeof(bool).Assembly,
+                Assembly.GetExecutingAssembly(),
+            };
         }
 
         public MetaChip(Engine.Engine Engine) : this(null, Engine)
@@ -77,19 +95,74 @@ namespace CircuitSim2.Chips
         {
         }
 
-        public MetaChip() : this(null, null)
-        {
-        }
-        
         private Dictionary<string, Chips.ChipBase> Chips;
 
         private Dictionary<string, CircuitSim2.IO.InputBase> Inputs;
         private Dictionary<string, CircuitSim2.IO.OutputBase> Outputs;
 
+        private Type FindType(TypeDescription TypeDesc, System.Type BaseType, System.Type[] ConstructorParams, System.Type[] RequiredInterfaces)
+        {
+            foreach (var assembly in AssemblySearchPath.Where(a => a.FullName == TypeDesc.AssemblyFullName))
+            {
+                foreach (var type in assembly.GetExportedTypes().Where(t => t.Namespace == TypeDesc.Namespace && t.Name == TypeDesc.Name && t.IsSubclassOf(BaseType)))
+                {
+                    bool iface_match = true;
+
+                    if(RequiredInterfaces != null)
+                    {
+                        foreach(var iface in RequiredInterfaces)
+                        {
+                            if(!type.IsAssignableFrom(iface))
+                            {
+                                iface_match = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(!iface_match)
+                    {
+                        continue;
+                    }
+
+                    if (ConstructorParams == null)
+                    {
+                        return type;
+                    }
+
+                    var ctors = type.GetConstructors();
+
+                    foreach (var ctor in ctors.Where(c => c.IsPublic))
+                    {
+                        var p = ctor.GetParameters();
+
+                        if (p.Length != ConstructorParams.Length) continue;
+
+                        bool ctor_match = true;
+                        for (int i = 0; i < p.Length; i++)
+                        {
+                            if (p[i].ParameterType != ConstructorParams[i])
+                            {
+                                ctor_match = false;
+                                break;
+                            }
+                        }
+
+                        if (ctor_match)
+                        {
+                            return type;
+                        }
+                    }
+                }
+            }
+
+            throw new ArgumentException($"Failed to locate type {TypeDesc.Namespace}.{TypeDesc.Name}");
+        }
+
         public void Load(MetaChipDescription Description)
         {
             Detach();
-            foreach(var subchip in SubChips)
+            foreach (var subchip in SubChips)
             {
                 RemoveSubChip(subchip);
                 subchip.Dispose();
@@ -102,50 +175,13 @@ namespace CircuitSim2.Chips
 
             Inputs = new Dictionary<string, CircuitSim2.IO.InputBase>();
 
+
             var InputList = new List<CircuitSim2.IO.InputBase>();
             var input_idx = 0;
             foreach (var desc in Description.Inputs)
             {
-                CircuitSim2.IO.InputBase input;
-
-                switch (desc.Type)
-                {
-                    case CircuitSim2.IO.Type.DIGITAL:
-                        input = new CircuitSim2.IO.Input<bool>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.BYTE:
-                        input = new CircuitSim2.IO.Input<byte>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.CHAR:
-                        input = new CircuitSim2.IO.Input<char>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.INT:
-                        input = new CircuitSim2.IO.Input<int>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.LONG:
-                        input = new CircuitSim2.IO.Input<long>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.SINGLE:
-                        input = new CircuitSim2.IO.Input<float>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.DOUBLE:
-                        input = new CircuitSim2.IO.Input<double>(desc.Name, this, input_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.STRING:
-                        input = new CircuitSim2.IO.Input<string>(desc.Name, this, input_idx);
-                        break;
-
-                    default:
-                        throw new ArgumentException();
-
-                }
+                var input_type = typeof(CircuitSim2.IO.Input<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null)); // TODO: ensure input_type implements IEquatable<input_type>?
+                var input = Activator.CreateInstance(input_type, desc.Name, this, input_idx) as CircuitSim2.IO.InputBase;
 
                 Inputs[desc.Name] = input;
                 InputList.Add(input);
@@ -158,45 +194,8 @@ namespace CircuitSim2.Chips
             var output_idx = 0;
             foreach (var desc in Description.Outputs)
             {
-                CircuitSim2.IO.OutputBase output;
-
-                switch (desc.Type)
-                {
-                    case CircuitSim2.IO.Type.DIGITAL:
-                        output = new CircuitSim2.IO.Output<bool>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.BYTE:
-                        output = new CircuitSim2.IO.Output<byte>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.CHAR:
-                        output = new CircuitSim2.IO.Output<char>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.INT:
-                        output = new CircuitSim2.IO.Output<int>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.LONG:
-                        output = new CircuitSim2.IO.Output<long>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.SINGLE:
-                        output = new CircuitSim2.IO.Output<float>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.DOUBLE:
-                        output = new CircuitSim2.IO.Output<double>(desc.Name, this, output_idx);
-                        break;
-
-                    case CircuitSim2.IO.Type.STRING:
-                        output = new CircuitSim2.IO.Output<string>(desc.Name, this, output_idx);
-                        break;
-
-                    default:
-                        throw new ArgumentException();
-                }
+                var output_type = typeof(CircuitSim2.IO.Output<>).MakeGenericType(FindType(desc.Type, typeof(object), null, null)); // TODO: ensure output_type implements IEquatable<output_type>?
+                var output = Activator.CreateInstance(output_type, desc.Name, this, output_idx) as CircuitSim2.IO.OutputBase;
 
                 Outputs[desc.Name] = output;
                 OutputList.Add(output);
@@ -205,21 +204,23 @@ namespace CircuitSim2.Chips
             }
             OutputSet = new CircuitSim2.IO.OutputSetBase(OutputList);
 
+            var chip_ctor_types = new System.Type[]
+            {
+                typeof(ChipBase),
+                typeof(Engine.Engine),
+            };
+
             foreach (var desc in Description.Chips)
             {
-                var matches = types.Where(type => type.Name == desc.Name && type.Namespace == desc.Namespace);
+                var chip_type = FindType(desc.Type, typeof(CircuitSim2.Chips.ChipBase), chip_ctor_types, null);
+                var chip = Activator.CreateInstance(chip_type, this as ChipBase, this.Engine) as ChipBase;
 
-                if (!matches.Any()) throw new ArgumentException();
+                chip.AutoTick = desc.AutoTick;
+                chip.Position = desc.Position;
+                chip.Rotation = desc.Rotation;
+                chip.Scale = desc.Scale;
 
-                var match = matches.First();
-
-                AddSubChip(Chips[desc.ID] = Activator.CreateInstance(match, new object[] { (this as ChipBase) }) as Chips.ChipBase);
-                Chips[desc.ID].AutoTick = desc.AutoTick;
-                Chips[desc.ID].Position = desc.Position;
-                Chips[desc.ID].Rotation = desc.Rotation;
-                Chips[desc.ID].Scale = desc.Scale;
-
-
+                AddSubChip(Chips[desc.ID] = chip);
 
                 desc.Bindings?.ForEach(binding => Chips[desc.ID].InputSet[binding.Name].Bind(Inputs[binding.BindName]));
             }
@@ -229,7 +230,7 @@ namespace CircuitSim2.Chips
                 Chips[desc.DestID].InputSet[desc.DestInput].Attach(Chips[desc.SrcID].OutputSet[desc.SrcOutput]);
             }
 
-            foreach(var desc in Description.Outputs)
+            foreach (var desc in Description.Outputs)
             {
                 OutputSet[desc.Name].Bind(Chips[desc.MapID].OutputSet[desc.MapOutput]);
             }
