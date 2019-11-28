@@ -13,11 +13,11 @@ namespace FullAdderTest
             var B = new GenericInput<bool>();
             var Cin = new GenericInput<bool>();*/
 
-            var A = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
-            var B = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
-            var Cin = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+            var A = new CircuitSim2.Chips.Digital.Generators.Constant();
+            var B = new CircuitSim2.Chips.Digital.Generators.Constant();
+            var Cin = new CircuitSim2.Chips.Digital.Generators.Constant();
 
-            var Adder = new FullAdder(null, null);
+            var Adder = new FullAdder();
 
             Adder.Inputs.A.Attach(A.Outputs.Out);
             Adder.Inputs.B.Attach(B.Outputs.Out);

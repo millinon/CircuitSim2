@@ -32,7 +32,7 @@ namespace CircuitSim2.Engine
                     {
                         var deps = new HashSet<Node>(Parents);
 
-                        foreach(var depset in Parents.Select(parent => parent.Dependencies))
+                        foreach (var depset in Parents.Select(parent => parent.Dependencies))
                         {
                             deps.UnionWith(depset);
                         }
@@ -212,7 +212,7 @@ namespace CircuitSim2.Engine
             {
                 Chips[Chip.ID] = Chip;
 
-                if(Chip is Chips.Time.Clock ClockChip)
+                if (Chip is Chips.Time.Clock ClockChip)
                 {
                     Clocks[Chip.ID] = ClockChip;
                 }
@@ -225,7 +225,7 @@ namespace CircuitSim2.Engine
             {
                 if (Chips.ContainsKey(Chip.ID)) Chips.Remove(Chip.ID);
 
-                if(Chip is Chips.Time.Clock ClockChip)
+                if (Chip is Chips.Time.Clock ClockChip)
                 {
                     Clocks.Remove(Chip.ID);
                 }
@@ -250,7 +250,7 @@ namespace CircuitSim2.Engine
         {
             lock (lock_obj)
             {
-                foreach(var Clock in Clocks.Values)
+                foreach (var Clock in Clocks.Values)
                 {
                     Clock.Update();
                 }
@@ -276,7 +276,7 @@ namespace CircuitSim2.Engine
                 }
             }
 
-            if(chip != null)
+            if (chip != null)
             {
                 chip.Tick();
 
@@ -366,7 +366,7 @@ namespace CircuitSim2.Engine
                 {
                     lock (lock_obj)
                     {
-                        if(Timer != null)
+                        if (Timer != null)
                         {
                             if (Timer.Enabled)
                             {
@@ -374,7 +374,7 @@ namespace CircuitSim2.Engine
                             }
                             Timer.Dispose();
                         }
-                        foreach(var chip in Chips.Values)
+                        foreach (var chip in Chips.Values)
                         {
                             chip.Dispose();
                         }

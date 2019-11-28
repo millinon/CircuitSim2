@@ -6,153 +6,67 @@ using System.Linq;
 namespace CircuitSim2.Chips.Long.Conversion
 {
     [Chip("LongToByte")]
+    [Serializable]
     public sealed class ToByte : UnaryFunctor<long, byte>
     {
-        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToByte(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToByte(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override byte Func(long Value) => (byte)Value;
     }
 
     [Chip("LongToChar")]
+    [Serializable]
     public sealed class ToChar : UnaryFunctor<long, char>
     {
-        public ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToChar(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToChar(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override char Func(long Value) => (char)Value;
     }
 
     [Chip("LongToInteger")]
+    [Serializable]
     public sealed class ToInteger : UnaryFunctor<long, int>
     {
-        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToInteger(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToInteger(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override int Func(long Value) => (int)Value;
     }
 
     [Chip("LongToSingle")]
+    [Serializable]
     public sealed class ToSingle : UnaryFunctor<long, float>
     {
-        public ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToSingle(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToSingle(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override float Func(long Value) => Value;
     }
 
     [Chip("LongToDouble")]
+    [Serializable]
     public sealed class ToDouble : UnaryFunctor<long, double>
     {
-        public ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToDouble(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToDouble(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override double Func(long Value) => Value;
     }
 
     [Chip("LongToString")]
+    [Serializable]
     public sealed class ToString : UnaryFunctor<long, string>
     {
-        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override string Func(long Value) => Value.ToString();
     }
 
     [Chip("LongToHexString")]
+    [Serializable]
     public sealed class ToHexString : UnaryFunctor<long, string>
     {
-        public ToHexString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToHexString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToHexString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override string Func(long Value) => Value.ToString("X");
     }
 
     [Chip("LongToDateTime")]
+    [Serializable]
     public sealed class ToDateTime : UnaryFunctor<long, System.DateTime>
     {
-        public ToDateTime(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToDateTime(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToDateTime(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override System.DateTime Func(long Value) => new System.DateTime(Value);
     }
 
     [Chip("LongDecompose")]
+    [Serializable]
     [PureChip]
     public sealed class Decompose : ChipBase
     {
+        [NonSerialized]
         public readonly GenericInput<long> Inputs;
 
         public sealed class OutputType : OutputSetBase
@@ -179,22 +93,16 @@ namespace CircuitSim2.Chips.Long.Conversion
             }
         }
 
-        public readonly OutputType Outputs; 
+        [NonSerialized]
+        public readonly OutputType Outputs;
 
-        public Decompose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Decompose(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Decompose()
         {
             InputSet = (Inputs = new GenericInput<long>(this));
             OutputSet = (Outputs = new OutputType(this));
         }
 
+        [NonSerialized]
         private byte[] bytes;
 
         public override void Compute()
@@ -216,6 +124,7 @@ namespace CircuitSim2.Chips.Long.Conversion
     }
 
     [Chip("LongCompose")]
+    [Serializable]
     [PureChip]
     public sealed class Compose : ChipBase
     {
@@ -247,15 +156,7 @@ namespace CircuitSim2.Chips.Long.Conversion
 
         public readonly GenericOutput<long> Outputs;
 
-        public Compose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Compose(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Compose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Compose()
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new GenericOutput<long>(this));

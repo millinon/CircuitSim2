@@ -6,22 +6,24 @@ namespace CircuitSim2.Chips.Signals
 {
     public abstract class EdgeDetector<T> : ChipBase
     {
+        [NonSerialized]
         public readonly GenericInput<T> Inputs;
+        [NonSerialized]
         public readonly GenericOutput<bool> Outputs;
 
-        private readonly Func<T, T, bool> Detector;
+        protected abstract bool Detector(T A, T B);
 
-        public EdgeDetector(Func<T, T, bool> Detector, ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public EdgeDetector()
         {
             InputSet = (Inputs = new GenericInput<T>(this));
             OutputSet = (Outputs = new GenericOutput<bool>(this));
 
-            this.Detector = Detector;
-
             _last = default;
         }
 
+        [NonSerialized]
         private T _last;
+        [NonSerialized]
         private bool _out;
 
         public sealed override void Compute()

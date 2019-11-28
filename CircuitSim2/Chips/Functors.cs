@@ -4,19 +4,21 @@ namespace CircuitSim2.Chips.Functors
 {
     public abstract class Generator<T> : ChipBase
     {
+        [NonSerialized]
         public readonly CircuitSim2.IO.ClockInputOnly Inputs;
 
+        [NonSerialized]
         public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
 
-        public Generator(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Generator()
         {
             InputSet = (Inputs = new CircuitSim2.IO.ClockInputOnly(this));
-
             OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
         }
 
         protected abstract T NextValue();
 
+        [NonSerialized]
         private T _out;
 
         public sealed override void Compute() => _out = NextValue();
@@ -30,13 +32,6 @@ namespace CircuitSim2.Chips.Functors
                 base.Tick();
             }
         }
-
-        /*public override SizeVec size => new SizeVec
-        {
-            Length = 1,
-            Width = 2,
-            Height = 1,
-        };*/
     }
 
     public abstract class Random<T> : Generator<T>
@@ -64,7 +59,7 @@ namespace CircuitSim2.Chips.Functors
             }
         }
 
-        public Random(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Random()
         {
             RNG = new Random(seed);
         }
@@ -73,17 +68,20 @@ namespace CircuitSim2.Chips.Functors
     [PureChip]
     public abstract class UnaryFunctor<T, U> : ChipBase
     {
+        [NonSerialized]
         public readonly CircuitSim2.IO.GenericInput<T> Inputs;
+        [NonSerialized]
         public readonly CircuitSim2.IO.GenericOutput<U> Outputs;
 
         public abstract U Func(T Value);
 
-        public UnaryFunctor(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public UnaryFunctor()
         {
             InputSet = (Inputs = new CircuitSim2.IO.GenericInput<T>(this));
             OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<U>(this));
         }
 
+        [NonSerialized]
         private U _out;
 
         public sealed override void Compute() => _out = Func(Inputs.A.Value);
@@ -91,13 +89,6 @@ namespace CircuitSim2.Chips.Functors
         public sealed override void Commit() => Outputs.Out.Value = _out;
 
         public sealed override void Tick() => base.Tick();
-
-        /*public override SizeVec size => new SizeVec
-        {
-            Length = 2.0,
-            Width = 1.0,
-            Height = 1.0,
-        };*/
     }
 
     [PureChip]
@@ -108,12 +99,13 @@ namespace CircuitSim2.Chips.Functors
 
         public abstract V Func(T Val1, U Val2);
 
-        public BinaryFunctor(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public BinaryFunctor()
         {
             InputSet = (Inputs = new CircuitSim2.IO.GenericInput<T, U>(this));
             OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<V>(this));
         }
 
+        [NonSerialized]
         private V _out;
 
         public sealed override void Compute() => _out = Func(Inputs.A.Value, Inputs.B.Value);
@@ -137,22 +129,90 @@ namespace CircuitSim2.Chips.Functors
             {
                 this.value = value;
 
-               if (AutoTick)
-               {
+                if (AutoTick)
+                {
                     Tick();
-               }
+                }
             }
         }
 
-        public Constant(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Constant() : base()
         {
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
         }
 
+        [NonSerialized]
         private T _out;
         public sealed override void Compute() => _out = Value;
         public sealed override void Commit() => Outputs.Out.Value = _out;
         public sealed override void Tick() => base.Tick();
+    }
+
+    public class Clamp<T> : ChipBase where T:IComparable<T>
+    {
+        private T minvalue;
+        [ChipProperty]
+        public T MinValue
+        {
+            get => minvalue;
+            set
+            {
+                minvalue = value;
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
+        }
+
+        private T maxvalue;
+        [ChipProperty]
+        public T MaxValue
+        {
+            get => maxvalue;
+            set
+            {
+                maxvalue = value;
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
+        }
+
+        [NonSerialized]
+        public readonly CircuitSim2.IO.GenericInput<T> Inputs;
+
+        [NonSerialized]
+        public readonly CircuitSim2.IO.GenericOutput<T> Outputs;
+
+        public Clamp()
+        {
+            InputSet = (Inputs = new CircuitSim2.IO.GenericInput<T>(this));
+            OutputSet = (Outputs = new CircuitSim2.IO.GenericOutput<T>(this));
+        }
+
+        [NonSerialized]
+        private T value;
+        public sealed override void Compute()
+        {
+            value = Inputs.A.Value;
+        
+            if(value.CompareTo(MinValue) < 0)
+            {
+                value = MinValue;
+            } else if(value.CompareTo(MaxValue) > 0)
+            {
+                value = MaxValue;
+            }
+        }
+
+        public sealed override void Commit()
+        {
+            Outputs.Out.Value = value;
+        }
     }
 }

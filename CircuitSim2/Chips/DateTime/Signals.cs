@@ -1,36 +1,19 @@
+using System;
 using ED = CircuitSim2.Chips.Signals.EdgeDetector<System.DateTime>;
 
 namespace CircuitSim2.Chips.DateTime.Signals
 {
     [Chip("DateTimeRisingEdge")]
+    [Serializable]
     public class RisingEdge : ED
     {
-        public RisingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a < b, ParentChip, Engine)
-        {
-        }
-
-        public RisingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public RisingEdge(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
+        protected override bool Detector(System.DateTime A, System.DateTime B) => A < B;
     }
 
     [Chip("DateTimeFallingEdge")]
+    [Serializable]
     public sealed class FallingEdge : ED
     {
-        public FallingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a > b, ParentChip, Engine)
-        {
-        }
-
-        public FallingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public FallingEdge(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
+        protected override bool Detector(System.DateTime A, System.DateTime B) => A > B;
     }
 }

@@ -13,10 +13,19 @@ namespace DLatchTest
             {
                 /*var E = new GenericInput<bool>(Engine);
                 var D = new GenericInput<bool>(Engine); */
-                var E = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
-                var D = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
+                var E = new CircuitSim2.Chips.Digital.Generators.Constant()
+                {
+                    Engine = Engine,
+                };
+                var D = new CircuitSim2.Chips.Digital.Generators.Constant()
+                {
+                    Engine = Engine,
+                };
 
-                var latch = new DLatch(Engine);
+                var latch = new DLatch()
+                {
+                    Engine = Engine,
+                };
 
                 latch.Inputs.D.Attach(D.Outputs.Out);
                 latch.Inputs.E.Attach(E.Outputs.Out);

@@ -9,10 +9,6 @@ namespace IntList
     {
         class LessThanHalfMax : CircuitSim2.Chips.Functors.UnaryFunctor<int, bool>
         {
-            public LessThanHalfMax(ChipBase ParentChip, Engine Engine) : base(ParentChip, Engine)
-            {
-            }
-
             public override bool Func(int Value)
             {
                 return Value < (int.MaxValue / 2);
@@ -24,28 +20,28 @@ namespace IntList
             Console.WriteLine($"HalfMax = {int.MaxValue / 2}");
             Console.WriteLine();
 
-            var clk = new CircuitSim2.Chips.Time.SteppingClock(null, null)
+            var clk = new CircuitSim2.Chips.Time.SteppingClock()
             {
                 Period = 2,
             };
 
-            var gen = new CircuitSim2.Chips.List.Generator<int>(null, null)
+            var gen = new CircuitSim2.Chips.List.Generator<int>()
             {
                 Count = 10,
                 Function = typeof(CircuitSim2.Chips.Integer.Generators.Random),
             };
 
-            var flt = new CircuitSim2.Chips.List.Filter<int>(null, null)
+            var flt = new CircuitSim2.Chips.List.Filter<int>()
             {
                 Predicate = typeof(LessThanHalfMax)
             };
 
-            var rdc = new CircuitSim2.Chips.List.Fold<int, int>(null, null)
+            var rdc = new CircuitSim2.Chips.List.Fold<int, int>()
             {
                 Function = typeof(CircuitSim2.Chips.Integer.Arithmetic.Add)
             };
 
-            var map = new CircuitSim2.Chips.List.Map<int, string>(null, null)
+            var map = new CircuitSim2.Chips.List.Map<int, string>()
             {
                 Function = typeof(CircuitSim2.Chips.Integer.Conversion.ToString)
             };

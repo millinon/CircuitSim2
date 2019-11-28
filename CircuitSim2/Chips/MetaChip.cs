@@ -74,7 +74,7 @@ namespace CircuitSim2.Chips
         [ChipProperty]
         public List<Assembly> AssemblySearchPath;
 
-        public MetaChip(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public MetaChip()
         {
             InputSet = new CircuitSim2.IO.NoInputs();
             OutputSet = new CircuitSim2.IO.NoOutputs();
@@ -85,14 +85,6 @@ namespace CircuitSim2.Chips
                 typeof(bool).Assembly,
                 Assembly.GetExecutingAssembly(),
             };
-        }
-
-        public MetaChip(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public MetaChip(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
         }
 
         private Dictionary<string, Chips.ChipBase> Chips;
@@ -108,11 +100,11 @@ namespace CircuitSim2.Chips
                 {
                     bool iface_match = true;
 
-                    if(RequiredInterfaces != null)
+                    if (RequiredInterfaces != null)
                     {
-                        foreach(var iface in RequiredInterfaces)
+                        foreach (var iface in RequiredInterfaces)
                         {
-                            if(!type.IsAssignableFrom(iface))
+                            if (!type.IsAssignableFrom(iface))
                             {
                                 iface_match = false;
                                 break;
@@ -120,7 +112,7 @@ namespace CircuitSim2.Chips
                         }
                     }
 
-                    if(!iface_match)
+                    if (!iface_match)
                     {
                         continue;
                     }
@@ -213,8 +205,9 @@ namespace CircuitSim2.Chips
             foreach (var desc in Description.Chips)
             {
                 var chip_type = FindType(desc.Type, typeof(CircuitSim2.Chips.ChipBase), chip_ctor_types, null);
-                var chip = Activator.CreateInstance(chip_type, new object[] { this as ChipBase, this.Engine }) as ChipBase;
+                var chip = Activator.CreateInstance(chip_type) as ChipBase;
 
+                chip.ParentChip = this;
                 chip.AutoTick = desc.AutoTick;
                 chip.Position = desc.Position;
                 chip.Rotation = desc.Rotation;

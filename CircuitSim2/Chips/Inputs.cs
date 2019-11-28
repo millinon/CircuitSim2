@@ -9,51 +9,51 @@ using CircuitSim2.IO;
 namespace CircuitSim2.Chips.IO.Inputs
 {
     [Chip("Button")]
+    [Serializable]
     public sealed class Button : ChipBase
     {
         [ChipProperty]
         public bool ToggleMode = false;
 
+        [NonSerialized]
         public readonly GenericOutput<bool> Outputs;
 
-        public Button(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Button(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        private Button(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        private Button()
         {
             InputSet = new NoInputs();
             OutputSet = (Outputs = new GenericOutput<bool>(this));
         }
 
-        private bool _state = false;
+        private bool state = false;
 
         public void Press()
         {
             if (ToggleMode)
             {
-                _state = !_state;
-            } else
-            {
-                _state = true;
+                state = !state;
             }
+            else
+            {
+                state = true;
+            }
+
+            Tick();
         }
 
         public void Release()
         {
             if (!ToggleMode)
             {
-                _state = false;
+                state = false;
+
+                Tick();
             }
         }
 
+        [NonSerialized]
         private bool _out;
 
-        public override void Compute() => _out = _state;
+        public override void Compute() => _out = state;
 
         public override void Commit() => Outputs.Out.Value = _out;
     }
@@ -102,12 +102,13 @@ namespace CircuitSim2.Chips.IO.Inputs
 
         public readonly GenericOutput<T> Outputs;
 
-        public Switch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Switch()
         {
             InputSet = new NoInputs();
             OutputSet = (Outputs = new GenericOutput<T>(this));
         }
 
+        [NonSerialized]
         private T _out;
         public sealed override void Compute() => _out = State ? OnValue : OffValue;
 

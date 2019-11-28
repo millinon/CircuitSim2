@@ -1,36 +1,25 @@
+using System;
 using ED = CircuitSim2.Chips.Signals.EdgeDetector<long>;
 
 namespace CircuitSim2.Chips.Long.Signals
 {
     [Chip("LongRisingEdge")]
+    [Serializable]
     public sealed class RisingEdge : ED
     {
-        public RisingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a < b, ParentChip, Engine)
+        protected override bool Detector(long A, long B)
         {
-        }
-
-        public RisingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public RisingEdge(Engine.Engine Engine) : this(null, Engine)
-        {
+            return A < B;
         }
     }
 
     [Chip("LongFallingEdge")]
+    [Serializable]
     public sealed class FallingEdge : ED
     {
-        public FallingEdge(ChipBase ParentChip, Engine.Engine Engine) : base((a, b) => a < b, ParentChip, Engine)
+        protected override bool Detector(long A, long B)
         {
-        }
-
-        public FallingEdge(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public FallingEdge(Engine.Engine Engine) : this(null, Engine)
-        {
+            return A > B;
         }
     }
 }

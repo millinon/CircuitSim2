@@ -2,40 +2,30 @@
 using CircuitSim2.IO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace CircuitSim2.Chips.List
 {
     [PureChip]
     public class Map<T, U> : ChipBase
     {
+        [NonSerialized]
         private readonly Constant<T> elem;
 
+        [NonSerialized]
         private UnaryFunctor<T, U> function;
+        private Type function_type;
         [ChipProperty]
         public Type Function
         {
             get
             {
-                return function.GetType();
+                return function_type;
             }
             set
             {
-                if (!value.IsSubclassOf(typeof(UnaryFunctor<T, U>)))
-                {
-                    throw new ArgumentException("Invalid functor chip", nameof(Function));
-                }
+                function?.Dispose();
 
-                if(function != null)
-                {
-                    function.Detach();
-                    function.Dispose();
-                }
-
-                function = Activator.CreateInstance(value, new object[] { null, null }) as UnaryFunctor<T, U>;
-                function.AutoTick = true;
-                function.Inputs.A.Attach(elem.Outputs.Out);
+                function = Instantiate(value);
 
                 if (AutoTick)
                 {
@@ -44,23 +34,48 @@ namespace CircuitSim2.Chips.List
             }
         }
 
+        private UnaryFunctor<T, U> Instantiate(Type value)
+        {
+            if (!value.IsSubclassOf(typeof(UnaryFunctor<T, U>)))
+            {
+                throw new ArgumentException("Invalid functor chip", nameof(Function));
+            }
+
+            var func = Activator.CreateInstance(value) as UnaryFunctor<T, U>;
+            func.AutoTick = true;
+            func.Inputs.A.Attach(elem.Outputs.Out);
+
+            function_type = value;
+
+            return func;
+        }
+
+        [NonSerialized]
         public readonly GenericInput<IEnumerable<T>> Inputs;
+        [NonSerialized]
         public readonly GenericOutput<IEnumerable<U>> Outputs;
 
-        public Map(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Map()
         {
             InputSet = (Inputs = new GenericInput<IEnumerable<T>>(this));
             OutputSet = (Outputs = new GenericOutput<IEnumerable<U>>(this));
 
-            elem = new Functors.Constant<T>(null, null);
+            elem = new Functors.Constant<T>();
         }
 
+        [NonSerialized]
         private List<U> _out;
+
         public sealed override void Compute()
         {
+            if(function == null)
+            {
+                Function = function_type;
+            }
+
             _out = new List<U>();
 
-            foreach(var item in Inputs.A.Value)
+            foreach (var item in Inputs.A.Value)
             {
                 elem.Value = item;
                 _out.Add(function.Outputs.Out.Value);
@@ -81,32 +96,24 @@ namespace CircuitSim2.Chips.List
     [PureChip]
     public class Filter<T> : ChipBase
     {
+        [NonSerialized]
         private readonly Constant<T> elem;
-
+        
+        [NonSerialized]
         private UnaryFunctor<T, bool> predicate;
+        private Type predicate_type;
         [ChipProperty]
         public Type Predicate
         {
             get
             {
-                return predicate.GetType();
+                return predicate_type;
             }
             set
             {
-                if (!value.IsSubclassOf(typeof(UnaryFunctor<T, bool>)))
-                {
-                    throw new ArgumentException("Invalid functor chip", nameof(Predicate));
-                }
+                predicate?.Dispose();
 
-                if (predicate != null)
-                {
-                    predicate.Detach();
-                    predicate.Dispose();
-                }
-
-                predicate = Activator.CreateInstance(value, new object[] { null, null }) as UnaryFunctor<T, bool>;
-                predicate.AutoTick = true;
-                predicate.Inputs.A.Attach(elem.Outputs.Out);
+                predicate = Instantiate(value);
 
                 if (AutoTick)
                 {
@@ -115,20 +122,44 @@ namespace CircuitSim2.Chips.List
             }
         }
 
+        private UnaryFunctor<T, bool> Instantiate(Type value)
+        {
+            if (!value.IsSubclassOf(typeof(UnaryFunctor<T, bool>)))
+            {
+                throw new ArgumentException("Invalid functor chip", nameof(Predicate));
+            }
+
+            var func = Activator.CreateInstance(value) as UnaryFunctor<T, bool>;
+            func.AutoTick = true;
+            func.Inputs.A.Attach(elem.Outputs.Out);
+
+            predicate_type = value;
+
+            return func;
+        }
+
+        [NonSerialized]
         public readonly GenericInput<IEnumerable<T>> Inputs;
+        [NonSerialized]
         public readonly GenericOutput<IEnumerable<T>> Outputs;
 
-        public Filter(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Filter()
         {
             InputSet = (Inputs = new GenericInput<IEnumerable<T>>(this));
             OutputSet = (Outputs = new GenericOutput<IEnumerable<T>>(this));
 
-            elem = new Functors.Constant<T>(null, null);
+            elem = new Functors.Constant<T>();
         }
 
+        [NonSerialized]
         private List<T> _out;
         public sealed override void Compute()
         {
+            if(predicate == null)
+            {
+                Predicate = predicate_type;
+            }
+            
             _out = new List<T>();
 
             foreach (var item in Inputs.A.Value)
@@ -156,40 +187,49 @@ namespace CircuitSim2.Chips.List
     [PureChip]
     public class Fold<T, U> : ChipBase
     {
+        [NonSerialized]
         private readonly Constant<T> elem;
+        [NonSerialized]
         private readonly Constant<U> acc;
 
-        private BinaryFunctor<U,T,U> function;
+        [NonSerialized]
+        private BinaryFunctor<U, T, U> function;
+        private Type function_type;
         [ChipProperty]
         public Type Function
         {
             get
             {
-                return function.GetType();
+                return function_type;
             }
             set
             {
-                if (!value.IsSubclassOf(typeof(BinaryFunctor<U, T, U>)))
-                {
-                    throw new ArgumentException("Invalid functor chip", nameof(Function));
-                }
+                function?.Dispose();
 
-                if (function != null)
-                {
-                    function.Detach();
-                    function.Dispose();
-                }
-
-                function = Activator.CreateInstance(value, new object[] { null, null }) as BinaryFunctor<U, T, U>;
-                function.AutoTick = true;
-                function.Inputs.A.Attach(acc.Outputs.Out);
-                function.Inputs.B.Attach(elem.Outputs.Out);
+                function = Instantiate(value);
 
                 if (AutoTick)
                 {
                     Tick();
                 }
             }
+        }
+
+        private BinaryFunctor<U, T, U> Instantiate(Type value)
+        {
+            if (!value.IsSubclassOf(typeof(BinaryFunctor<U, T, U>)))
+            {
+                throw new ArgumentException("Invalid functor chip", nameof(Function));
+            }
+
+            var func = Activator.CreateInstance(value) as BinaryFunctor<U, T, U>;
+            func.AutoTick = true;
+            func.Inputs.A.Attach(acc.Outputs.Out);
+            func.Inputs.B.Attach(elem.Outputs.Out);
+
+            function_type = value;
+
+            return func;
         }
 
         private U initialAcc;
@@ -199,7 +239,8 @@ namespace CircuitSim2.Chips.List
             get
             {
                 return initialAcc;
-            } set
+            }
+            set
             {
                 initialAcc = value;
 
@@ -210,25 +251,33 @@ namespace CircuitSim2.Chips.List
             }
         }
 
+        [NonSerialized]
         public readonly GenericInput<IEnumerable<T>> Inputs;
+        [NonSerialized]
         public readonly GenericOutput<U> Outputs;
 
-        public Fold(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Fold()
         {
             InputSet = (Inputs = new GenericInput<IEnumerable<T>>(this));
             OutputSet = (Outputs = new GenericOutput<U>(this));
 
-            elem = new Constant<T>(null, null);
-            acc = new Constant<U>(null, null);
+            elem = new Constant<T>();
+            acc = new Constant<U>();
         }
 
+        [NonSerialized]
         private U _out;
 
         public sealed override void Compute()
         {
+            if(function == null)
+            {
+                Function = function_type;
+            }
+
             acc.Value = InitialAccumulator;
 
-            foreach(var item in Inputs.A.Value)
+            foreach (var item in Inputs.A.Value)
             {
                 elem.Value = item;
 
@@ -251,10 +300,6 @@ namespace CircuitSim2.Chips.List
 
     public class Empty<T> : Functors.Generator<IEnumerable<T>>
     {
-        public Empty(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
         protected override IEnumerable<T> NextValue()
         {
             return new List<T>();
@@ -263,38 +308,46 @@ namespace CircuitSim2.Chips.List
 
     public class Generator<T> : Functors.Generator<IEnumerable<T>>
     {
+        [NonSerialized]
         private readonly Functors.Constant<bool> clk;
 
+        [NonSerialized]
         private Functors.Generator<T> function;
+        private Type function_type;
         [ChipProperty]
         public Type Function
         {
             get
             {
-                return function.GetType();
+                return function_type;
             }
             set
             {
-                if (!value.IsSubclassOf(typeof(Functors.Generator<T>)))
-                {
-                    throw new ArgumentException("Invalid functor chip", nameof(Function));
-                }
+                function?.Dispose();
 
-                if (function != null)
-                {
-                    function.Detach();
-                    function.Dispose();
-                }
-
-                function = Activator.CreateInstance(value, new object [] { null, null }) as Functors.Generator<T>;
-                function.AutoTick = true;
-                function.Inputs.Clk.Attach(clk.Outputs.Out);
+                function = Instantiate(value);
 
                 if (AutoTick)
                 {
                     Tick();
                 }
             }
+        }
+
+        private Functors.Generator<T> Instantiate(Type value)
+        {
+            if (!value.IsSubclassOf(typeof(Functors.Generator<T>)))
+            {
+                throw new ArgumentException("Invalid functor chip", nameof(Function));
+            }
+
+            var func = Activator.CreateInstance(value) as Functors.Generator<T>;
+            func.AutoTick = true;
+            func.Inputs.Clk.Attach(clk.Outputs.Out);
+
+            function_type = value;
+
+            return func;
         }
 
         private int count;
@@ -316,15 +369,20 @@ namespace CircuitSim2.Chips.List
             }
         }
 
-        public Generator(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Generator()
         {
-            clk = new Constant<bool>(null, null);
+            clk = new Constant<bool>();
         }
 
         protected override IEnumerable<T> NextValue()
         {
+            if(function == null)
+            {
+                Function = function_type;
+            }
+
             var list = new List<T>();
-            for(int i = 0; i < Count; i++)
+            for (int i = 0; i < Count; i++)
             {
                 clk.Value = true;
                 clk.Value = false;

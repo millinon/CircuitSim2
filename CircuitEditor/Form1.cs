@@ -33,7 +33,7 @@ namespace CircuitEditor
 
                 new_item.Click += (s, e) =>
                 {
-                    var chip = Activator.CreateInstance(chiptype, new object[] { (circuitCanvasControl1.Engine) }) as ChipBase;
+                    var chip = Activator.CreateInstance(chiptype) as ChipBase;
 
                     chip.Position = circuitCanvasControl1.Position;
                     chip.Rotation = new RotationVec { Gamma = 45, };

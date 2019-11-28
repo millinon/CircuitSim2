@@ -13,7 +13,7 @@ namespace CircuitSim2.Chips.Time
     {
         public readonly GenericOutput<bool> Outputs;
 
-        public Clock(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Clock()
         {
             InputSet = new CircuitSim2.IO.NoInputs();
 
@@ -28,7 +28,8 @@ namespace CircuitSim2.Chips.Time
         } = false;
 
         public abstract bool Pulse { get; }
-
+        
+        [NonSerialized]
         private bool _out;
         public sealed override void Compute()
         {
@@ -48,6 +49,7 @@ namespace CircuitSim2.Chips.Time
     }
 
     [Chip("SteppingClock")]
+    [Serializable]
     public sealed class SteppingClock : Clock
     {
         private ulong period = 1;
@@ -69,9 +71,11 @@ namespace CircuitSim2.Chips.Time
             }
         }
 
-
+        [NonSerialized]
         private object ticks_lock_obj = new object();
+        [NonSerialized]
         private ulong Ticks = 0;
+        [NonSerialized]
         private bool pulse = false;
 
         public override bool Pulse => pulse;
@@ -100,22 +104,11 @@ namespace CircuitSim2.Chips.Time
                 }
             }
         }
-
-        public SteppingClock(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public SteppingClock(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public SteppingClock(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
     }
 
 
     [Chip("RealTimeClock")]
+    [Serializable]
     public class RealTimeClock : Clock
     {
         private System.TimeSpan period;
@@ -138,9 +131,12 @@ namespace CircuitSim2.Chips.Time
             }
         }
 
+        [NonSerialized]
         private object last_pulse_lock_obj = new object();
+        [NonSerialized]
         private System.DateTime last_pulse;
-
+        
+        [NonSerialized]
         private bool pulse;
         public override bool Pulse
         {
@@ -149,7 +145,8 @@ namespace CircuitSim2.Chips.Time
 
         public override void Update()
         {
-            lock (last_pulse_lock_obj) { 
+            lock (last_pulse_lock_obj)
+            {
                 var now = System.DateTime.UtcNow;
 
                 if (now - last_pulse >= Period)
@@ -171,19 +168,5 @@ namespace CircuitSim2.Chips.Time
                 }
             }
         }
-
-        public RealTimeClock(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            last_pulse = System.DateTime.UtcNow;
-        }
-
-        public RealTimeClock(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public RealTimeClock(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
     }
 }

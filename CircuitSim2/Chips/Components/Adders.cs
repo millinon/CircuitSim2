@@ -2,10 +2,12 @@ using System.Linq;
 
 using CircuitSim2.IO;
 using CircuitSim2.Chips.Digital.Logic;
+using System;
 
 namespace CircuitSim2.Chips.Components.Adders
 {
     [Chip("HalfAdder")]
+    [Serializable]
     [PureChip]
     public sealed class HalfAdder : ChipBase
     {
@@ -21,26 +23,22 @@ namespace CircuitSim2.Chips.Components.Adders
             }
         }
 
+        [NonSerialized]
         public readonly GenericInput<bool, bool> Inputs;
+        [NonSerialized]
         public readonly OutputType Outputs;
 
+        [NonSerialized]
         private readonly XOR XOR;
+        [NonSerialized]
         private readonly AND AND;
 
-        public HalfAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public HalfAdder(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public HalfAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public HalfAdder()
         {
             InputSet = (Inputs = new GenericInput<bool, bool>(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            AddSubChip(XOR = new XOR(this)
+            AddSubChip(XOR = new XOR()
             {
                 Position = new PositionVec
                 {
@@ -50,7 +48,7 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(AND = new AND(this)
+            AddSubChip(AND = new AND()
             {
                 Position = new PositionVec
                 {
@@ -73,6 +71,7 @@ namespace CircuitSim2.Chips.Components.Adders
     }
 
     [Chip("FullAdder")]
+    [Serializable]
     [PureChip]
     public sealed class FullAdder : ChipBase
     {
@@ -90,7 +89,6 @@ namespace CircuitSim2.Chips.Components.Adders
             }
         }
 
-
         public sealed class OutputType : OutputSetBase
         {
             public readonly Output<bool> S;
@@ -103,29 +101,28 @@ namespace CircuitSim2.Chips.Components.Adders
             }
         }
 
+        [NonSerialized]
         public readonly InputType Inputs;
+        [NonSerialized]
         public readonly OutputType Outputs;
 
+        [NonSerialized]
         private readonly XOR XOR1;
+        [NonSerialized]
         private readonly XOR XOR2;
+        [NonSerialized]
         private readonly AND AND1;
+        [NonSerialized]
         private readonly AND AND2;
+        [NonSerialized]
         private readonly OR OR;
 
-        public FullAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public FullAdder(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public FullAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public FullAdder()
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            AddSubChip(XOR1 = new XOR(this)
+            AddSubChip(XOR1 = new XOR()
             {
                 Position = new PositionVec
                 {
@@ -135,7 +132,7 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(XOR2 = new XOR(this)
+            AddSubChip(XOR2 = new XOR()
             {
                 Position = new PositionVec
                 {
@@ -145,7 +142,7 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(AND1 = new AND(this)
+            AddSubChip(AND1 = new AND()
             {
                 Position = new PositionVec
                 {
@@ -155,7 +152,7 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(AND2 = new AND(this)
+            AddSubChip(AND2 = new AND()
             {
                 Position = new PositionVec
                 {
@@ -165,7 +162,7 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(OR = new OR(this)
+            AddSubChip(OR = new OR()
             {
                 Position = new PositionVec
                 {
@@ -194,6 +191,7 @@ namespace CircuitSim2.Chips.Components.Adders
     }
 
     [Chip("ByteAdder")]
+    [Serializable]
     [PureChip]
     public sealed class ByteAdder : ChipBase
     {
@@ -232,21 +230,14 @@ namespace CircuitSim2.Chips.Components.Adders
 
         private readonly FullAdder[] Adders;
 
-        public ByteAdder(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ByteAdder(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public ByteAdder(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ByteAdder()
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            AddSubChip(DecomposerA = new Byte.Conversion.Decompose(this)
+            AddSubChip(DecomposerA = new Byte.Conversion.Decompose()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = -12.0,
@@ -255,18 +246,20 @@ namespace CircuitSim2.Chips.Components.Adders
                 },
                 Scale = 0.5,
             });
-            AddSubChip(DecomposerB = new Byte.Conversion.Decompose(this)
+            AddSubChip(DecomposerB = new Byte.Conversion.Decompose()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
-                  X = -12.0,
-                  Y = 10.0,
-                  Z = 0.0,
+                    X = -12.0,
+                    Y = 10.0,
+                    Z = 0.0,
                 },
                 Scale = 0.5,
             });
-            AddSubChip(Composer = new Byte.Conversion.Compose(this)
+            AddSubChip(Composer = new Byte.Conversion.Compose()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = 12.0,
@@ -289,12 +282,13 @@ namespace CircuitSim2.Chips.Components.Adders
                     y_pos = y_space_per_io * (i - 8 / 2 + 0.5);
                 }*/
 
-                AddSubChip(Adders[i] = new FullAdder(this)
+                AddSubChip(Adders[i] = new FullAdder()
                 {
+                    ParentChip = this,
                     Position = new PositionVec
                     {
                         X = 0.0,
-                        Y = (size.Width/8)*-(8-i-0.5)+size.Width/2,
+                        Y = (size.Width / 8) * -(8 - i - 0.5) + size.Width / 2,
                         //Y = (i < 5 ? (size.Width/8)*-(4-i)+size.Width/2 : (size.Width/8)*(i-4)) + 3,
                         Z = 0.0,
                     },

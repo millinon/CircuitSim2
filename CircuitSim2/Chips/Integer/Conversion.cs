@@ -6,135 +6,60 @@ using System.Linq;
 namespace CircuitSim2.Chips.Integer.Conversion
 {
     [Chip("IntegerToByte")]
+    [Serializable]
     public sealed class ToByte : UnaryFunctor<int, byte>
     {
-        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToByte(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToByte(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override byte Func(int Value) => (byte)Value;
     }
 
     [Chip("IntegerToChar")]
+    [Serializable]
     public sealed class ToChar : UnaryFunctor<int, char>
     {
-        public ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToChar(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToChar(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override char Func(int Value) => (char)Value;
     }
 
     [Chip("IntegerToLong")]
+    [Serializable]
     public sealed class ToInteger : UnaryFunctor<int, long>
     {
-        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToInteger(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToInteger(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override long Func(int Value) => Value;
     }
 
     [Chip("IntegerToSingle")]
+    [Serializable]
     public sealed class ToSingle : UnaryFunctor<int, float>
     {
-        public ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToSingle(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToSingle(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override float Func(int Value) => Value;
     }
 
     [Chip("IntegerToDouble")]
+    [Serializable]
     public sealed class ToDouble : UnaryFunctor<int, double>
     {
-        public ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToDouble(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToDouble(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override double Func(int Value) => Value;
     }
 
     [Chip("IntegerToString")]
+    [Serializable]
     public sealed class ToString : UnaryFunctor<int, string>
     {
-        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override string Func(int Value) => Value.ToString();
     }
 
     [Chip("IntegerToHexString")]
+    [Serializable]
     public sealed class ToHexString : UnaryFunctor<int, string>
     {
-        public ToHexString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToHexString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToHexString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override string Func(int Value) => Value.ToString("X");
     }
 
     [Chip("IntegerDecompose")]
+    [Serializable]
     [PureChip]
     public sealed class Decompose : ChipBase
     {
+        [NonSerialized]
         public readonly GenericInput<int> Inputs;
 
         public sealed class OutputType : OutputSetBase
@@ -153,23 +78,17 @@ namespace CircuitSim2.Chips.Integer.Conversion
             }
         }
 
+        [NonSerialized]
         public readonly OutputType Outputs;
 
 
-        public Decompose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Decompose(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Decompose()
         {
             InputSet = (Inputs = new GenericInput<int>(this));
             OutputSet = (Outputs = new OutputType(this));
         }
 
+        [NonSerialized]
         private byte[] bytes;
 
         public override void Compute()
@@ -187,6 +106,7 @@ namespace CircuitSim2.Chips.Integer.Conversion
     }
 
     [Chip("IntegerCompose")]
+    [Serializable]
     [PureChip]
     public sealed class Compose : ChipBase
     {
@@ -205,31 +125,26 @@ namespace CircuitSim2.Chips.Integer.Conversion
                 Byte3 = this["Byte3"] as Input<byte>;
             }
         }
-
+        
+        [NonSerialized]
         public readonly InputType Inputs;
 
+        [NonSerialized]
         public readonly GenericOutput<int> Outputs;
 
-        public Compose(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Compose(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public Compose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Compose()
         {
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new GenericOutput<int>(this));
         }
 
+        [NonSerialized]
         private int _out;
 
         public override void Compute()
         {
             var bytes = new byte[4] { Inputs.Byte0.Value, Inputs.Byte1.Value, Inputs.Byte2.Value, Inputs.Byte3.Value };
-            _out = BitConverter.ToInt32(bytes,0);
+            _out = BitConverter.ToInt32(bytes, 0);
         }
 
         public override void Commit()

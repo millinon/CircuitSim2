@@ -92,40 +92,40 @@ namespace CircuitSim2.IO
 
                 y_pos = y_space_per_io * -(num_ios - Index - 0.5) + y_space / 2;
 
-/*                if (num_ios % 2 == 1)
-                {
-  */                  
+                /*                if (num_ios % 2 == 1)
+                                {
+                  */
 
 
-/*                    if(num_ios == 1)
-                    {
-                        y_pos = 0;
-                    } else if(Index < (num_ios) / 2)
-                    {
-                        y_pos = y_space_per_io * (num_ios-Index);
-                    } else
-                    {
-                        y_pos = y_space_per_io * (Index-num_ios/2);
-                    } */
- /*               } else
-                {
-                    y_pos = y_space_per_io * (-)
+                /*                    if(num_ios == 1)
+                                    {
+                                        y_pos = 0;
+                                    } else if(Index < (num_ios) / 2)
+                                    {
+                                        y_pos = y_space_per_io * (num_ios-Index);
+                                    } else
+                                    {
+                                        y_pos = y_space_per_io * (Index-num_ios/2);
+                                    } */
+                /*               } else
+                               {
+                                   y_pos = y_space_per_io * (-)
 
-                    if(Index <  num_ios / 2)
-                    {
-                        y_pos = -y_space_per_io * (Index + 0.5);
-                    } else
-                    {
-                        y_pos = y_space_per_io * (Index - num_ios/2 + 0.5);
-                    }
-                }*/
-                               
+                                   if(Index <  num_ios / 2)
+                                   {
+                                       y_pos = -y_space_per_io * (Index + 0.5);
+                                   } else
+                                   {
+                                       y_pos = y_space_per_io * (Index - num_ios/2 + 0.5);
+                                   }
+                               }*/
+
                 var position = new PositionVec
-                    {
-                        X = x_pos,
-                        Y = y_pos,
-                        Z = parent_pos.Z,
-                    };
+                {
+                    X = x_pos,
+                    Y = y_pos,
+                    Z = parent_pos.Z,
+                };
 
                 var rotation_matrix = new double[3][]
                 {
@@ -332,11 +332,12 @@ namespace CircuitSim2.IO
 
         public override void Notify()
         {
-            if(Value && !last) // detect rising edge
+            if (Value && !last) // detect rising edge
             {
                 rising_edge = true;
                 base.Notify();
-            } else
+            }
+            else
             {
                 rising_edge = false;
             }
@@ -501,20 +502,24 @@ namespace CircuitSim2.IO
                                 {
                                     changed = false;
                                 }
-                            } else
+                            }
+                            else
                             {
-                                if(value is IEnumerable<T> seq_val1 && Value is IEnumerable<T> seq_val2)
+                                if (value is IEnumerable<T> seq_val1 && Value is IEnumerable<T> seq_val2)
                                 {
                                     changed = !seq_val1.SequenceEqual(seq_val2);
-                                } else if(value is IEquatable<T> eq_val1 && Value is IEquatable<T> eq_val2)
+                                }
+                                else if (value is IEquatable<T> eq_val1 && Value is IEquatable<T> eq_val2)
                                 {
                                     changed = !eq_val1.Equals(eq_val2);
-                                } else
+                                }
+                                else
                                 {
                                     changed = true; // can't detect if value changed - assume it did
                                 }
                             }
-                        } else
+                        }
+                        else
                         {
                             if (value is IEquatable<T> val1 && Value is IEquatable<T> val2)
                             {

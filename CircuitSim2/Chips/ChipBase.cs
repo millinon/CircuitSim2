@@ -21,11 +21,11 @@ namespace CircuitSim2
             this.Description = Description;
         }
     }
-    
+
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class PureChip : Attribute
     {
-        
+
     }
 
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false, Inherited = true)]
@@ -37,8 +37,10 @@ namespace CircuitSim2
     namespace Chips
     {
         [DebuggerDisplay("{Name}")]
+        [Serializable]
         public abstract class ChipBase : IDisposable
         {
+            [NonSerialized]
             private readonly object lock_obj;
 
             public readonly string ID;
@@ -50,19 +52,67 @@ namespace CircuitSim2
                 set { lock (lock_obj) autotick = value; }
             }
 
+            [NonSerialized]
             private bool haveerror;
             public bool HaveError
             {
-                get {
-                    if(SubChips.Any(chip => chip.HaveError))
+                get
+                {
+                    if (SubChips.Any(chip => chip.HaveError))
                     {
                         return true;
                     }
-                    lock (lock_obj) return haveerror; }
+                    lock (lock_obj) return haveerror;
+                }
                 private set { lock (lock_obj) haveerror = value; }
             }
 
-            public readonly Engine.Engine Engine;
+            [NonSerialized]
+            private Engine.Engine engine;
+            public Engine.Engine Engine
+            {
+                get
+                {
+                    lock (lock_obj) return engine;
+                }
+                set
+                {
+                    lock (lock_obj)
+                    {
+                        engine?.Unregister(this);
+
+                        engine = value;
+
+                        foreach(var subchip in SubChips)
+                        {
+                            subchip.Engine = value;
+                        }
+
+                        engine?.Register(this);
+                    }
+                }
+            }
+
+            [NonSerialized]
+            private ChipBase parentchip;
+            public ChipBase ParentChip
+            {
+                get
+                {
+                    lock(lock_obj) return parentchip;
+                } set
+                {
+                    lock (lock_obj)
+                    {
+                        parentchip = value;
+
+                        Engine = parentchip?.Engine;
+                    }
+                }
+            }
+
+            [NonSerialized]
+            private readonly Dictionary<string, ChipBase> ChildChips;
 
             private Chip ChipAttr
             {
@@ -93,10 +143,6 @@ namespace CircuitSim2
 
             public bool IsPure => GetType().GetCustomAttributes(false).Any(attr => attr.GetType() == typeof(PureChip));
 
-            public readonly ChipBase ParentChip;
-
-            private readonly Dictionary<string, ChipBase> ChildChips;
-
             public IEnumerable<ChipBase> SubChips => ChildChips.Values;
 
             protected void AddSubChip(ChipBase Chip)
@@ -109,20 +155,16 @@ namespace CircuitSim2
                 ChildChips.Remove(ID);
             }
 
-            public ChipBase(ChipBase ParentChip, Engine.Engine Engine)
+            public ChipBase()
             {
-                this.ParentChip = ParentChip;
-                this.Engine = Engine;
-
                 ChildChips = new Dictionary<string, ChipBase>();
 
                 ID = Guid.NewGuid().ToString();
 
                 lock_obj = new object();
-
-                Engine?.Register(this);
             }
 
+            [NonSerialized]
             private InputSetBase inputset;
             public InputSetBase InputSet
             {
@@ -130,6 +172,7 @@ namespace CircuitSim2
                 protected set { lock (lock_obj) inputset = value; }
             }
 
+            [NonSerialized]
             private OutputSetBase outputset;
             public OutputSetBase OutputSet
             {
@@ -151,7 +194,7 @@ namespace CircuitSim2
             {
                 this.HaveError = false;
 
-                foreach(var chip in SubChips)
+                foreach (var chip in SubChips)
                 {
                     chip.Reset();
                 }
@@ -190,7 +233,7 @@ namespace CircuitSim2
             {
                 Tick();
 
-                foreach(var chip in SubChips)
+                foreach (var chip in SubChips)
                 {
                     chip.SuperTick();
                 }
@@ -217,8 +260,8 @@ namespace CircuitSim2
 
                     return new SizeVec
                     {
-                        Length = Math.Max((int)((subchips + 2)*4), 2),
-                        Width = Math.Max((int)(subchips * 1.5), maxio*2.5),
+                        Length = Math.Max((int)((subchips + 2) * 4), 2),
+                        Width = Math.Max((int)(subchips * 1.5), maxio * 2.5),
                         Height = 1,
                     };
                 }
@@ -246,12 +289,14 @@ namespace CircuitSim2
                 Z = 0.0,
             };
 
-            public PositionVec Position {
-                get {
-                    if(ParentChip != null)
+            public PositionVec Position
+            {
+                get
+                {
+                    if (ParentChip != null)
                     {
 
-                        
+
                         var parent_scale = ParentChip.Scale;
                         var parent_angle = ParentChip.Rotation;
                         var parent_pos = ParentChip.Position;
@@ -271,7 +316,8 @@ namespace CircuitSim2
                         };
 
                         return parent_pos.Add(pos.Multiply(rotation_matrix));
-                    } else
+                    }
+                    else
                     {
                         return position;
                     }
@@ -343,7 +389,8 @@ namespace CircuitSim2
                     if (ParentChip != null && !ParentChip.Visible)
                     {
                         return false;
-                    } else
+                    }
+                    else
                     {
                         return visible;
                     }
@@ -367,13 +414,13 @@ namespace CircuitSim2
                 {
                     childrenvisible = value;
 
-                    foreach(var chip in SubChips)
+                    foreach (var chip in SubChips)
                     {
                         chip.ChildrenVisible = true;
                     }
                 }
             }
-#endregion
+            #endregion
 
             #region IDisposable Support
             private bool disposedValue = false;
@@ -391,7 +438,7 @@ namespace CircuitSim2
 
                         Detach();
 
-                        foreach(var chip in SubChips)
+                        foreach (var chip in SubChips)
                         {
                             chip.Dispose();
                         }
@@ -404,7 +451,7 @@ namespace CircuitSim2
             {
                 Dispose(true);
             }
-#endregion
+            #endregion
         }
     }
 }

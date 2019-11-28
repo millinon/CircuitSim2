@@ -32,15 +32,18 @@ namespace CircuitSim2.Chips.Digital.Conversion
             }
         }
 
+        [NonSerialized]
         public readonly GenericInput<bool> Inputs;
+        [NonSerialized]
         public readonly GenericOutput<T> Outputs;
 
-        public DigitalConverter(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public DigitalConverter()
         {
             InputSet = (Inputs = new GenericInput<bool>(this));
             OutputSet = (Outputs = new GenericOutput<T>(this));
         }
 
+        [NonSerialized]
         private T _out;
 
         public override void Compute()
@@ -61,116 +64,49 @@ namespace CircuitSim2.Chips.Digital.Conversion
 
 
     [Chip("DigitalToByte")]
+    [Serializable]
     public sealed class ToByte : DigitalConverter<byte>
     {
-        public ToByte(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToByte(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToByte(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToChar")]
+    [Serializable]
     public sealed class ToChar : DigitalConverter<char>
     {
-        public ToChar(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToChar(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToChar(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToDouble")]
+    [Serializable]
     public sealed class ToDouble : DigitalConverter<double>
     {
-        public ToDouble(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToDouble(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToDouble(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToInteger")]
+    [Serializable]
     public sealed class ToInteger : DigitalConverter<int>
     {
-        public ToInteger(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToInteger(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToInteger(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToLong")]
+    [Serializable]
     public sealed class ToLong : DigitalConverter<long>
     {
-        public ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToLong(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToLong(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToSingle")]
+    [Serializable]
     public sealed class ToSingle : DigitalConverter<float>
     {
-        public ToSingle(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToSingle(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToSingle(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
     }
 
     [Chip("DigitalToString")]
+    [Serializable]
     public sealed class ToString : DigitalConverter<string>
     {
-        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public ToString()
         {
             Low = "False";
             High = "True";
-        }
-
-        public ToString(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToString(Engine.Engine Engine) : base(null, Engine)
-        {
         }
     }
 }

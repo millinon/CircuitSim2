@@ -14,11 +14,23 @@ namespace ByteAdderTest
 
             using (CircuitSim2.Engine.Engine engine = use_engine ? new CircuitSim2.Engine.Engine() : null)
             {
-                var a = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
-                var b = new CircuitSim2.Chips.Byte.Generators.Constant(engine);
-                var cin = new CircuitSim2.Chips.Digital.Generators.Constant(engine);
-               
-                var adder = new ByteAdder(engine);
+                var a = new CircuitSim2.Chips.Byte.Generators.Constant()
+                {
+                    Engine = engine,
+                };
+                var b = new CircuitSim2.Chips.Byte.Generators.Constant()
+                {
+                    Engine = engine,
+                };
+                var cin = new CircuitSim2.Chips.Digital.Generators.Constant()
+                {
+                    Engine = engine,
+                };
+
+                var adder = new ByteAdder()
+                {
+                    Engine = engine,
+                };
 
                 adder.Inputs.A.Attach(a.Outputs.Out);
                 adder.Inputs.B.Attach(b.Outputs.Out);

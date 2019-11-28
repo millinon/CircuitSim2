@@ -6,6 +6,7 @@ using CircuitSim2.IO;
 namespace CircuitSim2.Chips.Components.Memory
 {
     [Chip("DLatch")]
+    [Serializable]
     public sealed class DLatch : ChipBase
     {
         public sealed class InputType : InputSetBase
@@ -20,8 +21,9 @@ namespace CircuitSim2.Chips.Components.Memory
             }
         }
 
+        [NonSerialized]
         public readonly InputType Inputs;
-        
+
         public sealed class OutputType : OutputSetBase
         {
             public readonly Output<bool> Q;
@@ -34,32 +36,29 @@ namespace CircuitSim2.Chips.Components.Memory
             }
         }
 
+        [NonSerialized]
         public readonly OutputType Outputs;
 
+        [NonSerialized]
         private readonly NOT NOT;
+        [NonSerialized]
         private readonly AND AND1;
+        [NonSerialized]
         private readonly AND AND2;
+        [NonSerialized]
         private readonly NOR NOR1;
+        [NonSerialized]
         private readonly NOR NOR2;
 
 
-        public DLatch(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
+        public DLatch()
         {
-        }
-
-        public DLatch(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
-        public DLatch(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            if (Engine == null) throw new ArgumentNullException(nameof(Engine));
-
             InputSet = (Inputs = new InputType(this));
             OutputSet = (Outputs = new OutputType(this));
 
-            AddSubChip(NOT = new NOT(this)
+            AddSubChip(NOT = new NOT()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = -2.5,
@@ -68,8 +67,9 @@ namespace CircuitSim2.Chips.Components.Memory
                 },
                 Scale = 0.5,
             });
-            AddSubChip(AND1 = new AND(this)
+            AddSubChip(AND1 = new AND()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = -1.5,
@@ -78,8 +78,9 @@ namespace CircuitSim2.Chips.Components.Memory
                 },
                 Scale = 0.5,
             });
-            AddSubChip(AND2 = new AND(this)
+            AddSubChip(AND2 = new AND()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = -1.5,
@@ -88,8 +89,9 @@ namespace CircuitSim2.Chips.Components.Memory
                 },
                 Scale = 0.5,
             });
-            AddSubChip(NOR1 = new NOR(this)
+            AddSubChip(NOR1 = new NOR()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = 1.5,
@@ -98,8 +100,9 @@ namespace CircuitSim2.Chips.Components.Memory
                 },
                 Scale = 0.5,
             });
-            AddSubChip(NOR2 = new NOR(this)
+            AddSubChip(NOR2 = new NOR()
             {
+                ParentChip = this,
                 Position = new PositionVec
                 {
                     X = 1.5,

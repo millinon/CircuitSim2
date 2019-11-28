@@ -8,43 +8,82 @@ using System.Threading.Tasks;
 
 namespace CircuitSim2.Chips.TimeSpan.Conversion
 {
+    [Chip("TimeSpanFromMilliseconds")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromMilliseconds : UnaryFunctor<int, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(int Value) => System.TimeSpan.FromMilliseconds(Value);
+    }
+
+    [Chip("TimeSpanFromSeconds")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromSeconds : UnaryFunctor<int, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(int Value) => System.TimeSpan.FromSeconds(Value);
+    }
+
+    [Chip("TimeSpanFromMinutes")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromMinutes : UnaryFunctor<int, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(int Value) => System.TimeSpan.FromMinutes(Value);
+    }
+
+    [Chip("TimeSpanFromHours")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromHours : UnaryFunctor<int, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(int Value) => System.TimeSpan.FromHours(Value);
+    }
+
+    [Chip("TimeSpanFromDays")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromDays : UnaryFunctor<int, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(int Value) => System.TimeSpan.FromDays(Value);
+    }
+
+    [Chip("TimeSpanFromTicks")]
+    [Serializable]
+    [PureChip]
+    public sealed class FromTicks : UnaryFunctor<long, System.TimeSpan>
+    {
+        public override System.TimeSpan Func(long Value) => System.TimeSpan.FromTicks(Value);
+    }
+
     [Chip("TimeSpanToString")]
+    [Serializable]
     [PureChip]
     public sealed class ToString : UnaryFunctor<System.TimeSpan, string>
     {
-        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToString(ChipBase ParentChip) : base(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToString(Engine.Engine Engine) : base(null, Engine)
-        {
-        }
-
         public override string Func(System.TimeSpan Value) => Value.ToString();
     }
 
     [Chip("TimeSpanDecompose")]
+    [Serializable]
     [PureChip]
     public sealed class Decompose : ChipBase
     {
+        [NonSerialized]
         public readonly CircuitSim2.IO.GenericInput<System.TimeSpan> Inputs;
 
         public class OutputType : CircuitSim2.IO.OutputSetBase
         {
-            public readonly Output<int>     Seconds;
-            public readonly Output<int>     Minutes;
-            public readonly Output<int>     Milliseconds;
-            public readonly Output<int>     Hours;
-            public readonly Output<int>     Days;
-            public readonly Output<long>    Ticks;
-            public readonly Output<double>  TotalHours;
-            public readonly Output<double>  TotalMilliseconds;
-            public readonly Output<double>  TotalMinutes;
-            public readonly Output<double>  TotalSeconds;
+            public readonly Output<int> Seconds;
+            public readonly Output<int> Minutes;
+            public readonly Output<int> Milliseconds;
+            public readonly Output<int> Hours;
+            public readonly Output<int> Days;
+            public readonly Output<long> Ticks;
+            public readonly Output<double> TotalHours;
+            public readonly Output<double> TotalMilliseconds;
+            public readonly Output<double> TotalMinutes;
+            public readonly Output<double> TotalSeconds;
 
             public OutputType(Decompose Chip) : base(new OutputBase[]
             {
@@ -73,14 +112,16 @@ namespace CircuitSim2.Chips.TimeSpan.Conversion
             }
         }
 
+        [NonSerialized]
         public readonly OutputType Outputs;
 
-        public Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Decompose()
         {
             InputSet = (Inputs = new GenericInput<System.TimeSpan>(this));
             OutputSet = (Outputs = new OutputType(this));
         }
 
+        [NonSerialized]
         private System.TimeSpan ts;
         public override void Compute()
         {

@@ -8,8 +8,10 @@ using CircuitSim2.IO;
 namespace CircuitSim2.Chips.Neural
 {
     [Chip("Neuron")]
+    [Serializable]
     public class Neuron : ChipBase
     {
+        [Serializable]
         public class WeightCollection : IEnumerable<double>
         {
             private double[] values;
@@ -29,26 +31,48 @@ namespace CircuitSim2.Chips.Neural
                 get
                 {
                     return values[idx];
-                } set
+                }
+                set
                 {
                     values[idx] = value;
 
-                    Chip.Reset();
-
-                    if (Chip.AutoTick)
+                    if (Chip != null)
                     {
-                        Chip.Tick();
+                        Chip.Reset();
+
+                        if (Chip.AutoTick)
+                        {
+                            Chip.Tick();
+                        }
                     }
                 }
             }
 
-            private readonly Neuron Chip;
+
+            [NonSerialized]
+            private Neuron chip;
+            public Neuron Chip
+            {
+                get
+                {
+                    return chip;
+                } set
+                {
+                    this.chip = value;
+                }
+            }
 
             public WeightCollection(Neuron Chip, int Capacity, Random RNG)
             {
                 values = Enumerable.Range(0, Capacity).Select(_ => RNG.NextDouble()).ToArray();
                 this.Chip = Chip;
             }
+
+            public WeightCollection(double[] values)
+            {
+                this.values = values;
+            }
+
         }
 
         public InputArray<double> Inputs
@@ -98,7 +122,7 @@ namespace CircuitSim2.Chips.Neural
             }
             set
             {
-                if(value <= 0)
+                if (value <= 0)
                 {
                     throw new ArgumentException(nameof(NumInputs));
                 }
@@ -106,7 +130,7 @@ namespace CircuitSim2.Chips.Neural
                 numInputs = value;
 
                 CreateInputs();
-                
+
                 if (AutoTick)
                 {
                     Tick();
@@ -114,7 +138,7 @@ namespace CircuitSim2.Chips.Neural
             }
         }
 
-
+        [NonSerialized]
         private Random rng = new Random();
         public Random RNG
         {
@@ -152,19 +176,12 @@ namespace CircuitSim2.Chips.Neural
 
         protected virtual double Phi(double A) => 1.0 / (1.0 + Math.Exp(-A));
 
-        public Neuron(Engine.Engine Engine) : this(null, Engine)
+        public Neuron()
         {
+            CreateInputs();
         }
 
-        public Neuron(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public Neuron(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-            CreateInputs();   
-        }
-
+        [NonSerialized]
         private double _out;
 
         public sealed override void Compute()
@@ -182,7 +199,7 @@ namespace CircuitSim2.Chips.Neural
         public override SizeVec size => new SizeVec
         {
             Length = 1.0,
-            Width = NumInputs+1.0,
+            Width = NumInputs + 1.0,
             Height = 1.0,
         };
     }

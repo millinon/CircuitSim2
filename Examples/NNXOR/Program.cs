@@ -15,30 +15,43 @@ namespace NNXOR
             //using (Engine Engine = new Engine())
             using (Engine Engine = null)
             {
-                var A = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
-                var B = new CircuitSim2.Chips.Digital.Generators.Constant(Engine);
-
-                var convA = new ToDouble(Engine)
+                var A = new CircuitSim2.Chips.Digital.Generators.Constant()
                 {
+                    Engine = Engine,
+                };
+                var B = new CircuitSim2.Chips.Digital.Generators.Constant()
+                {
+                    Engine = Engine,
+                };
+
+                var convA = new ToDouble()
+                {
+                    Engine = Engine,
                     Low = 0.0,
                     High = 1.0,
                 };
 
-                var convB = new ToDouble(Engine)
+                var convB = new ToDouble()
                 {
+                    Engine = Engine,
                     Low = 0.0,
                     High = 1.0,
                 };
 
-                var XOR = new XOR(Engine);
-                var convX = new ToDouble(Engine)
+                var XOR = new XOR()
                 {
+                    Engine = Engine,
+                };
+                var convX = new ToDouble()
+                {
+                    Engine = Engine,
                     Low = 0.0,
                     High = 1.0,
                 };
 
-                var NN = new FeedForward(Engine)
+                var NN = new FeedForward()
                 {
+                    Engine = Engine,
                     NumInputs = 2,
                     Layers = new int[] { 3, 1 },
                 };
@@ -67,7 +80,7 @@ namespace NNXOR
                     Engine.Start(0.01);
                 }
 
-                foreach (var epoch in Enumerable.Range(0, 100000))
+                foreach (var epoch in Enumerable.Range(0, 10000))
                 {
                     foreach(var a_val in vals)
                     {

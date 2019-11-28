@@ -20,17 +20,17 @@ namespace MetaNANDTest
             //var A = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
             //var B = new CircuitSim2.Chips.IO.BasicInputs.GenericInput<bool>();
 
-            var A = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
-            var B = new CircuitSim2.Chips.Digital.Generators.Constant(null, null);
+            var A = new CircuitSim2.Chips.Digital.Generators.Constant();
+            var B = new CircuitSim2.Chips.Digital.Generators.Constant();
 
             A.Value = false;
             B.Value = false;
 
-            var NAND = new NAND(null, null);
+            var NAND = new NAND();
             NAND.Inputs.A.Attach(A.Outputs.Out);
             NAND.Inputs.B.Attach(B.Outputs.Out);
 
-            MetaChip MetaNAND = new MetaChip(null, null);
+            MetaChip MetaNAND = new MetaChip();
 
             var bool_type = new MetaChip.TypeDescription
             {

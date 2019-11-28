@@ -9,45 +9,25 @@ using System.Threading.Tasks;
 namespace CircuitSim2.Chips.DateTime.Conversion
 {
     [Chip("DateTimeToString")]
+    [Serializable]
     public class ToString : UnaryFunctor<System.DateTime, string>
     {
-        public ToString(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToString(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToString(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override string Func(System.DateTime Value) => Value.ToString();
     }
 
     [Chip("DateTimeToLong")]
+    [Serializable]
     public class ToLong : UnaryFunctor<System.DateTime, long>
     {
-        public ToLong(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
-        {
-        }
-
-        public ToLong(ChipBase ParentChip) : this(ParentChip, ParentChip?.Engine)
-        {
-        }
-
-        public ToLong(Engine.Engine Engine) : this(null, Engine)
-        {
-        }
-
         public override long Func(System.DateTime Value) => Value.Ticks;
     }
 
     [Chip("DateTimeDecompose")]
+    [Serializable]
     [PureChip]
     public class Decompose : ChipBase
     {
+        [NonSerialized]
         public readonly GenericInput<System.DateTime> Inputs;
 
         public class OutputType : OutputSetBase
@@ -63,8 +43,8 @@ namespace CircuitSim2.Chips.DateTime.Conversion
             public readonly Output<long> Ticks;
             public readonly Output<int> Year;
 
-            public OutputType(Decompose Chip) : base(new OutputBase[] { 
-                new Output<int>("Day", Chip, 0), 
+            public OutputType(Decompose Chip) : base(new OutputBase[] {
+                new Output<int>("Day", Chip, 0),
                 new Output<int>("DayOfWeek", Chip, 1),
                 new Output<int>("DayOfYear", Chip, 2),
                 new Output<int>("Hour", Chip, 3),
@@ -89,18 +69,20 @@ namespace CircuitSim2.Chips.DateTime.Conversion
             }
         }
 
+        [NonSerialized]
         public readonly OutputType Outputs;
 
-        public Decompose(ChipBase ParentChip, Engine.Engine Engine) : base(ParentChip, Engine)
+        public Decompose()
         {
             InputSet = (Inputs = new GenericInput<System.DateTime>(this));
             OutputSet = (Outputs = new OutputType(this));
         }
 
+        [NonSerialized]
         private System.DateTime ts;
         public override void Compute()
         {
-            ts = Inputs.A.Value;   
+            ts = Inputs.A.Value;
         }
 
         public override void Commit()
