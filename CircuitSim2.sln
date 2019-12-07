@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntList", "Examples\IntList
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lag", "Examples\Lag\Lag.csproj", "{D112F6F4-2492-4714-80EB-9C027C1BD5A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serial", "Examples\Serial\Serial.csproj", "{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,6 +98,7 @@ Global
 		{486DC336-7A2C-488B-9700-55E104CD3CEE} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{A0794096-6C39-4131-8D7F-42E8C84F9FBC} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{D112F6F4-2492-4714-80EB-9C027C1BD5A1} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
+		{BA90C1B6-5FE6-4DC5-8535-29752DACC2DE} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {859F3C67-B6F9-47A6-913E-6B87B1EF5AE4}
