@@ -16,4 +16,10 @@ namespace CircuitSim2.Chips.DateTime.Signals
     {
         protected override bool Detector(System.DateTime A, System.DateTime B) => A > B;
     }
+
+    [Chip("DatetimeLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<System.DateTime>
+    {
+    }
 }

@@ -16,4 +16,10 @@ namespace CircuitSim2.Chips.Byte.Signals
     {
         protected override bool Detector(byte A, byte B) => A > B;
     }
+
+    [Chip("ByteLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<byte>
+    {
+    }
 }

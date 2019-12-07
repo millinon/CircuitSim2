@@ -221,7 +221,9 @@ namespace CircuitSim2.Chips.Components.Adders
             }
         }
 
+        [NonSerialized]
         public readonly InputType Inputs;
+        [NonSerialized]
         public readonly OutputType Outputs;
 
         private readonly Byte.Conversion.Decompose DecomposerA;

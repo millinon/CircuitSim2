@@ -16,4 +16,10 @@ namespace CircuitSim2.Chips.TimeSpan.Signals
     {
         protected override bool Detector(System.TimeSpan A, System.TimeSpan B) => A > B;
     }
+
+    [Chip("TimeSpanLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<System.TimeSpan>
+    {
+    }
 }

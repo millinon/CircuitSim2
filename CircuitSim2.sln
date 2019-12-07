@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CircuitEditor", "CircuitEdi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntList", "Examples\IntList\IntList.csproj", "{A0794096-6C39-4131-8D7F-42E8C84F9FBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lag", "Examples\Lag\Lag.csproj", "{D112F6F4-2492-4714-80EB-9C027C1BD5A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{A0794096-6C39-4131-8D7F-42E8C84F9FBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0794096-6C39-4131-8D7F-42E8C84F9FBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0794096-6C39-4131-8D7F-42E8C84F9FBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D112F6F4-2492-4714-80EB-9C027C1BD5A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{BF8BB4F3-6079-42D7-82DA-0C3B5B66FBD2} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{486DC336-7A2C-488B-9700-55E104CD3CEE} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 		{A0794096-6C39-4131-8D7F-42E8C84F9FBC} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
+		{D112F6F4-2492-4714-80EB-9C027C1BD5A1} = {DEDE17A9-B85E-4F50-87EE-A9570B6B7107}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {859F3C67-B6F9-47A6-913E-6B87B1EF5AE4}

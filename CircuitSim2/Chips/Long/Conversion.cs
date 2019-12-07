@@ -152,8 +152,10 @@ namespace CircuitSim2.Chips.Long.Conversion
             }
         }
 
+        [NonSerialized]
         public readonly InputType Inputs;
 
+        [NonSerialized]
         public readonly GenericOutput<long> Outputs;
 
         public Compose()

@@ -12,14 +12,18 @@ namespace CircuitSim2.Chips.Neural.Networks
     [Serializable]
     public sealed class FeedForward : ChipBase
     {
+        [NonSerialized]
+        private InputArray<double> inputs;
         public InputArray<double> Inputs
         {
-            get; private set;
+            get => inputs; private set => inputs = value;
         }
 
+        [NonSerialized]
+        private OutputArray<double> outputs;
         public OutputArray<double> Outputs
         {
-            get; private set;
+            get => outputs; private set => outputs = value;
         }
 
         [NonSerialized]
@@ -51,6 +55,7 @@ namespace CircuitSim2.Chips.Neural.Networks
         }
 
         private int[] layers = new int[] { 1 };
+
 
         [ChipProperty]
         public int[] Layers

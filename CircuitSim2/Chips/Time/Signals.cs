@@ -13,9 +13,9 @@ namespace CircuitSim2.Chips.Time
     {
         public readonly GenericOutput<bool> Outputs;
 
-        public Clock()
+        protected Clock()
         {
-            InputSet = new CircuitSim2.IO.NoInputs();
+            InputSet = new NoInputs();
 
             OutputSet = (Outputs = new GenericOutput<bool>(this));
         }
@@ -111,7 +111,29 @@ namespace CircuitSim2.Chips.Time
     [Serializable]
     public class RealTimeClock : Clock
     {
+        private long period_ticks;
+        
+        [NonSerialized]
         private System.TimeSpan period;
+
+        [ChipProperty]
+        public long Period_Ticks
+        {
+            get
+            {
+                return period_ticks;
+            }
+            set
+            {
+                period = new System.TimeSpan(value);
+                period_ticks = value;
+
+                if (AutoTick)
+                {
+                    Tick();
+                }
+            }
+        }
 
         [ChipProperty]
         public System.TimeSpan Period
@@ -123,6 +145,7 @@ namespace CircuitSim2.Chips.Time
             set
             {
                 period = value;
+                period_ticks = value.Ticks;
 
                 if (AutoTick)
                 {

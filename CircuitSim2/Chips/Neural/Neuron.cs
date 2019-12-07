@@ -56,7 +56,8 @@ namespace CircuitSim2.Chips.Neural
                 get
                 {
                     return chip;
-                } set
+                }
+                set
                 {
                     this.chip = value;
                 }
@@ -75,14 +76,18 @@ namespace CircuitSim2.Chips.Neural
 
         }
 
+        [NonSerialized]
+        private InputArray<double> inputs;
+        [NonSerialized]
+        private GenericOutput<double> outputs;
         public InputArray<double> Inputs
         {
-            get; private set;
+            get => inputs; private set => inputs = value;
         }
 
         public GenericOutput<double> Outputs
         {
-            get; private set;
+            get => outputs; private set => outputs = value;
         }
 
 

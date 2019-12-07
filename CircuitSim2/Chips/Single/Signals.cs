@@ -16,4 +16,10 @@ namespace CircuitSim2.Chips.Single.Signals
     {
         protected override bool Detector(float A, float B) => A > B;
     }
+
+    [Chip("SingleLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<float>
+    {
+    }
 }

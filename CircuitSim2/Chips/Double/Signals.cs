@@ -16,4 +16,10 @@ namespace CircuitSim2.Chips.Double.Signals
     {
         protected override bool Detector(double A, double B) => A > B;
     }
+
+    [Chip("DoubleLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<double>
+    {
+    }
 }

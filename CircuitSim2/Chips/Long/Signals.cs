@@ -22,4 +22,10 @@ namespace CircuitSim2.Chips.Long.Signals
             return A > B;
         }
     }
+
+    [Chip("LongLag")]
+    [Serializable]
+    public sealed class Lag : Chips.Signals.Lag<long>
+    {
+    }
 }
